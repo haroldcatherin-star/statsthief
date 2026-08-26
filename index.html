@@ -87,11 +87,55 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
 .cl-match{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:10px 14px;border-radius:10px;margin-bottom:4px;}.cl-match.win{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);}.cl-match.loss{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);}
 .cl-team{font-weight:700;font-size:12px;}.cl-team.you{color:var(--gold);}.cl-score{font-family:'Anton',sans-serif;font-size:16px;color:var(--cream);text-align:center;min-width:50px;}
 .cl-trophy{text-align:center;margin-top:16px;padding:20px;border-radius:14px;background:linear-gradient(160deg,rgba(255,208,69,.15),rgba(168,85,247,.1));border:1px solid rgba(255,208,69,.3);}.cl-trophy .big{font-size:48px;margin-bottom:8px;}.cl-trophy .msg{font-family:'Anton',sans-serif;font-size:20px;color:var(--gold);}
+.bdo-block{padding:18px 16px;margin-bottom:16px;background:linear-gradient(160deg,rgba(255,208,69,.08),rgba(2,14,31,.5))!important;border-color:rgba(255,208,69,.25)!important;}
+.bdo-block h3{font-size:10.5px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.bdo-btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#B8860B,#DAA520);color:#fff;font-family:'Anton',sans-serif;font-size:16px;cursor:pointer;transition:.14s;box-shadow:0 8px 24px -8px rgba(218,165,32,.5);}.bdo-btn:hover:not(:disabled){transform:translateY(-2px);}.bdo-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.bdo-msg{text-align:center;padding:16px;font-size:14px;color:var(--steel);line-height:1.6;margin-top:12px;}
+.bdo-msg.nominated{color:var(--gold);}
+.bdo-ranking{margin-top:14px;}
+.bdo-row{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;margin-bottom:5px;font-size:13px;font-weight:600;border:1px solid var(--gb);background:var(--glass);opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
+.bdo-row.show{opacity:1;transform:translateY(0);}
+.bdo-row.you{background:rgba(255,208,69,.12);border-color:rgba(255,208,69,.4);}
+.bdo-rank{font-family:'Anton',sans-serif;font-size:18px;color:var(--steel);}.bdo-row.you .bdo-rank{color:var(--gold);}
+.bdo-name{color:var(--cream);}.bdo-name small{color:var(--steel);font-weight:400;font-size:11px;margin-left:6px;}
+.bdo-pts{color:var(--steel);font-size:11px;}
+.bdo-trophy{text-align:center;margin-top:18px;padding:24px;border-radius:14px;background:linear-gradient(160deg,rgba(255,208,69,.2),rgba(184,134,11,.1));border:1.5px solid rgba(255,208,69,.4);opacity:0;transform:scale(.9);transition:opacity .5s .3s,transform .5s .3s;}.bdo-trophy.show{opacity:1;transform:scale(1);}
+.bdo-trophy .big{font-size:56px;margin-bottom:10px;}.bdo-trophy .msg{font-family:'Anton',sans-serif;font-size:22px;color:var(--gold);}
 .source-block{padding:18px 16px;}.source-block h3{font-size:10.5px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;color:var(--steel);margin-bottom:10px;}.src-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rsm);border:1px solid var(--gb);background:var(--glass);margin-bottom:6px;font-size:12px;}.src-who{font-weight:600;}.src-club{color:var(--steel);font-size:11px;}
 .replay{display:block;width:100%;margin-top:22px;padding:14px;border:1.5px solid rgba(255,255,255,.15);border-radius:var(--r);background:rgba(255,255,255,.04);color:var(--cream);font-family:'Anton',sans-serif;font-size:15px;cursor:pointer;transition:.14s;}.replay:hover{background:rgba(255,255,255,.09);}
 .event-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(2,14,31,.75);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s;}.event-overlay.show{opacity:1;pointer-events:auto;}
 .event-card{background:linear-gradient(160deg,rgba(26,92,186,.25),rgba(2,14,31,.85));border:1.5px solid rgba(255,208,69,.4);border-radius:20px;padding:32px 28px;text-align:center;max-width:340px;width:90%;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:scale(.9);transition:transform .3s;}.event-overlay.show .event-card{transform:scale(1);}.event-card .ev-icon{font-size:48px;margin-bottom:12px;}.event-card .ev-title{font-family:'Anton',sans-serif;font-size:22px;color:var(--gold);margin-bottom:8px;text-transform:uppercase;}.event-card .ev-desc{font-size:13px;color:var(--steel);line-height:1.5;margin-bottom:18px;}.event-card .ev-ok{padding:10px 28px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),#E8A800);color:#1a0f00;font-family:'Anton',sans-serif;font-size:15px;cursor:pointer;transition:.14s;box-shadow:0 6px 16px rgba(255,208,69,.4);}.event-card .ev-ok:hover{transform:translateY(-1px);}
 @media(max-width:520px){.rules{grid-template-columns:1fr;}.stat-grid,.built-grid,.final-9{grid-template-columns:repeat(2,1fr);}.team-grid{grid-template-columns:repeat(3,1fr);}.result-top{grid-template-columns:1fr;text-align:center;}.season-header{grid-template-columns:repeat(2,1fr);}}
+
+.next-season-btn{display:block;width:100%;margin-top:16px;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--blue-bright),var(--blue-mid));color:#fff;font-family:'Anton',sans-serif;font-size:17px;cursor:pointer;transition:.14s;box-shadow:0 10px 28px -8px rgba(46,124,246,.5);}.next-season-btn:hover{transform:translateY(-2px);}
+.season-badge{display:inline-block;padding:5px 14px;border-radius:999px;font-size:11px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;background:rgba(46,124,246,.15);border:1px solid rgba(46,124,246,.4);color:var(--blue-bright);margin-bottom:14px;}
+.offseason-card{padding:20px;margin-bottom:12px;}.offseason-card h3{font-size:10.5px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;color:var(--steel);margin-bottom:14px;}
+.evo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.evo-cell{padding:10px 8px;text-align:center;border-radius:10px;border:1px solid var(--gb);background:var(--glass);}
+.evo-cell .el{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--steel-dim);margin-bottom:6px;}
+.evo-cell .ev{font-family:'Anton',sans-serif;font-size:14px;}
+.evo-cell .ev.up{color:#22C55E;}.evo-cell .ev.down{color:#EF4444;}.evo-cell .ev.same{color:var(--steel-dim);}
+.evo-msg{text-align:center;font-size:13px;color:var(--steel);line-height:1.5;margin-bottom:14px;padding:12px;border-radius:10px;border:1px solid var(--gb);background:var(--glass);}
+.transfer-card{padding:20px;margin-bottom:12px;}
+.transfer-card h3{font-size:10.5px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;color:var(--steel);margin-bottom:14px;}
+.offer-grid{display:grid;gap:10px;}
+.offer-btn{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 16px;border-radius:12px;border:1.5px solid var(--gb);background:var(--glass);cursor:pointer;transition:.14s;text-align:left;}
+.offer-btn:hover{border-color:rgba(46,124,246,.5);transform:translateY(-1px);}
+.offer-btn.active{border-color:var(--gold);background:rgba(255,208,69,.08);box-shadow:0 0 0 1px var(--gold);}
+.offer-btn .oc{width:18px;height:18px;border-radius:4px;}.offer-btn .on{font-weight:700;font-size:13px;}.offer-btn .od{font-size:11px;color:var(--steel);margin-top:2px;}.offer-btn .or{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;border-radius:6px;}
+.career-block{padding:24px 20px;}
+.career-block h2{font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);margin-bottom:4px;}
+.career-block .subtitle{font-size:13px;color:var(--steel);margin-bottom:20px;}
+.career-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:18px;}
+.cs-box{padding:14px 8px;text-align:center;border-radius:12px;}.cs-box .cv{font-family:'Anton',sans-serif;font-size:26px;}.cs-box .cl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--steel);margin-top:4px;}
+.career-timeline{margin-bottom:18px;}
+.ct-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;border:1px solid var(--gb);background:var(--glass);margin-bottom:5px;font-size:12px;}
+.ct-season{font-family:'Anton',sans-serif;font-size:14px;color:var(--steel);}.ct-club{font-weight:700;}.ct-stats{color:var(--steel);font-size:11px;}
+.ct-badges{display:flex;gap:4px;flex-wrap:wrap;}
+.ct-badge{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;}
+.career-verdict{text-align:center;padding:20px;margin:14px 0;border-radius:14px;background:linear-gradient(160deg,rgba(255,208,69,.12),rgba(46,124,246,.08));border:1px solid rgba(255,208,69,.25);}
+.career-verdict .cv-icon{font-size:48px;margin-bottom:8px;}.career-verdict .cv-title{font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);margin-bottom:4px;}.career-verdict .cv-desc{font-size:13px;color:var(--steel);line-height:1.5;}
+@media(max-width:520px){.career-stats{grid-template-columns:repeat(2,1fr);}.ct-row{grid-template-columns:auto 1fr;}.ct-badges,.ct-stats{grid-column:span 2;}}
 </style>
 </head>
 <body>
@@ -135,6 +179,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
 </section>
 
 <section id="s-result" class="screen hidden">
+  <div class="season-badge hidden" id="result-season-badge"></div>
   <div class="result-top glass">
     <div><div class="ovr-circle" id="ovr-c"><span class="ol">OVR</span><span class="on" id="ovr-n">—</span></div><div class="ovr-pos D" id="ovr-pos">—</div></div>
     <div class="tier-block"><h2 class="D" id="tier-n">—</h2><div class="D" id="nickname" style="font-size:16px;color:var(--blue-bright);margin-bottom:6px;"></div><p id="tier-d">—</p><div class="ps-tag" id="ps-tag" style="display:none;"></div></div>
@@ -144,9 +189,43 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
   <div class="compo-block glass hidden" id="compo-block"><h3>Your all-time squad</h3><div id="compo-content"></div></div>
   <div class="sim-block glass hidden" id="sim-block"><h3>Season simulation</h3><button class="sim-run-btn D" id="btn-sim" disabled>Simulate season →</button><div class="hidden" id="sim-results"></div></div>
   <div class="cl-block glass hidden" id="cl-block"><h3>UEFA Champions League</h3><button class="cl-btn D" id="btn-cl" disabled>Play the Champions League</button><div class="hidden" id="cl-results"></div></div>
+  <div class="bdo-block glass hidden" id="bdo-block"><h3>🏆 Ballon d'Or Ceremony</h3><button class="bdo-btn D" id="btn-bdo">Am I nominated?</button><div id="bdo-content"></div></div>
   <div class="source-block glass"><h3>Origin of each stolen attribute</h3><div id="src-rows"></div></div>
-  <button class="replay D" id="btn-replay">↺ New player</button>
+  <button class="next-season-btn D hidden" id="btn-next-season">Next Season →</button>
+  <button class="replay D hidden" id="btn-career-summary">📊 Career Summary</button>
+  <button class="replay D" id="btn-replay">↺ New Career</button>
 </section>
+
+<section id="s-offseason" class="screen hidden">
+  <div class="season-badge" id="off-season-badge">Off-Season</div>
+  <div class="offseason-card glass">
+    <h3>Stat Evolution</h3>
+    <div class="evo-grid" id="evo-grid"></div>
+    <div class="evo-msg" id="evo-msg"></div>
+  </div>
+  <button class="cta D" id="btn-to-transfer">Transfer Window →</button>
+</section>
+
+<section id="s-transfer" class="screen hidden">
+  <div class="season-badge" id="transfer-badge">Transfer Window</div>
+  <div class="transfer-card glass">
+    <h3>Your options</h3>
+    <div class="offer-grid" id="offer-grid"></div>
+  </div>
+  <button class="cta D" id="btn-confirm-transfer" disabled>Confirm Choice →</button>
+</section>
+
+<section id="s-career" class="screen hidden">
+  <div class="career-block glass">
+    <h2 class="D">Career Summary</h2>
+    <p class="subtitle" id="career-subtitle"></p>
+    <div class="career-stats" id="career-stats"></div>
+    <div class="career-timeline" id="career-timeline"></div>
+    <div class="career-verdict" id="career-verdict"></div>
+  </div>
+  <button class="replay D" id="btn-new-career">↺ New Career</button>
+</section>
+
 <div class="event-overlay" id="event-overlay"><div class="event-card"><div class="ev-icon" id="ev-icon">🔥</div><div class="ev-title D" id="ev-title">—</div><div class="ev-desc" id="ev-desc">—</div><button class="ev-ok D" id="ev-ok">Continue</button></div></div>
 </div>
 <script>
@@ -471,7 +550,7 @@ function drawC(){const p=eClubs();let i;do{i=Math.floor(Math.random()*p.length)}
 function drawP(){const p=elig(ST.club);let i;do{i=Math.floor(Math.random()*p.length)}while(p.length>1&&i===ST.lastPI);ST.lastPI=i;ST.player=p[i];}
 function finalStat(k){const base=ST.owned[k]?ST.owned[k].v:50;if(k==="ps")return base;const ps=ST.owned.ps?ST.owned.ps.v:"";const boost=PS_BOOST[ps]||{};return Math.min(99,base+(boost[k]||0));}
 const $=id=>document.getElementById(id);
-function showS(id){["s-home","s-draft","s-result"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+function showS(id){["s-home","s-draft","s-result","s-offseason","s-transfer","s-career"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
 function rNav(){$("rnd").textContent=ST.round;$("pos-pill").textContent=POS_L[ST.pos];$("rc-n").textContent=ST.clubLeft;$("rc-badge").textContent=ST.clubLeft;$("rp-n").textContent=ST.playerLeft;$("rp-badge").textContent=ST.playerLeft;$("rc-pill").classList.toggle("empty",ST.clubLeft<=0);$("rp-pill").classList.toggle("empty",ST.playerLeft<=0);$("btn-rc").disabled=phase!=="ready"||ST.clubLeft<=0;$("btn-rp").disabled=phase!=="ready"||ST.playerLeft<=0;$("btn-spin").disabled=phase!=="idle";}
 function rProg(){const p=$("prog");p.innerHTML="";for(let i=1;i<=TOTAL_ROUNDS;i++){const s=document.createElement("span");if(i<ST.round)s.className="done";else if(i===ST.round)s.className="cur";p.appendChild(s);}}
 function hide(){$("rar-badge").classList.remove("show");$("style-tag").classList.remove("show");$("stat-grid").classList.remove("show");$("stat-grid").innerHTML="";$("confirm-wrap").classList.remove("show");selectedKey=null;}
@@ -520,7 +599,7 @@ function doResult(){const ovr=calcOVR();$("ovr-n").textContent=ovr;$("ovr-c").st
   const f=$("final-9");f.innerHTML="";ALL_KEYS.forEach(k=>{const c=document.createElement("div");c.className="fc glass";if(k==="ps"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}else{const fv=finalStat(k);const hb=ST.owned[k]&&fv>ST.owned[k].v;c.innerHTML=`<div class="fl">${SL(k)}${hb?' <span style="color:#22C55E;font-size:8px;">▲PS</span>':''}</div>${ST.owned[k]?catH(fv):`<span style="color:var(--steel-dim)">—</span>`}`;}f.appendChild(c);});
   const shuffled=[...CLUBS].sort(()=>Math.random()-.5).slice(0,5);const tg=$("team-grid");tg.innerHTML="";shuffled.forEach(cl=>{const b=document.createElement("button");b.className="team-btn";b.dataset.cn=cl.name;b.innerHTML=`<span class="tc" style="background:${cl.color};box-shadow:0 0 6px ${cl.color}55"></span><div class="tn">${cl.name}</div>`;b.addEventListener("click",()=>{tg.querySelectorAll(".team-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");showCompo(cl);});tg.appendChild(b);});
   const sr=$("src-rows");sr.innerHTML="";ALL_KEYS.forEach(k=>{if(!ST.owned[k])return;const o=ST.owned[k];const row=document.createElement("div");row.className="src-row";if(k==="ps")row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span style="color:var(--gold);font-weight:700;font-size:11px">✦ ${o.v}</span>`;else row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span>${SL(k)} ${catH(finalStat(k))}</span>`;sr.appendChild(row);});
-  $("sim-results").classList.add("hidden");$("cl-results").classList.add("hidden");$("compo-block").classList.add("hidden");$("sim-block").classList.add("hidden");$("cl-block").classList.add("hidden");showS("s-result");}
+  $("sim-results").classList.add("hidden");$("cl-results").classList.add("hidden");$("compo-block").classList.add("hidden");$("sim-block").classList.add("hidden");$("cl-block").classList.add("hidden");$("bdo-block").classList.add("hidden");showS("s-result");}
 
 /* COMPO 2-2-2 */
 function showCompo(club){const ourPos=ST.pos;const byG={ATT:[],MID:[],DEF:[]};club.players.forEach(p=>{const g=posG(p.pos);if(g)byG[g].push(p);});Object.values(byG).forEach(a=>a.sort(()=>Math.random()-.5));const need={ATT:2,MID:2,DEF:2};need[ourPos]=Math.max(0,need[ourPos]-1);const you={name:"YOUR PLAYER",pos:POS_L[ourPos],you:true};const cc=$("compo-content");cc.innerHTML="";const pitch=document.createElement("div");pitch.className="compo-pitch";
@@ -552,16 +631,409 @@ $("btn-sim").addEventListener("click",()=>{const cn=$("btn-sim").dataset.cn;cons
   const finish=simLeaguePos===1?"Premier League champions!":simLeaguePos<=4?"qualified for the Champions League!":simLeaguePos<=6?"qualified for European football.":simLeaguePos<=17?"survived in the Premier League.":`relegated... (${simLeaguePos}th)`;
   v.textContent=`With ${g} goals and ${a} assists in ${apps} apps, « ${genNickname()} » finishes ${simLeaguePos}${simLeaguePos===1?"st":simLeaguePos===2?"nd":simLeaguePos===3?"rd":"th"} — ${finish}`;sr.appendChild(v);
   sr.classList.remove("hidden");$("btn-sim").disabled=true;$("btn-sim").textContent="Season simulated ✓";
-  if(simLeaguePos<=4){$("cl-block").classList.remove("hidden");$("btn-cl").disabled=false;$("btn-cl").textContent="Play the Champions League";$("cl-results").classList.add("hidden");}else $("cl-block").classList.add("hidden");});
+  // Track achievements
+  resetAchievements();
+  achievements.simRating=rating;
+  achievements.leagueChamp=simLeaguePos===1;
+  achievements.top4=simLeaguePos<=4;
+  achievements.goldenBoot=awards.some(a=>a.l.includes("Golden Boot"));
+  achievements.assistKing=awards.some(a=>a.l.includes("Assist"));
+  achievements.poty=awards.some(a=>a.l.includes("Player of the Year"));
+  achievements.toty=awards.some(a=>a.l.includes("Team of the Year"));
+  achievements.bestDef=awards.some(a=>a.l.includes("Best Defence"));
+  if(simLeaguePos<=4){$("cl-block").classList.remove("hidden");$("btn-cl").disabled=false;$("btn-cl").textContent="Play the Champions League";$("cl-results").classList.add("hidden");$("bdo-block").classList.add("hidden");}
+  else{$("cl-block").classList.add("hidden");showBdoBlock();}});
 
 const CL_TEAMS=[{name:"Real Madrid",str:93,c:"#FEBE10"},{name:"FC Barcelona",str:90,c:"#A50044"},{name:"Bayern Munich",str:89,c:"#DC052D"},{name:"PSG",str:88,c:"#004170"},{name:"Inter Milan",str:86,c:"#009BDB"},{name:"AC Milan",str:84,c:"#FB090B"},{name:"Juventus",str:83,c:"#000"},{name:"Borussia Dortmund",str:82,c:"#FDE100"},{name:"Atlético Madrid",str:83,c:"#CB3524"},{name:"Napoli",str:82,c:"#12A0D7"},{name:"Benfica",str:80,c:"#F00"},{name:"Porto",str:79,c:"#003893"},{name:"Ajax",str:78,c:"#D2122E"},{name:"RB Leipzig",str:81,c:"#DD0741"},{name:"Celtic",str:74,c:"#16883D"},{name:"Sporting CP",str:78,c:"#00843D"}];
 $("btn-cl").addEventListener("click",()=>{const ovr=calcOVR(),teamStr=TEAM_STR[simClubName]||72,myStr=(teamStr+ovr)/2;const cr=$("cl-results");cr.innerHTML="";const rounds=["Round of 16","Quarter-finals","Semi-finals","Final"];const pool=[...CL_TEAMS].sort(()=>Math.random()-.5);let alive=true,oi=0;
-  for(let r=0;r<4;r++){if(!alive)break;const opp=pool[oi%pool.length];oi++;const wp=0.35+(myStr-opp.str)/100*0.6;const won=Math.random()<Math.min(0.88,Math.max(0.15,wp));const mg=rng(won?1:0,won?4:2);const og=won?rng(0,Math.max(0,mg-1)):rng(mg+1,mg+3);
+  for(let r=0;r<4;r++){if(!alive)break;const opp=pool[oi%pool.length];oi++;const wp=0.50+(myStr-opp.str)/100*0.5;const won=Math.random()<Math.min(0.88,Math.max(0.25,wp));const mg=rng(won?1:0,won?4:2);const og=won?rng(0,Math.max(0,mg-1)):rng(mg+1,mg+3);
     const rd=document.createElement("div");rd.className="cl-round";rd.innerHTML=`<div class="cl-round-title">${rounds[r]}</div>`;const match=document.createElement("div");match.className=`cl-match ${won?"win":"loss"}`;match.innerHTML=`<span class="cl-team you">${simClubName} ⭐</span><span class="cl-score">${mg} - ${og}</span><span class="cl-team">${opp.name}</span>`;rd.appendChild(match);cr.appendChild(rd);
-    if(!won){alive=false;const el=document.createElement("p");el.style.cssText="text-align:center;color:var(--steel);font-size:13px;margin-top:12px;line-height:1.5;";el.textContent=`Knocked out in the ${rounds[r].toLowerCase()} by ${opp.name}. A great European run for « ${genNickname()} »!`;cr.appendChild(el);}}
-  if(alive){const trophy=document.createElement("div");trophy.className="cl-trophy";trophy.innerHTML=`<div class="big">🏆</div><div class="msg">CHAMPIONS LEAGUE WINNERS!</div><p style="color:var(--steel);font-size:12px;margin-top:8px;">« ${genNickname()} » becomes a legend — ${simClubName} lifts the trophy!</p>`;cr.appendChild(trophy);}
-  cr.classList.remove("hidden");$("btn-cl").disabled=true;$("btn-cl").textContent="Champions League played ✓";});
-$("btn-replay").addEventListener("click",()=>{document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));$("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;showS("s-home");});
+    if(!won){alive=false;const el=document.createElement("p");el.style.cssText="text-align:center;color:var(--steel);font-size:13px;margin-top:12px;line-height:1.5;";el.textContent=`Knocked out in the ${rounds[r].toLowerCase()} by ${opp.name}. A great European run for « ${genNickname()} »!`;cr.appendChild(el);if(r>=2)achievements.clSemi=true;}}
+  if(alive){achievements.clWinner=true;achievements.clSemi=true;const trophy=document.createElement("div");trophy.className="cl-trophy";trophy.innerHTML=`<div class="big">🏆</div><div class="msg">CHAMPIONS LEAGUE WINNERS!</div><p style="color:var(--steel);font-size:12px;margin-top:8px;">« ${genNickname()} » becomes a legend — ${simClubName} lifts the trophy!</p>`;cr.appendChild(trophy);}
+  cr.classList.remove("hidden");$("btn-cl").disabled=true;$("btn-cl").textContent="Champions League played ✓";
+  // Show Ballon d'Or after CL
+  showBdoBlock();
+});
+
+/* ACHIEVEMENT TRACKING */
+let achievements={leagueChamp:false,top4:false,clWinner:false,clSemi:false,goldenBoot:false,assistKing:false,poty:false,toty:false,bestDef:false,simRating:0};
+
+function resetAchievements(){achievements={leagueChamp:false,top4:false,clWinner:false,clSemi:false,goldenBoot:false,assistKing:false,poty:false,toty:false,bestDef:false,simRating:0};}
+
+/* BALLON D'OR */
+const BDO_RIVALS=[
+  {name:"Kylian Mbappé",club:"Real Madrid",min:82,max:92},
+  {name:"Harry Kane",club:"Bayern Munich",min:78,max:88},
+  {name:"Michael Olise",club:"Bayern Munich",min:74,max:86},
+  {name:"Khvicha Kvaratskhelia",club:"PSG",min:73,max:85},
+  {name:"Rodri",club:"Man City",min:74,max:84},
+  {name:"Lamine Yamal",club:"Barcelona",min:72,max:84},
+  {name:"Ousmane Dembélé",club:"PSG",min:72,max:83},
+  {name:"Jude Bellingham",club:"Real Madrid",min:73,max:83},
+  {name:"Vinícius Jr",club:"Real Madrid",min:70,max:82},
+];
+
+function calcBdoScore(){
+  const ovr=calcOVR();
+  let score=ovr*0.5+achievements.simRating*0.3;
+  if(achievements.leagueChamp) score+=15;
+  if(achievements.top4) score+=8;
+  if(achievements.clWinner) score+=20;
+  if(achievements.clSemi) score+=10;
+  if(achievements.goldenBoot||achievements.assistKing) score+=12;
+  if(achievements.poty) score+=15;
+  if(achievements.toty) score+=5;
+  if(achievements.bestDef) score+=5;
+  return Math.round(score);
+}
+
+function showBdoBlock(){
+  $("bdo-block").classList.remove("hidden");
+  $("btn-bdo").disabled=false;
+  $("btn-bdo").textContent="Am I nominated?";
+  $("bdo-content").innerHTML="";
+  bdoPhase=0;
+}
+
+let bdoPhase=0; // 0=ready, 1=nominated shown, 2=ranking revealed
+$("btn-bdo").addEventListener("click",()=>{
+  if(bdoPhase===0){
+    // Calculate score + check nomination
+    const myScore=calcBdoScore();
+    const rivals=BDO_RIVALS.map(r=>({...r,score:rng(r.min,r.max)}));
+    // Store for phase 2
+    window._bdoData={myScore,rivals};
+    
+    const allScores=[myScore,...rivals.map(r=>r.score)].sort((a,b)=>b-a);
+    const myRank=allScores.indexOf(myScore)+1;
+    
+    const cc=$("bdo-content");cc.innerHTML="";
+    const msg=document.createElement("div");
+    
+    if(myRank<=10){
+      msg.className="bdo-msg nominated";
+      msg.innerHTML=`⭐ <strong>You made the Top 10!</strong><br>The football world is watching. Tap below to reveal the final ranking.`;
+      $("btn-bdo").textContent="Reveal the ranking →";
+      bdoPhase=1;
+    } else {
+      msg.className="bdo-msg";
+      msg.textContent=`You didn't make the Top 10 this year (score: ${myScore}). Keep building — the Ballon d'Or awaits next season.`;
+      $("btn-bdo").disabled=true;
+      $("btn-bdo").textContent="Not nominated";
+      bdoPhase=2;
+    }
+    cc.appendChild(msg);
+  } else if(bdoPhase===1){
+    // Reveal ranking with staggered animation
+    const {myScore,rivals}=window._bdoData;
+    const ranking=[{name:`« ${genNickname()} »`,club:simClubName,score:myScore,you:true},...rivals.map(r=>({name:r.name,club:r.club,score:r.score,you:false}))];
+    ranking.sort((a,b)=>b.score-a.score);
+    const top10=ranking.slice(0,10);
+    
+    const cc=$("bdo-content");cc.innerHTML="";
+    const rDiv=document.createElement("div");rDiv.className="bdo-ranking";
+    
+    // Render rows 10→1 (bottom to top for suspense, but displayed top to bottom)
+    top10.forEach((p,i)=>{
+      const row=document.createElement("div");
+      row.className=`bdo-row${p.you?" you":""}`;
+      row.innerHTML=`<span class="bdo-rank">${i+1}</span><span class="bdo-name">${p.name}<small>${p.club}</small></span><span class="bdo-pts">${p.score} pts</span>`;
+      rDiv.appendChild(row);
+      // Stagger reveal: last place first (10th shown first, 1st shown last)
+      setTimeout(()=>row.classList.add("show"),(9-i)*300+100);
+    });
+    cc.appendChild(rDiv);
+    
+    // Check if winner
+    if(top10[0].you){
+      const trophy=document.createElement("div");trophy.className="bdo-trophy";
+      trophy.innerHTML=`<div class="big">🏆</div><div class="msg">BALLON D'OR WINNER!</div><p style="color:var(--steel);font-size:12px;margin-top:8px;">« ${genNickname()} » claims football's greatest individual prize!</p>`;
+      cc.appendChild(trophy);
+      setTimeout(()=>trophy.classList.add("show"),10*300+400);
+    } else {
+      const myPos=top10.findIndex(p=>p.you)+1;
+      const endMsg=document.createElement("p");endMsg.style.cssText="text-align:center;color:var(--steel);font-size:13px;margin-top:14px;line-height:1.5;opacity:0;transition:opacity .4s;";
+      endMsg.textContent=myPos<=3?`${myPos}${myPos===1?"st":myPos===2?"nd":"rd"} place — so close to glory! The world knows your name.`:`Finishing ${myPos}th — a remarkable achievement. The best is yet to come.`;
+      cc.appendChild(endMsg);
+      setTimeout(()=>endMsg.style.opacity="1",10*300+200);
+    }
+    
+    $("btn-bdo").disabled=true;
+    $("btn-bdo").textContent="Ceremony complete ✓";
+    bdoPhase=2;
+  }
+});
+
+/* ============================================================
+   CAREER MODE — 6 seasons
+============================================================ */
+let career={season:1,club:null,history:[],totalG:0,totalA:0,totalApps:0,plTitles:0,clTitles:0,bdos:0,age:22};
+let seasonData={};
+
+function resetCareer(){career={season:1,club:null,history:[],totalG:0,totalA:0,totalApps:0,plTitles:0,clTitles:0,bdos:0,age:22};seasonData={};}
+
+function recordSeason(g,a,apps,rating,leaguePos,clResult,bdoRank){
+  const rec={season:career.season,club:career.club,g,a,apps,rating,leaguePos,clResult,bdoRank,awards:[...seasonData.awards||[]]};
+  career.history.push(rec);
+  career.totalG+=g;career.totalA+=a;career.totalApps+=apps;
+  if(leaguePos===1)career.plTitles++;
+  if(clResult==="Winner")career.clTitles++;
+  if(bdoRank===1)career.bdos++;
+}
+
+/* Hook into sim to record data */
+const origSimClick=$("btn-sim").onclick;
+// We'll track season data via the achievements object + extra vars
+let simGoals=0,simAssists=0,simApps=0,simRating2=0;
+
+/* Show season badge on result screen */
+function updateSeasonUI(){
+  const badge=$("result-season-badge");
+  if(career.season>=1){badge.classList.remove("hidden");badge.textContent=`Season ${career.season} / 6 · Age ${career.age}`;}
+  // Show next season button for seasons 1-5
+  if(career.season<6){$("btn-next-season").classList.remove("hidden");$("btn-career-summary").classList.add("hidden");}
+  else{$("btn-next-season").classList.add("hidden");$("btn-career-summary").classList.remove("hidden");}
+}
+
+/* Override doResult to set career club on first season */
+const origDoResult=doResult;
+doResult=function(){
+  origDoResult();
+  updateSeasonUI();
+};
+
+/* After team selection in season 1, record the club */
+const origShowCompo=showCompo;
+showCompo=function(club){
+  origShowCompo(club);
+  career.club=club.name;
+};
+
+/* Track sim results for career */
+const origBtnSimHandler=$("btn-sim").cloneNode(true);
+// We need to intercept sim results. Let's wrap by reading DOM after sim.
+
+/* NEXT SEASON button */
+$("btn-next-season").addEventListener("click",()=>{
+  // Record this season from DOM
+  const boxes=$("sim-results").querySelectorAll(".stat-box .sv");
+  if(boxes.length>=4){
+    simApps=parseInt(boxes[0].textContent)||0;
+    simGoals=parseInt(boxes[1].textContent)||0;
+    simAssists=parseInt(boxes[2].textContent)||0;
+  }
+  const clRes=achievements.clWinner?"Winner":achievements.clSemi?"Semi-finalist":simLeaguePos<=4?"Knocked out":"N/A";
+  // BdO rank
+  let bdoRank=99;
+  if(window._bdoData){
+    const {myScore,rivals}=window._bdoData;
+    const all=[myScore,...rivals.map(r=>r.score)].sort((a,b)=>b-a);
+    bdoRank=all.indexOf(myScore)+1;
+  }
+  recordSeason(simGoals,simAssists,simApps,achievements.simRating,simLeaguePos,clRes,bdoRank);
+  
+  career.season++;career.age++;
+  showOffseason();
+});
+
+/* OFF-SEASON */
+function showOffseason(){
+  $("off-season-badge").textContent=`Off-Season · Before Season ${career.season}`;
+  const grid=$("evo-grid");grid.innerHTML="";
+  const changes={};
+  const rating=achievements.simRating||70;
+  
+  // Performance-based evolution
+  const upKeys=SK.filter(k=>ST.owned[k]).sort(()=>Math.random()-.5);
+  if(rating>82&&upKeys.length>0){const k=upKeys[0];changes[k]=rng(2,3);}
+  if(rating>75&&upKeys.length>1){const k=upKeys[1];changes[k]=rng(1,2);}
+  if(rating<70&&upKeys.length>0){const k=upKeys[upKeys.length-1];changes[k]=-rng(1,3);}
+  
+  // Age regression risk (seasons 5-6, age 26-27)
+  let injuryMsg="";
+  if(career.age>=26&&Math.random()<0.25){
+    const k=["spd","phy"][Math.floor(Math.random()*2)];
+    if(!changes[k])changes[k]=0;
+    changes[k]-=rng(2,4);
+    injuryMsg="⚠️ Your body is feeling the toll of the years...";
+  }
+  
+  // Apply changes
+  SK.forEach(k=>{
+    const o=ST.owned[k];if(!o)return;
+    const ch=changes[k]||0;
+    const oldV=o.v;
+    o.v=Math.max(30,Math.min(99,o.v+ch));
+    const cell=document.createElement("div");cell.className="evo-cell";
+    const arrow=ch>0?"▲ +"+ch:ch<0?"▼ "+ch:"—";
+    const cls=ch>0?"up":ch<0?"down":"same";
+    cell.innerHTML=`<div class="el">${SL(k)}</div>${catH(o.v)}<div class="ev ${cls}">${arrow}</div>`;
+    grid.appendChild(cell);
+  });
+  
+  const msg=$("evo-msg");
+  if(injuryMsg)msg.textContent=injuryMsg;
+  else if(rating>82)msg.textContent="🔥 Outstanding season! Your stats have improved.";
+  else if(rating>70)msg.textContent="Solid season. Minor adjustments to your game.";
+  else msg.textContent="Tough season. Some areas have declined.";
+  
+  showS("s-offseason");
+}
+
+$("btn-to-transfer").addEventListener("click",()=>showTransfer());
+
+/* TRANSFER WINDOW */
+function showTransfer(){
+  $("transfer-badge").textContent=`Transfer Window · Season ${career.season}`;
+  const grid=$("offer-grid");grid.innerHTML="";
+  let selectedClub=career.club;
+  const ovr=calcOVR();
+  
+  // Stay option
+  const stayBtn=document.createElement("button");stayBtn.className="offer-btn active";
+  const stayClub=CLUBS.find(c=>c.name===career.club);
+  stayBtn.innerHTML=`<span class="oc" style="background:${stayClub?stayClub.color:'#888'}"></span><div><div class="on">${career.club}</div><div class="od">Stay — you know this club</div></div><span class="or" style="color:var(--gold);background:rgba(255,208,69,.15);">Current</span>`;
+  stayBtn.addEventListener("click",()=>{grid.querySelectorAll(".offer-btn").forEach(b=>b.classList.remove("active"));stayBtn.classList.add("active");selectedClub=career.club;$("btn-confirm-transfer").disabled=false;});
+  grid.appendChild(stayBtn);
+  
+  // Generate 2-3 offers based on OVR
+  const available=CLUBS.filter(c=>c.name!==career.club);
+  const pool=[];
+  if(ovr>=85)pool.push(...available.filter(c=>(TEAM_STR[c.name]||72)>=82));
+  if(ovr>=75)pool.push(...available.filter(c=>{const s=TEAM_STR[c.name]||72;return s>=74&&s<86;}));
+  if(ovr<75)pool.push(...available.filter(c=>(TEAM_STR[c.name]||72)<78));
+  
+  const unique=[...new Set(pool.map(c=>c.name))].sort(()=>Math.random()-.5).slice(0,3);
+  unique.forEach(cn=>{
+    const cl=CLUBS.find(c=>c.name===cn);if(!cl)return;
+    const str=TEAM_STR[cn]||72;
+    const role=str>=85?"Rotation player":str>=78?"Key player":"Star player";
+    const tag=str>=85?"Contender":str>=75?"Mid-table":"Project";
+    const tagColor=str>=85?"#A855F7":str>=75?"#2563EB":"#16A34A";
+    const btn=document.createElement("button");btn.className="offer-btn";
+    btn.innerHTML=`<span class="oc" style="background:${cl.color}"></span><div><div class="on">${cn}</div><div class="od">${role}</div></div><span class="or" style="color:${tagColor};background:${tagColor}22;">${tag}</span>`;
+    btn.addEventListener("click",()=>{grid.querySelectorAll(".offer-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");selectedClub=cn;$("btn-confirm-transfer").disabled=false;});
+    grid.appendChild(btn);
+  });
+  
+  $("btn-confirm-transfer").disabled=false;
+  $("btn-confirm-transfer").onclick=()=>{
+    career.club=selectedClub;
+    simClubName=selectedClub;
+    // Go directly to sim for this season (skip draft)
+    directSim();
+  };
+  showS("s-transfer");
+}
+
+/* DIRECT SIM — for seasons 2-6, skip draft and team pick */
+function directSim(){
+  // Set up result screen without draft
+  const ovr=calcOVR();
+  $("ovr-n").textContent=ovr;$("ovr-c").style.setProperty("--p",Math.min(ovr,99));$("ovr-pos").textContent=POS_L[ST.pos];
+  let tier=TIERS[0];TIERS.forEach(t=>{if(ovr>=t.min)tier=t;});
+  $("tier-n").textContent=tier.n;$("tier-d").textContent=tier.d;
+  $("nickname").textContent=`« ${genNickname()} »`;
+  const pt=$("ps-tag");if(ST.owned.ps){pt.textContent="✦ "+ST.owned.ps.v;pt.style.display="inline-block";}else pt.style.display="none";
+  
+  // Show boosted final stats
+  const f=$("final-9");f.innerHTML="";
+  ALL_KEYS.forEach(k=>{const c=document.createElement("div");c.className="fc glass";
+    if(k==="ps"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}
+    else{const fv=finalStat(k);const hb=ST.owned[k]&&fv>ST.owned[k].v;c.innerHTML=`<div class="fl">${SL(k)}${hb?' <span style="color:#22C55E;font-size:8px;">▲PS</span>':''}</div>${ST.owned[k]?catH(fv):`<span style="color:var(--steel-dim)">—</span>`}`;}
+    f.appendChild(c);
+  });
+  
+  // Hide team picker, show compo directly
+  document.querySelector(".team-pick").classList.add("hidden");
+  const club=CLUBS.find(c=>c.name===career.club);
+  if(club)showCompo(club);
+  
+  // Auto-trigger sim
+  $("btn-sim").dataset.cn=career.club;
+  $("btn-sim").disabled=false;
+  $("btn-sim").textContent="Simulate season →";
+  
+  // Source rows
+  const sr=$("src-rows");sr.innerHTML="";
+  ALL_KEYS.forEach(k=>{if(!ST.owned[k])return;const o=ST.owned[k];const row=document.createElement("div");row.className="src-row";
+    if(k==="ps")row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span style="color:var(--gold);font-weight:700;font-size:11px">✦ ${o.v}</span>`;
+    else row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span>${SL(k)} ${catH(finalStat(k))}</span>`;
+    sr.appendChild(row);
+  });
+  
+  $("sim-results").classList.add("hidden");$("cl-results").classList.add("hidden");
+  $("compo-block").classList.remove("hidden");$("sim-block").classList.remove("hidden");
+  $("cl-block").classList.add("hidden");$("bdo-block").classList.add("hidden");
+  
+  updateSeasonUI();
+  showS("s-result");
+}
+
+/* CAREER SUMMARY — after season 6 */
+$("btn-career-summary").addEventListener("click",()=>{
+  // Record last season first
+  const boxes=$("sim-results").querySelectorAll(".stat-box .sv");
+  if(boxes.length>=4){simApps=parseInt(boxes[0].textContent)||0;simGoals=parseInt(boxes[1].textContent)||0;simAssists=parseInt(boxes[2].textContent)||0;}
+  const clRes=achievements.clWinner?"Winner":achievements.clSemi?"Semi-finalist":simLeaguePos<=4?"Knocked out":"N/A";
+  let bdoRank=99;
+  if(window._bdoData){const{myScore,rivals}=window._bdoData;const all=[myScore,...rivals.map(r=>r.score)].sort((a,b)=>b-a);bdoRank=all.indexOf(myScore)+1;}
+  recordSeason(simGoals,simAssists,simApps,achievements.simRating,simLeaguePos,clRes,bdoRank);
+  
+  showCareerSummary();
+});
+
+function showCareerSummary(){
+  const c=career;
+  $("career-subtitle").textContent=`${POS_L[ST.pos]} · ${c.history.map(h=>h.club).filter((v,i,a)=>a.indexOf(v)===i).join(" → ")} · Ages ${22}-${22+c.history.length-1}`;
+  
+  // Stats
+  const stats=$("career-stats");stats.innerHTML="";
+  [{v:c.totalApps,l:"Total Apps"},{v:c.totalG,l:"Total Goals"},{v:c.totalA,l:"Total Assists"},{v:c.plTitles+c.clTitles+c.bdos,l:"Trophies"}].forEach(s=>{
+    const box=document.createElement("div");box.className="cs-box glass";
+    box.innerHTML=`<div class="cv">${s.v}</div><div class="cl">${s.l}</div>`;
+    stats.appendChild(box);
+  });
+  
+  // Timeline
+  const tl=$("career-timeline");tl.innerHTML="";
+  c.history.forEach(h=>{
+    const row=document.createElement("div");row.className="ct-row";
+    let badges="";
+    if(h.leaguePos===1)badges+=`<span class="ct-badge" style="color:#FFD045;background:rgba(255,208,69,.15);">🏆 PL</span>`;
+    if(h.clResult==="Winner")badges+=`<span class="ct-badge" style="color:#2563EB;background:rgba(37,99,235,.15);">⭐ CL</span>`;
+    if(h.bdoRank===1)badges+=`<span class="ct-badge" style="color:#A855F7;background:rgba(168,85,247,.15);">🏆 BdO</span>`;
+    if(h.bdoRank<=3&&h.bdoRank>1)badges+=`<span class="ct-badge" style="color:#CA8A04;background:rgba(202,138,4,.15);">BdO #${h.bdoRank}</span>`;
+    row.innerHTML=`<span class="ct-season">S${h.season}</span><span class="ct-club">${h.club}</span><span class="ct-stats">${h.g}G ${h.a}A · ${h.leaguePos}${h.leaguePos===1?"st":h.leaguePos===2?"nd":h.leaguePos===3?"rd":"th"}</span><span class="ct-badges">${badges}</span>`;
+    tl.appendChild(row);
+  });
+  
+  // Verdict
+  const v=$("career-verdict");
+  let icon,title,desc;
+  if(c.bdos>=2){icon="👑";title="ALL-TIME GOAT";desc="Multiple Ballon d'Or winner. Your name will echo through eternity.";}
+  else if(c.bdos>=1&&c.clTitles>=1){icon="🌟";title="Generational Talent";desc="Ballon d'Or winner and Champions League hero. A career for the ages.";}
+  else if(c.clTitles>=1){icon="🏆";title="European Royalty";desc="Champions League winner. You've conquered the continent.";}
+  else if(c.plTitles>=2){icon="🏅";title="Premier League Legend";desc="Multiple league titles. The Premier League was your playground.";}
+  else if(c.plTitles>=1){icon="⭐";title="Champion";desc="A Premier League winner. You know what it takes.";}
+  else if(c.totalG>=80){icon="🔥";title="Goal Machine";desc=`${c.totalG} career goals. Defenders had nightmares about you.`;}
+  else if(c.totalA>=60){icon="🎯";title="Assist King";desc=`${c.totalA} career assists. The ultimate team player.`;}
+  else if(c.totalApps>=200){icon="💪";title="Iron Man";desc=`${c.totalApps} appearances. Reliable, consistent, ever-present.`;}
+  else{icon="⚽";title="Solid Career";desc="A respectable career in English football. Not everyone gets to play in the Premier League.";}
+  v.innerHTML=`<div class="cv-icon">${icon}</div><div class="cv-title D">${title}</div><div class="cv-desc">${desc}</div>`;
+  
+  showS("s-career");
+}
+
+$("btn-new-career").addEventListener("click",()=>{
+  resetCareer();
+  document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));
+  $("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;
+  document.querySelector(".team-pick").classList.remove("hidden");
+  showS("s-home");
+});
+
+$("btn-replay").addEventListener("click",()=>{resetCareer();document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));$("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;document.querySelector(".team-pick").classList.remove("hidden");showS("s-home");});
 </script>
 </body>
 </html>
