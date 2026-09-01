@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7312684373493265"
-     crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>STAT THIEF</title>
@@ -180,6 +178,17 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
   <div class="built"><h4>Your player</h4><div class="built-grid" id="built-grid"></div></div>
 </section>
 
+
+<section id="s-name" class="screen hidden">
+  <div class="glass" style="padding:32px 24px;text-align:center;max-width:440px;margin:60px auto 0;">
+    <div style="font-size:48px;margin-bottom:16px;">⚽</div>
+    <h2 class="D" style="font-size:24px;color:var(--gold);margin-bottom:6px;">Name your player</h2>
+    <p style="color:var(--steel);font-size:13px;margin-bottom:20px;line-height:1.5;">Your legend needs a name. Choose wisely — this is how the world will remember you.</p>
+    <input type="text" id="player-name-input" placeholder="Enter name..." maxlength="24" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid var(--gb);background:rgba(255,255,255,.06);color:var(--cream);font-family:Inter,sans-serif;font-size:16px;font-weight:700;text-align:center;outline:none;transition:.14s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gb)'">
+    <button class="cta D" id="btn-name-confirm" style="margin-top:16px;" disabled>Continue →</button>
+  </div>
+</section>
+
 <section id="s-result" class="screen hidden">
   <div class="season-badge hidden" id="result-season-badge"></div>
   <div class="result-top glass">
@@ -190,6 +199,12 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
   <div class="team-pick glass"><h3>Destiny calls — which club will you join?</h3><div class="team-grid" id="team-grid"></div></div>
   <div class="compo-block glass hidden" id="compo-block"><h3>Your all-time squad</h3><div id="compo-content"></div></div>
   <div class="sim-block glass hidden" id="sim-block"><h3>Season simulation</h3><button class="sim-run-btn D" id="btn-sim" disabled>Simulate season →</button><div class="hidden" id="sim-results"></div></div>
+  <div class="glass hidden" id="biggame-block" style="padding:18px 16px;margin-bottom:16px;">
+    <h3 style="font-size:10.5px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">⚡ Big Game</h3>
+    <p id="bg-scenario" style="font-size:13px;color:var(--steel);line-height:1.6;margin-bottom:14px;"></p>
+    <div id="bg-choices" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+    <div id="bg-result" class="hidden" style="margin-top:14px;padding:14px;border-radius:10px;text-align:center;font-size:13px;line-height:1.5;"></div>
+  </div>
   <div class="cl-block glass hidden" id="cl-block"><h3>UEFA Champions League</h3><button class="cl-btn D" id="btn-cl" disabled>Play the Champions League</button><div class="hidden" id="cl-results"></div></div>
   <div class="bdo-block glass hidden" id="bdo-block"><h3>🏆 Ballon d'Or Ceremony</h3><button class="bdo-btn D" id="btn-bdo">Am I nominated?</button><div id="bdo-content"></div></div>
   <div class="source-block glass"><h3>Origin of each stolen attribute</h3><div id="src-rows"></div></div>
@@ -239,7 +254,7 @@ const SL_POS={
   DEF:{spd:"Pace",sho:"Shooting",pas:"Build-up",dri:"Awareness",def:"Tackling",phy:"Power",aer:"Aerial",men:"Leadership"},
 };
 function SL(k){return SL_POS[ST.pos][k];}
-const ALL_KEYS=[...SK,"ps"];
+const ALL_KEYS=[...SK,"ps","nat"];
 function P(n,pos,style,ps,s,h,p2,d,df,ph,ae,me){return{name:n,pos,style,ps,spd:s,sho:h,pas:p2,dri:d,def:df,phy:ph,aer:ae,men:me};}
 function posG(p){if(["BU","AIL","F9","SS"].includes(p))return"ATT";if(["MOC","MC","MDC","MG","MD"].includes(p))return"MID";if(["DC","DG","DD"].includes(p))return"DEF";return null;}
 
@@ -537,6 +552,101 @@ const PS_BOOST={
   "Clean Defender":{def:3,men:3,pas:2},"Zonal Shield":{def:3,men:3},"Pressing Fullback":{spd:3,def:2,phy:2},
 };
 
+/* NATIONALITY LOOKUP */
+const NATS={};
+function N(names,f,c){names.forEach(n=>NATS[n]={f,c});}
+N(["Thierry Henry","Robert Pirès","Claude Makélélé","Marcel Desailly","Patrick Vieira","Gilberto Silva","N'Golo Kanté","Gianfranco Zola","Michael Essien","Louis Saha","Dimitri Payet","Nicolas Anelka","Samir Nasri"],"🇫🇷","France");
+N(["Dennis Bergkamp","Ruud van Nistelrooy","Robin van Persie","Marc Overmars","Jaap Stam","Edwin van der Sar","Jan Vertonghen"],"🇳🇱","Netherlands");
+N(["Ian Wright","Tony Adams","Sol Campbell","Ashley Cole","Lee Dixon","Frank Lampard","John Terry","Steven Gerrard","Michael Owen","Wayne Rooney","Gary Neville","Rio Ferdinand","Paul Scholes","David Beckham","Jamie Carragher","Michael Carrick","Andrew Robertson","Trent Alexander-Arnold","Robbie Fowler","Jack Grealish","Declan Rice","Jarrod Bowen","Harry Kane","Jimmy Greaves","Glenn Hoddle","Mousa Dembélé","Ledley King","Danny Rose","Alan Shearer","Les Ferdinand","Robert Lee","Nicky Butt","Gabriel Agbonlahor","Leon Osman","Scott Parker","Mark Noble","Jamie Vardy","Gary Lineker","Glenn Murray","Wilfried Zaha","Andrew Johnson","Scott Dann","Marc Guéhi","Joel Ward","Callum Wilson","David Brooks","Lewis Cook","Andrew Surman","Steve Cook","Ivan Toney","Bryan Mbeumo","Ollie Watkins","Clint Dempsey","Danny Murphy","Brede Hangeland","Stan Collymore","Chris Wood","David Platt","Stuart Pearce","Des Walker","Steve Chettle","Viv Anderson","Mark Viduka","Harry Kewell","Alan Smith","Lee Bowyer","Kevin Phillips","Darren Bent","Phil Bardsley","Michael Gray","Wes Brown","John O'Shea","Adam Smith","Lewis Dunk","Shane Duffy","Tariq Lamptey","James McArthur","Mile Jedinak","Yohan Cabaye","Junior Stanislas","Aaron Hickey","Kenny Tete","Charlie Daniels","Nathan Aké","Rico Henry","Ethan Pinnock","Pontus Jansson"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Cristiano Ronaldo","Bernardo Silva","Nuno Tavares","Nelson Semedo","Rúben Dias","Manuel Akanji","Joao Moutinho","Rúben Neves"],"🇵🇹","Portugal");
+N(["Luis Suárez","Nemanja Vidić","Patrice Evra"],"🇺🇾","Uruguay");
+N(["Roberto Firmino","Carlos Tevez","Fernandinho","Josko Gvardiol"],"🇧🇷","Brazil");
+N(["Eric Cantona","Ryan Giggs"],"🇫🇷","France");
+N(["Bobby Charlton","George Best"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Sergio Agüero","Aleksandar Kolarov","Pablo Zabaleta","Fabricio Coloccini"],"🇦🇷","Argentina");
+N(["Raheem Sterling","Kyle Walker","Rico Lewis","Phil Foden","Cole Palmer"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Kevin De Bruyne","Eden Hazard","Vincent Kompany","Romelu Lukaku","Marouane Fellaini","Kevin Mirallas","Toby Alderweireld","Mousa Dembélé"],"🇧🇪","Belgium");
+N(["David Silva","Marc Cucurella","César Azpilicueta","Jonny Castro"],"🇪🇸","Spain");
+N(["Yaya Touré"],"🇨🇮","Ivory Coast");
+N(["Rodri"],"🇪🇸","Spain");
+N(["Joleon Lescott"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Son Heung-min"],"🇰🇷","South Korea");
+N(["Gareth Bale"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
+N(["Luka Modrić"],"🇭🇷","Croatia");
+N(["Christian Eriksen","Mikkel Damsgaard","Pontus Jansson"],"🇩🇰","Denmark");
+N(["Dele Alli"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["David Ginola","Hatem Ben Arfa"],"🇫🇷","France");
+N(["Gary Speed"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
+N(["Kieran Trippier"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Dwight Yorke"],"🇹🇹","Trinidad");
+N(["Juan Pablo Ángel"],"🇨🇴","Colombia");
+N(["James Milner","Gareth Barry"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Stiliyan Petrov"],"🇧🇬","Bulgaria");
+N(["Martin Laursen"],"🇩🇰","Denmark");
+N(["Olof Mellberg"],"🇸🇪","Sweden");
+N(["Wilfred Bouma"],"🇳🇱","Netherlands");
+N(["Alan Hutton"],"🏴󠁧󠁢󠁳󠁣󠁴󠁿","Scotland");
+N(["Tim Cahill"],"🇦🇺","Australia");
+N(["Steven Pienaar"],"🇿🇦","South Africa");
+N(["Phil Jagielka","Séamus Coleman"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Sylvain Distin"],"🇫🇷","France");
+N(["Leighton Baines"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Paolo Di Canio"],"🇮🇹","Italy");
+N(["Carlton Cole","Glen Johnson","Aaron Cresswell","James Collins"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Marlon Harewood"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Riyad Mahrez"],"🇩🇿","Algeria");
+N(["Emile Heskey","Danny Drinkwater","Wes Morgan","Ben Chilwell","Ricardo Pereira"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Robert Huth"],"🇩🇪","Germany");
+N(["Raúl Jiménez"],"🇲🇽","Mexico");
+N(["Robbie Keane"],"🇮🇪","Ireland");
+N(["Diogo Jota"],"🇵🇹","Portugal");
+N(["Matt Jarvis","Dave Edwards","Conor Coady"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Willy Boly"],"🇫🇷","France");
+N(["Matt Doherty"],"🇮🇪","Ireland");
+N(["Bobby Zamora","Leandro Trossard"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Kaoru Mitoma"],"🇯🇵","Japan");
+N(["Yves Bissouma"],"🇲🇱","Mali");
+N(["Pascal Groß"],"🇩🇪","Germany");
+N(["Moisés Caicedo"],"🇪🇨","Ecuador");
+N(["Alexis Mac Allister"],"🇦🇷","Argentina");
+N(["Patrick van Aanholt"],"🇳🇱","Netherlands");
+N(["Christian Benteke"],"🇧🇪","Belgium");
+N(["Joshua King"],"🇳🇴","Norway");
+N(["Ryan Fraser"],"🏴󠁧󠁢󠁳󠁣󠁴󠁿","Scotland");
+N(["Saïd Benrahma"],"🇩🇿","Algeria");
+N(["Vitaly Janelt"],"🇩🇪","Germany");
+N(["Christian Nørgaard"],"🇩🇰","Denmark");
+N(["Carlos Salcido"],"🇲🇽","Mexico");
+N(["John Paintsil"],"🇬🇭","Ghana");
+N(["Pierre van Hooijdonk"],"🇳🇱","Netherlands");
+N(["Bryan Roy"],"🇳🇱","Netherlands");
+N(["Andy Reid"],"🇮🇪","Ireland");
+N(["Gary McAllister","David Batty"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Lucas Radebe"],"🇿🇦","South Africa");
+N(["Ian Harte","Gary Kelly"],"🇮🇪","Ireland");
+N(["Niall Quinn"],"🇮🇪","Ireland");
+N(["Asamoah Gyan"],"🇬🇭","Ghana");
+N(["Julio Arca"],"🇦🇷","Argentina");
+N(["Lee Cattermole","Kevin Richardson"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Branislav Ivanović"],"🇷🇸","Serbia");
+N(["Xabi Alonso"],"🇪🇸","Spain");
+N(["Javier Mascherano"],"🇦🇷","Argentina");
+N(["Virgil van Dijk"],"🇳🇱","Netherlands");
+N(["Kenny Dalglish"],"🏴󠁧󠁢󠁳󠁣󠁴󠁿","Scotland");
+N(["Mohamed Salah"],"🇪🇬","Egypt");
+N(["Jimmy F. Hasselbaink"],"🇳🇱","Netherlands");
+N(["Simon Davies"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
+N(["Papa Bouba Diop"],"🇸🇳","Senegal");
+N(["Shola Ameobi","José Enrique"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
+N(["Ryan Giggs"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
+N(["Roy Keane","Robbie Keane"],"🇮🇪","Ireland");
+// Fallback for any missing
+function getNat(name){return NATS[name]||{f:"🏳️",c:"Unknown"};}
+
+/* PLAYER NAME STATE */
+let playerName="";
+
+
 const CATS=[{min:90,l:"S",c:"#A855F7",bg:"rgba(168,85,247,.18)"},{min:85,l:"A+",c:"#3B5BDB",bg:"rgba(59,91,219,.18)"},{min:80,l:"A",c:"#2563EB",bg:"rgba(37,99,235,.16)"},{min:75,l:"A-",c:"#0891B2",bg:"rgba(8,145,178,.16)"},{min:70,l:"B+",c:"#0D9488",bg:"rgba(13,148,136,.16)"},{min:65,l:"B",c:"#16A34A",bg:"rgba(22,163,74,.14)"},{min:60,l:"B-",c:"#65A30D",bg:"rgba(101,163,13,.14)"},{min:55,l:"C+",c:"#CA8A04",bg:"rgba(202,138,4,.14)"},{min:50,l:"C",c:"#D97706",bg:"rgba(217,119,6,.14)"},{min:45,l:"C-",c:"#EA580C",bg:"rgba(234,88,12,.14)"},{min:35,l:"D",c:"#DC2626",bg:"rgba(220,38,38,.14)"},{min:25,l:"E",c:"#B91C1C",bg:"rgba(185,28,28,.14)"},{min:0,l:"F",c:"#7F1D1D",bg:"rgba(127,29,29,.14)"}];
 function cat(v){for(const c of CATS)if(v>=c.min)return c;return CATS.at(-1);}
 function catH(v){const c=cat(v);return`<span class="cat D" style="color:${c.c};background:${c.bg};border:1.5px solid ${c.c}55">${c.l}</span>`;}
@@ -552,7 +662,7 @@ function drawC(){const p=eClubs();let i;do{i=Math.floor(Math.random()*p.length)}
 function drawP(){const p=elig(ST.club);let i;do{i=Math.floor(Math.random()*p.length)}while(p.length>1&&i===ST.lastPI);ST.lastPI=i;ST.player=p[i];}
 function finalStat(k){const base=ST.owned[k]?ST.owned[k].v:50;if(k==="ps")return base;const ps=ST.owned.ps?ST.owned.ps.v:"";const boost=PS_BOOST[ps]||{};return Math.min(99,base+(boost[k]||0));}
 const $=id=>document.getElementById(id);
-function showS(id){["s-home","s-draft","s-result","s-offseason","s-transfer","s-career"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+function showS(id){["s-home","s-draft","s-result","s-offseason","s-transfer","s-career","s-name"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
 function rNav(){$("rnd").textContent=ST.round;$("pos-pill").textContent=POS_L[ST.pos];$("rc-n").textContent=ST.clubLeft;$("rc-badge").textContent=ST.clubLeft;$("rp-n").textContent=ST.playerLeft;$("rp-badge").textContent=ST.playerLeft;$("rc-pill").classList.toggle("empty",ST.clubLeft<=0);$("rp-pill").classList.toggle("empty",ST.playerLeft<=0);$("btn-rc").disabled=phase!=="ready"||ST.clubLeft<=0;$("btn-rp").disabled=phase!=="ready"||ST.playerLeft<=0;$("btn-spin").disabled=phase!=="idle";}
 function rProg(){const p=$("prog");p.innerHTML="";for(let i=1;i<=TOTAL_ROUNDS;i++){const s=document.createElement("span");if(i<ST.round)s.className="done";else if(i===ST.round)s.className="cur";p.appendChild(s);}}
 function hide(){$("rar-badge").classList.remove("show");$("style-tag").classList.remove("show");$("stat-grid").classList.remove("show");$("stat-grid").innerHTML="";$("confirm-wrap").classList.remove("show");selectedKey=null;}
@@ -564,12 +674,13 @@ function setClr(c){const h=c.color.replace("#","");$("draw-stage").style.backgro
 function rar(q){const a=SK.reduce((s,k)=>s+q[k],0)/8;if(a>=82)return{l:"Icon ✦",c:"#A855F7",b:"rgba(168,85,247,.14)"};if(a>=74)return{l:"Elite",c:"#2563EB",b:"rgba(37,99,235,.14)"};if(a>=64)return{l:"Proven",c:"#16A34A",b:"rgba(22,163,74,.12)"};return{l:"Common",c:"#7A90B3",b:"rgba(122,144,179,.1)"};}
 function spin(sc,sp){phase="spinning";hide();rNav();setClr(ST.club);const after=()=>{phase="ready";const q=ST.player,r2=rar(q);const rb=$("rar-badge"),st=$("style-tag");rb.textContent=r2.l;rb.style.color=r2.c;rb.style.background=r2.b;rb.style.border=`1px solid ${r2.c}55`;rb.classList.add("show");st.innerHTML=`<strong>${q.style}</strong>`;st.classList.add("show");buildGrid();$("stat-grid").classList.add("show");rNav();};if(sc&&sp)spinT("rt-club",cItems(),`<span class="clr" style="background:${ST.club.color};box-shadow:0 0 8px ${ST.club.color}"></span>${ST.club.name}`,1700,()=>spinT("rt-player",pItems(),`<span>${ST.player.name}<small>${ST.player.pos}</small></span>`,1400,after));else if(sp)spinT("rt-player",pItems(),`<span>${ST.player.name}<small>${ST.player.pos}</small></span>`,1400,after);else after();}
 $("btn-spin").addEventListener("click",()=>{if(phase!=="idle")return;drawC();spin(true,true);});
-function buildGrid(){const g=$("stat-grid"),q=ST.player;g.innerHTML="";selectedKey=null;$("confirm-wrap").classList.remove("show");SK.forEach(k=>{const own=ST.owned[k];const btn=document.createElement("button");btn.className="stat-btn";btn.disabled=!!own;btn.dataset.key=k;const v=own?own.v:Math.min(99,q[k]+statBonus);btn.innerHTML=`<span class="sname">${SL(k)}</span>${catH(v)}`;if(!own)btn.addEventListener("click",()=>selectStat(k));g.appendChild(btn);});const own=ST.owned.ps;const psBtn=document.createElement("button");psBtn.className="stat-btn";psBtn.disabled=!!own;psBtn.dataset.key="ps";psBtn.style.cssText="grid-column:span 2;border-color:rgba(255,208,69,.3);background:rgba(255,208,69,.06);";psBtn.innerHTML=`<span class="sname" style="color:var(--gold)">✦ Playstyle</span><span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 10px;border-radius:6px">${own?own.v:q.ps}</span>`;if(!own)psBtn.addEventListener("click",()=>selectStat("ps"));g.appendChild(psBtn);}
+function buildGrid(){const g=$("stat-grid"),q=ST.player;g.innerHTML="";selectedKey=null;$("confirm-wrap").classList.remove("show");SK.forEach(k=>{const own=ST.owned[k];const btn=document.createElement("button");btn.className="stat-btn";btn.disabled=!!own;btn.dataset.key=k;const v=own?own.v:Math.min(99,q[k]+statBonus);btn.innerHTML=`<span class="sname">${SL(k)}</span>${catH(v)}`;if(!own)btn.addEventListener("click",()=>selectStat(k));g.appendChild(btn);});const ownPs=ST.owned.ps;const psBtn=document.createElement("button");psBtn.className="stat-btn";psBtn.disabled=!!ownPs;psBtn.dataset.key="ps";psBtn.style.cssText="border-color:rgba(255,208,69,.3);background:rgba(255,208,69,.06);";psBtn.innerHTML=`<span class="sname" style="color:var(--gold)">✦ Style</span><span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 10px;border-radius:6px">${ownPs?ownPs.v:q.ps}</span>`;if(!ownPs)psBtn.addEventListener("click",()=>selectStat("ps"));g.appendChild(psBtn);
+  const ownNat=ST.owned.nat;const natData=getNat(q.name);const natBtn=document.createElement("button");natBtn.className="stat-btn";natBtn.disabled=!!ownNat;natBtn.dataset.key="nat";natBtn.style.cssText="border-color:rgba(46,124,246,.3);background:rgba(46,124,246,.06);";natBtn.innerHTML=`<span class="sname" style="color:var(--blue-bright)">🌍 Nation</span><span class="cat D" style="color:var(--blue-bright);background:rgba(46,124,246,.15);border:1.5px solid rgba(46,124,246,.4);font-size:13px;padding:2px 10px;border-radius:6px">${ownNat?ownNat.v:natData.f+" "+natData.c}</span>`;if(!ownNat)natBtn.addEventListener("click",()=>selectStat("nat"));g.appendChild(natBtn);}
 function selectStat(k){if(phase!=="ready")return;selectedKey=k;$("stat-grid").querySelectorAll(".stat-btn").forEach(b=>b.classList.remove("selected"));const btn=$("stat-grid").querySelector(`[data-key="${k}"]`);if(btn)btn.classList.add("selected");$("confirm-wrap").classList.add("show");}
-$("btn-confirm").addEventListener("click",()=>{if(phase!=="ready"||selectedKey===null)return;const k=selectedKey,q=ST.player;ST.owned[k]={v:k==="ps"?q.ps:Math.min(99,q[k]+statBonus),name:q.name,club:ST.club.name,color:ST.club.color};const btn=$("stat-grid").querySelector(`[data-key="${k}"]`);if(btn)btn.classList.add("flash");$("confirm-wrap").classList.remove("show");selectedKey=null;statBonus=0;rBuilt();setTimeout(()=>{if(ST.round>=TOTAL_ROUNDS){doResult();return;}ST.round++;phase="idle";hide();$("rt-club").innerHTML="";$("rt-player").innerHTML="";if(Math.random()<0.25)triggerEvent();else{rNav();rProg();}},600);});
+$("btn-confirm").addEventListener("click",()=>{if(phase!=="ready"||selectedKey===null)return;const k=selectedKey,q=ST.player;ST.owned[k]={v:k==="ps"?q.ps:k==="nat"?getNat(q.name).f+" "+getNat(q.name).c:Math.min(99,q[k]+statBonus),name:q.name,club:ST.club.name,color:ST.club.color};const btn=$("stat-grid").querySelector(`[data-key="${k}"]`);if(btn)btn.classList.add("flash");$("confirm-wrap").classList.remove("show");selectedKey=null;statBonus=0;rBuilt();setTimeout(()=>{if(ST.round>=TOTAL_ROUNDS){doResult();return;}ST.round++;phase="idle";hide();$("rt-club").innerHTML="";$("rt-player").innerHTML="";if(Math.random()<0.25)triggerEvent();else{rNav();rProg();}},600);});
 const EVENTS=[{icon:"🔥",title:"Hot Streak",desc:"You're on fire! Next player's stats get a +5 boost.",fx:()=>{statBonus=5;}},{icon:"❄️",title:"Rainy Day",desc:"Heavy pitch. Next player's stats drop by -3.",fx:()=>{statBonus=-3;}},{icon:"🎁",title:"Generous Scout",desc:"Your scout found an extra club respin!",fx:()=>{ST.clubLeft++;}},{icon:"🔓",title:"Back Door",desc:"Your agent unlocks an extra player respin!",fx:()=>{ST.playerLeft++;}},{icon:"⭐",title:"Magic Night",desc:"Divine inspiration! Next stats get a +8 boost.",fx:()=>{statBonus=8;}},{icon:"💨",title:"Headwind",desc:"Not your best day... next stats drop by -5.",fx:()=>{statBonus=-5;}}];
 function triggerEvent(){const ev=EVENTS[Math.floor(Math.random()*EVENTS.length)];$("ev-icon").textContent=ev.icon;$("ev-title").textContent=ev.title;$("ev-desc").textContent=ev.desc;$("event-overlay").classList.add("show");$("ev-ok").onclick=()=>{ev.fx();$("event-overlay").classList.remove("show");rNav();rProg();};}
-function rBuilt(){const g=$("built-grid");g.innerHTML="";ALL_KEYS.forEach(k=>{const o=ST.owned[k],c=document.createElement("div");c.className="bc";if(k==="ps"){c.innerHTML=`<div class="bl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:11px;padding:2px 6px;border-radius:5px">${o.v}</span>`:`<span class="cat D" style="color:var(--steel-dim);background:var(--glass);border:1.5px solid var(--gb)">—</span>`}`;}else{c.innerHTML=`<div class="bl">${SL(k)}</div>${o?catH(o.v):`<span class="cat D" style="color:var(--steel-dim);background:var(--glass);border:1.5px solid var(--gb)">—</span>`}`;}g.appendChild(c);});}
+function rBuilt(){const g=$("built-grid");g.innerHTML="";ALL_KEYS.forEach(k=>{const o=ST.owned[k],c=document.createElement("div");c.className="bc";if(k==="ps"){c.innerHTML=`<div class="bl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:11px;padding:2px 6px;border-radius:5px">${o.v}</span>`:`<span class="cat D" style="color:var(--steel-dim);background:var(--glass);border:1.5px solid var(--gb)">—</span>`}`;}else if(k==="nat"){c.innerHTML=`<div class="bl" style="color:var(--blue-bright)">🌍 Nation</div>${o?`<span class="cat D" style="color:var(--blue-bright);background:rgba(46,124,246,.15);border:1.5px solid rgba(46,124,246,.4);font-size:11px;padding:2px 6px;border-radius:5px">${o.v}</span>`:`<span class="cat D" style="color:var(--steel-dim);background:var(--glass);border:1.5px solid var(--gb)">—</span>`}`;}else{c.innerHTML=`<div class="bl">${SL(k)}</div>${o?catH(o.v):`<span class="cat D" style="color:var(--steel-dim);background:var(--glass);border:1.5px solid var(--gb)">—</span>`}`;}g.appendChild(c);});}
 $("btn-rc").addEventListener("click",()=>{if(phase!=="ready"||ST.clubLeft<=0)return;ST.clubLeft--;drawC();spin(true,true);});
 $("btn-rp").addEventListener("click",()=>{if(phase!=="ready"||ST.playerLeft<=0)return;ST.playerLeft--;drawP();spin(false,true);});
 $("btn-reset").addEventListener("click",()=>{document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));$("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;showS("s-home");});
@@ -597,11 +708,11 @@ function genNickname(){const v=k=>finalStat(k),ps=ST.owned.ps?ST.owned.ps.v:"";
 function calcOVR(){const w=W[ST.pos];let o=0;SK.forEach(k=>{o+=finalStat(k)*w[k];});return Math.round(o);}
 const TEAM_STR={"Manchester City":92,"Arsenal":90,"Liverpool":89,"Chelsea":86,"Manchester United":83,"Tottenham":82,"Newcastle":81,"Aston Villa":80,"West Ham":76,"Brighton":77,"Crystal Palace":75,"Wolverhampton":74,"Fulham":73,"Brentford":73,"Bournemouth":72,"Everton":71,"Nottm Forest":72,"Leicester":70,"Leeds United":69,"Sunderland":68};
 
-function doResult(){const ovr=calcOVR();$("ovr-n").textContent=ovr;$("ovr-c").style.setProperty("--p",Math.min(ovr,99));$("ovr-pos").textContent=POS_L[ST.pos];let tier=TIERS[0];TIERS.forEach(t=>{if(ovr>=t.min)tier=t;});$("tier-n").textContent=tier.n;$("tier-d").textContent=tier.d;$("nickname").textContent=`« ${genNickname()} »`;const pt=$("ps-tag");if(ST.owned.ps){pt.textContent="✦ "+ST.owned.ps.v;pt.style.display="inline-block";}else pt.style.display="none";
-  const f=$("final-9");f.innerHTML="";ALL_KEYS.forEach(k=>{const c=document.createElement("div");c.className="fc glass";if(k==="ps"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}else{const fv=finalStat(k);const hb=ST.owned[k]&&fv>ST.owned[k].v;c.innerHTML=`<div class="fl">${SL(k)}${hb?' <span style="color:#22C55E;font-size:8px;">▲PS</span>':''}</div>${ST.owned[k]?catH(fv):`<span style="color:var(--steel-dim)">—</span>`}`;}f.appendChild(c);});
+function doResult(){const ovr=calcOVR();$("ovr-n").textContent=ovr;$("ovr-c").style.setProperty("--p",Math.min(ovr,99));$("ovr-pos").textContent=POS_L[ST.pos];let tier=TIERS[0];TIERS.forEach(t=>{if(ovr>=t.min)tier=t;});$("tier-n").textContent=tier.n;$("tier-d").textContent=tier.d;$("nickname").textContent=`« ${playerName||genNickname()} » — ${genNickname()}`;const pt=$("ps-tag");if(ST.owned.ps){pt.textContent="✦ "+ST.owned.ps.v;pt.style.display="inline-block";}else pt.style.display="none";
+  const f=$("final-9");f.innerHTML="";ALL_KEYS.forEach(k=>{const c=document.createElement("div");c.className="fc glass";if(k==="ps"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}else if(k==="nat"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--blue-bright)">🌍 Nation</div>${o?`<span class="cat D" style="color:var(--blue-bright);background:rgba(46,124,246,.15);border:1.5px solid rgba(46,124,246,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}else{const fv=finalStat(k);const hb=ST.owned[k]&&fv>ST.owned[k].v;c.innerHTML=`<div class="fl">${SL(k)}${hb?' <span style="color:#22C55E;font-size:8px;">▲PS</span>':''}</div>${ST.owned[k]?catH(fv):`<span style="color:var(--steel-dim)">—</span>`}`;}f.appendChild(c);});
   const shuffled=[...CLUBS].sort(()=>Math.random()-.5).slice(0,5);const tg=$("team-grid");tg.innerHTML="";shuffled.forEach(cl=>{const b=document.createElement("button");b.className="team-btn";b.dataset.cn=cl.name;b.innerHTML=`<span class="tc" style="background:${cl.color};box-shadow:0 0 6px ${cl.color}55"></span><div class="tn">${cl.name}</div>`;b.addEventListener("click",()=>{tg.querySelectorAll(".team-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");showCompo(cl);});tg.appendChild(b);});
-  const sr=$("src-rows");sr.innerHTML="";ALL_KEYS.forEach(k=>{if(!ST.owned[k])return;const o=ST.owned[k];const row=document.createElement("div");row.className="src-row";if(k==="ps")row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span style="color:var(--gold);font-weight:700;font-size:11px">✦ ${o.v}</span>`;else row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span>${SL(k)} ${catH(finalStat(k))}</span>`;sr.appendChild(row);});
-  $("sim-results").classList.add("hidden");$("cl-results").classList.add("hidden");$("compo-block").classList.add("hidden");$("sim-block").classList.add("hidden");$("cl-block").classList.add("hidden");$("bdo-block").classList.add("hidden");showS("s-result");}
+  const sr=$("src-rows");sr.innerHTML="";ALL_KEYS.forEach(k=>{if(!ST.owned[k])return;const o=ST.owned[k];const row=document.createElement("div");row.className="src-row";if(k==="ps")row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span style="color:var(--gold);font-weight:700;font-size:11px">✦ ${o.v}</span>`;else if(k==="nat") row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span style="color:var(--blue-bright);font-weight:700;font-size:11px">🌍 ${o.v}</span>`;else row.innerHTML=`<span class="src-who">${o.name}</span><span class="src-club">${o.club}</span><span>${SL(k)} ${catH(finalStat(k))}</span>`;sr.appendChild(row);});
+  $("sim-results").classList.add("hidden");$("cl-results").classList.add("hidden");$("compo-block").classList.add("hidden");$("sim-block").classList.add("hidden");$("cl-block").classList.add("hidden");$("bdo-block").classList.add("hidden");$("biggame-block").classList.add("hidden");showS("s-result");}
 
 /* COMPO 2-2-2 */
 function showCompo(club){const ourPos=ST.pos;const byG={ATT:[],MID:[],DEF:[]};club.players.forEach(p=>{const g=posG(p.pos);if(g)byG[g].push(p);});Object.values(byG).forEach(a=>a.sort(()=>Math.random()-.5));const need={ATT:2,MID:2,DEF:2};need[ourPos]=Math.max(0,need[ourPos]-1);const you={name:"YOUR PLAYER",pos:POS_L[ourPos],you:true};const cc=$("compo-content");cc.innerHTML="";const pitch=document.createElement("div");pitch.className="compo-pitch";
@@ -643,12 +754,17 @@ $("btn-sim").addEventListener("click",()=>{const cn=$("btn-sim").dataset.cn;cons
   achievements.poty=awards.some(a=>a.l.includes("Player of the Year"));
   achievements.toty=awards.some(a=>a.l.includes("Team of the Year"));
   achievements.bestDef=awards.some(a=>a.l.includes("Best Defence"));
+
+  // BIG GAME
+  $("biggame-block").classList.remove("hidden");
+  setupBigGame(cn,ovr,rating,simLeaguePos);
   if(simLeaguePos<=4){$("cl-block").classList.remove("hidden");$("btn-cl").disabled=false;$("btn-cl").textContent="Play the Champions League";$("cl-results").classList.add("hidden");$("bdo-block").classList.add("hidden");}
   else{$("cl-block").classList.add("hidden");showBdoBlock();}});
 
 const CL_TEAMS=[{name:"Real Madrid",str:93,c:"#FEBE10"},{name:"FC Barcelona",str:90,c:"#A50044"},{name:"Bayern Munich",str:89,c:"#DC052D"},{name:"PSG",str:88,c:"#004170"},{name:"Inter Milan",str:86,c:"#009BDB"},{name:"AC Milan",str:84,c:"#FB090B"},{name:"Juventus",str:83,c:"#000"},{name:"Borussia Dortmund",str:82,c:"#FDE100"},{name:"Atlético Madrid",str:83,c:"#CB3524"},{name:"Napoli",str:82,c:"#12A0D7"},{name:"Benfica",str:80,c:"#F00"},{name:"Porto",str:79,c:"#003893"},{name:"Ajax",str:78,c:"#D2122E"},{name:"RB Leipzig",str:81,c:"#DD0741"},{name:"Celtic",str:74,c:"#16883D"},{name:"Sporting CP",str:78,c:"#00843D"}];
 $("btn-cl").addEventListener("click",()=>{const ovr=calcOVR(),teamStr=TEAM_STR[simClubName]||72,myStr=(teamStr+ovr)/2;const cr=$("cl-results");cr.innerHTML="";const rounds=["Round of 16","Quarter-finals","Semi-finals","Final"];const pool=[...CL_TEAMS].sort(()=>Math.random()-.5);let alive=true,oi=0;
-  for(let r=0;r<4;r++){if(!alive)break;const opp=pool[oi%pool.length];oi++;const wp=0.50+(myStr-opp.str)/100*0.5;const won=Math.random()<Math.min(0.88,Math.max(0.25,wp));const mg=rng(won?1:0,won?4:2);const og=won?rng(0,Math.max(0,mg-1)):rng(mg+1,mg+3);
+  const momentum=[0,0.05,0.10,0.15];
+  for(let r=0;r<4;r++){if(!alive)break;const opp=pool[oi%pool.length];oi++;const wp=0.50+(myStr-opp.str)/100*0.5+momentum[r];const won=Math.random()<Math.min(0.90,Math.max(0.28,wp));const mg=rng(won?1:0,won?4:2);const og=won?rng(0,Math.max(0,mg-1)):rng(mg+1,mg+3);
     const rd=document.createElement("div");rd.className="cl-round";rd.innerHTML=`<div class="cl-round-title">${rounds[r]}</div>`;const match=document.createElement("div");match.className=`cl-match ${won?"win":"loss"}`;match.innerHTML=`<span class="cl-team you">${simClubName} ⭐</span><span class="cl-score">${mg} - ${og}</span><span class="cl-team">${opp.name}</span>`;rd.appendChild(match);cr.appendChild(rd);
     if(!won){alive=false;const el=document.createElement("p");el.style.cssText="text-align:center;color:var(--steel);font-size:13px;margin-top:12px;line-height:1.5;";el.textContent=`Knocked out in the ${rounds[r].toLowerCase()} by ${opp.name}. A great European run for « ${genNickname()} »!`;cr.appendChild(el);if(r>=2)achievements.clSemi=true;}}
   if(alive){achievements.clWinner=true;achievements.clSemi=true;const trophy=document.createElement("div");trophy.className="cl-trophy";trophy.innerHTML=`<div class="big">🏆</div><div class="msg">CHAMPIONS LEAGUE WINNERS!</div><p style="color:var(--steel);font-size:12px;margin-top:8px;">« ${genNickname()} » becomes a legend — ${simClubName} lifts the trophy!</p>`;cr.appendChild(trophy);}
@@ -657,6 +773,85 @@ $("btn-cl").addEventListener("click",()=>{const ovr=calcOVR(),teamStr=TEAM_STR[s
   showBdoBlock();
 });
 
+
+/* NAME INPUT */
+$("player-name-input").addEventListener("input",e=>{
+  $("btn-name-confirm").disabled=e.target.value.trim().length<2;
+});
+$("player-name-input").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!$("btn-name-confirm").disabled)$("btn-name-confirm").click();
+});
+$("btn-name-confirm").addEventListener("click",()=>{
+  playerName=$("player-name-input").value.trim();
+  doResult();
+});
+
+/* Override doResult routing — season 1 goes to name screen first */
+const _origDoResult2=doResult;
+let nameChosen=false;
+doResult=function(){
+  if(career.season===1&&!nameChosen){
+    nameChosen=true;
+    $("player-name-input").value="";
+    $("btn-name-confirm").disabled=true;
+    showS("s-name");
+    return;
+  }
+  _origDoResult2();
+};
+
+
+/* BIG GAME — key match simulation */
+const BIG_GAMES=[
+  {type:"Derby",scenario:"The stadium is packed. Local bragging rights are on the line. Your team's biggest rival stands across the tunnel.",choices:["Go all out — attack from the start","Stay disciplined — wait for the counter"]},
+  {type:"Cup Final",scenario:"Wembley. 90,000 fans. One trophy on the line. You've dreamed of this moment your entire career.",choices:["Play your natural game","Rise to the occasion — take risks"]},
+  {type:"Title Decider",scenario:"Last day of the season. Win and you're champions. The pressure is immense. Every touch matters.",choices:["Keep calm and control the game","Channel the nerves into adrenaline"]},
+  {type:"European Night",scenario:"The floodlights are on. A hostile away crowd. This is what Champions League nights are made of.",choices:["Silence the crowd — score early","Absorb the pressure — strike late"]},
+];
+
+function setupBigGame(clubName,ovr,rating,leaguePos){
+  const bg=BIG_GAMES[Math.floor(Math.random()*BIG_GAMES.length)];
+  $("bg-scenario").textContent=`⚡ ${bg.type}: ${bg.scenario}`;
+  const choices=$("bg-choices");choices.innerHTML="";
+  $("bg-result").classList.add("hidden");
+  
+  bg.choices.forEach((ch,i)=>{
+    const btn=document.createElement("button");
+    btn.className="ghost";btn.style.cssText="padding:14px;font-size:13px;";
+    btn.textContent=ch;
+    btn.addEventListener("click",()=>{
+      choices.querySelectorAll("button").forEach(b=>b.disabled=true);
+      resolveBigGame(bg.type,i,ovr,clubName);
+    });
+    choices.appendChild(btn);
+  });
+}
+
+function resolveBigGame(type,choice,ovr,clubName){
+  const scale=(ovr-50)/50;
+  const baseWin=0.45+scale*0.3;
+  // Choice 0 = aggressive (higher variance), choice 1 = measured (more consistent)
+  const roll=Math.random();
+  const won=choice===0?roll<baseWin+0.05:roll<baseWin+0.1;
+  const starred=won&&roll<baseWin*0.5; // exceptional performance
+  
+  const res=$("bg-result");res.classList.remove("hidden");
+  const pn=playerName||genNickname();
+  
+  if(starred){
+    res.style.cssText="margin-top:14px;padding:14px;border-radius:10px;text-align:center;font-size:13px;line-height:1.5;background:rgba(255,208,69,.1);border:1px solid rgba(255,208,69,.3);color:var(--gold);";
+    res.innerHTML=`⭐ <strong>Man of the Match!</strong><br>${pn} delivers a masterclass! Two goals and an assist in a dominant victory. The fans chant your name.`;
+    achievements.simRating=Math.min(99,(achievements.simRating||70)+3);
+  } else if(won){
+    res.style.cssText="margin-top:14px;padding:14px;border-radius:10px;text-align:center;font-size:13px;line-height:1.5;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);color:#22C55E;";
+    res.innerHTML=`✅ <strong>Victory!</strong><br>${pn} puts in a solid shift as ${clubName} secure the win. A goal to seal it.`;
+    achievements.simRating=Math.min(99,(achievements.simRating||70)+1);
+  } else {
+    res.style.cssText="margin-top:14px;padding:14px;border-radius:10px;text-align:center;font-size:13px;line-height:1.5;background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2);color:var(--steel);";
+    res.innerHTML=`❌ <strong>Defeat.</strong><br>A tough night for ${pn}. Sometimes the ball just doesn't bounce your way. Head up — there's always next time.`;
+  }
+}
+
 /* ACHIEVEMENT TRACKING */
 let achievements={leagueChamp:false,top4:false,clWinner:false,clSemi:false,goldenBoot:false,assistKing:false,poty:false,toty:false,bestDef:false,simRating:0};
 
@@ -664,15 +859,26 @@ function resetAchievements(){achievements={leagueChamp:false,top4:false,clWinner
 
 /* BALLON D'OR */
 const BDO_RIVALS=[
-  {name:"Kylian Mbappé",club:"Real Madrid",min:82,max:92},
-  {name:"Harry Kane",club:"Bayern Munich",min:78,max:88},
-  {name:"Michael Olise",club:"Bayern Munich",min:74,max:86},
-  {name:"Khvicha Kvaratskhelia",club:"PSG",min:73,max:85},
-  {name:"Rodri",club:"Man City",min:74,max:84},
-  {name:"Lamine Yamal",club:"Barcelona",min:72,max:84},
-  {name:"Ousmane Dembélé",club:"PSG",min:72,max:83},
-  {name:"Jude Bellingham",club:"Real Madrid",min:73,max:83},
-  {name:"Vinícius Jr",club:"Real Madrid",min:70,max:82},
+  {name:"Kylian Mbappé",club:"Real Madrid",min:82,max:94},
+  {name:"Harry Kane",club:"Bayern Munich",min:80,max:90},
+  {name:"Michael Olise",club:"Bayern Munich",min:76,max:88},
+  {name:"Khvicha Kvaratskhelia",club:"PSG",min:75,max:87},
+  {name:"Rodri",club:"Man City",min:76,max:86},
+  {name:"Lamine Yamal",club:"Barcelona",min:74,max:86},
+  {name:"Ousmane Dembélé",club:"PSG",min:74,max:85},
+  {name:"Jude Bellingham",club:"Real Madrid",min:75,max:85},
+  {name:"Vinícius Jr",club:"Real Madrid",min:73,max:84},
+  {name:"Erling Haaland",club:"Man City",min:78,max:92},
+  {name:"Mohamed Salah",club:"Liverpool",min:74,max:86},
+  {name:"Bukayo Saka",club:"Arsenal",min:74,max:85},
+  {name:"Kevin De Bruyne",club:"Man City",min:73,max:84},
+  {name:"Jamal Musiala",club:"Bayern Munich",min:72,max:84},
+  {name:"Pedri",club:"Barcelona",min:72,max:83},
+  {name:"Cole Palmer",club:"Chelsea",min:73,max:84},
+  {name:"Phil Foden",club:"Man City",min:72,max:83},
+  {name:"Florian Wirtz",club:"Liverpool",min:72,max:83},
+  {name:"Bruno Fernandes",club:"Man United",min:70,max:82},
+  {name:"Son Heung-min",club:"Tottenham",min:70,max:81},
 ];
 
 function calcBdoScore(){
@@ -728,7 +934,7 @@ $("btn-bdo").addEventListener("click",()=>{
   } else if(bdoPhase===1){
     // Reveal ranking with staggered animation
     const {myScore,rivals}=window._bdoData;
-    const ranking=[{name:`« ${genNickname()} »`,club:simClubName,score:myScore,you:true},...rivals.map(r=>({name:r.name,club:r.club,score:r.score,you:false}))];
+    const ranking=[{name:`« ${playerName||genNickname()} » — ${genNickname()}`,club:simClubName,score:myScore,you:true},...rivals.map(r=>({name:r.name,club:r.club,score:r.score,you:false}))];
     ranking.sort((a,b)=>b.score-a.score);
     const top10=ranking.slice(0,10);
     
@@ -791,9 +997,9 @@ let simGoals=0,simAssists=0,simApps=0,simRating2=0;
 /* Show season badge on result screen */
 function updateSeasonUI(){
   const badge=$("result-season-badge");
-  if(career.season>=1){badge.classList.remove("hidden");badge.textContent=`Season ${career.season} / 6 · Age ${career.age}`;}
+  if(career.season>=1){badge.classList.remove("hidden");badge.textContent=`Season ${career.season} / 12 · Age ${career.age}`;}
   // Show next season button for seasons 1-5
-  if(career.season<6){$("btn-next-season").classList.remove("hidden");$("btn-career-summary").classList.add("hidden");}
+  if(career.season<12){$("btn-next-season").classList.remove("hidden");$("btn-career-summary").classList.add("hidden");}
   else{$("btn-next-season").classList.add("hidden");$("btn-career-summary").classList.remove("hidden");}
 }
 
@@ -845,19 +1051,19 @@ function showOffseason(){
   const changes={};
   const rating=achievements.simRating||70;
   
-  // Performance-based evolution
+  // Performance-based evolution — generous upgrades
   const upKeys=SK.filter(k=>ST.owned[k]).sort(()=>Math.random()-.5);
-  if(rating>82&&upKeys.length>0){const k=upKeys[0];changes[k]=rng(2,3);}
-  if(rating>75&&upKeys.length>1){const k=upKeys[1];changes[k]=rng(1,2);}
-  if(rating<70&&upKeys.length>0){const k=upKeys[upKeys.length-1];changes[k]=-rng(1,3);}
+  if(rating>80&&upKeys.length>0){changes[upKeys[0]]=rng(3,5);if(upKeys.length>1)changes[upKeys[1]]=rng(2,4);}
+  else if(rating>70&&upKeys.length>0){changes[upKeys[0]]=rng(2,3);if(upKeys.length>1)changes[upKeys[1]]=rng(1,2);}
+  else if(rating<65&&upKeys.length>0){changes[upKeys[upKeys.length-1]]=-rng(1,2);}
   
-  // Age regression risk (seasons 5-6, age 26-27)
+  // Age regression risk (age 27+, gentle)
   let injuryMsg="";
-  if(career.age>=26&&Math.random()<0.25){
+  if(career.age>=27&&Math.random()<0.15){
     const k=["spd","phy"][Math.floor(Math.random()*2)];
     if(!changes[k])changes[k]=0;
-    changes[k]-=rng(2,4);
-    injuryMsg="⚠️ Your body is feeling the toll of the years...";
+    changes[k]-=rng(1,3);
+    injuryMsg="⚠️ Father Time is catching up...";
   }
   
   // Apply changes
@@ -935,7 +1141,7 @@ function directSim(){
   $("ovr-n").textContent=ovr;$("ovr-c").style.setProperty("--p",Math.min(ovr,99));$("ovr-pos").textContent=POS_L[ST.pos];
   let tier=TIERS[0];TIERS.forEach(t=>{if(ovr>=t.min)tier=t;});
   $("tier-n").textContent=tier.n;$("tier-d").textContent=tier.d;
-  $("nickname").textContent=`« ${genNickname()} »`;
+  $("nickname").textContent=`« ${playerName||genNickname()} » — ${genNickname()}`;
   const pt=$("ps-tag");if(ST.owned.ps){pt.textContent="✦ "+ST.owned.ps.v;pt.style.display="inline-block";}else pt.style.display="none";
   
   // Show boosted final stats
@@ -987,7 +1193,7 @@ $("btn-career-summary").addEventListener("click",()=>{
 
 function showCareerSummary(){
   const c=career;
-  $("career-subtitle").textContent=`${POS_L[ST.pos]} · ${c.history.map(h=>h.club).filter((v,i,a)=>a.indexOf(v)===i).join(" → ")} · Ages ${22}-${22+c.history.length-1}`;
+  $("career-subtitle").textContent=`${POS_L[ST.pos]} · ${c.history.map(h=>h.club).filter((v,i,a)=>a.indexOf(v)===i).join(" → ")} · Ages 22-${21+c.history.length}`;
   
   // Stats
   const stats=$("career-stats");stats.innerHTML="";
@@ -1028,14 +1234,14 @@ function showCareerSummary(){
 }
 
 $("btn-new-career").addEventListener("click",()=>{
-  resetCareer();
+  resetCareer();nameChosen=false;playerName='';
   document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));
   $("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;
   document.querySelector(".team-pick").classList.remove("hidden");
   showS("s-home");
 });
 
-$("btn-replay").addEventListener("click",()=>{resetCareer();document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));$("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;document.querySelector(".team-pick").classList.remove("hidden");showS("s-home");});
+$("btn-replay").addEventListener("click",()=>{resetCareer();nameChosen=false;playerName='';document.querySelectorAll(".pos-card").forEach(c=>c.classList.remove("active"));$("btn-start").disabled=true;$("btn-start").textContent="Pick a position";delete $("btn-start").dataset.pos;document.querySelector(".team-pick").classList.remove("hidden");showS("s-home");});
 </script>
 </body>
 </html>
