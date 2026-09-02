@@ -136,12 +136,41 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
 .career-verdict{text-align:center;padding:20px;margin:14px 0;border-radius:14px;background:linear-gradient(160deg,rgba(255,208,69,.12),rgba(46,124,246,.08));border:1px solid rgba(255,208,69,.25);}
 .career-verdict .cv-icon{font-size:48px;margin-bottom:8px;}.career-verdict .cv-title{font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);margin-bottom:4px;}.career-verdict .cv-desc{font-size:13px;color:var(--steel);line-height:1.5;}
 @media(max-width:520px){.career-stats{grid-template-columns:repeat(2,1fr);}.ct-row{grid-template-columns:auto 1fr;}.ct-badges,.ct-stats{grid-column:span 2;}}
+
+.salary-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22C55E;}
+.money-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--glass);border:1px solid var(--gb);margin-bottom:12px;font-size:12px;}
+.money-bar .label{color:var(--steel);font-weight:600;}.money-bar .amount{font-family:'Anton',sans-serif;font-size:16px;color:#22C55E;}
+.transfer-fee{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(255,208,69,.1);border:1px solid rgba(255,208,69,.3);color:var(--gold);margin-top:4px;}
+
+.life-dashboard{padding:16px;border-radius:14px;background:linear-gradient(160deg,rgba(34,197,94,.08),rgba(2,14,31,.5));border:1px solid rgba(34,197,94,.25);margin-bottom:16px;}
+.life-top{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.life-stat{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--gb);}
+.life-stat .ls-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--steel-dim);margin-bottom:4px;}
+.life-stat .ls-val{font-family:'Anton',sans-serif;font-size:18px;color:var(--cream);}
+.life-stat .ls-val.green{color:#22C55E;}
+.fame-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden;}
+.fame-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue-bright),var(--gold));transition:width .5s;}
+.followers-line{font-size:11px;color:var(--steel);margin-top:4px;}
+.revenue-breakdown{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--gb);grid-column:span 2;font-size:12px;}
+.revenue-breakdown .rv-row{display:flex;justify-content:space-between;padding:3px 0;color:var(--steel);}.rv-row .rv-val{color:var(--cream);font-weight:700;}
+.rv-row.rv-total{border-top:1px solid var(--gb);margin-top:4px;padding-top:6px;color:var(--gold);font-weight:700;}.rv-row.rv-total .rv-val{color:var(--gold);}
+.life-cats{display:grid;gap:12px;}
+.life-cat{padding:16px;border-radius:14px;border:1px solid var(--gb);background:var(--glass);}
+.life-cat h4{font-size:11px;letter-spacing:.12em;font-weight:700;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.life-opts{display:grid;gap:8px;}
+.life-opt{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 14px;border-radius:10px;border:1.5px solid var(--gb);background:rgba(255,255,255,.02);cursor:pointer;transition:.14s;text-align:left;}
+.life-opt:hover:not(.disabled){border-color:rgba(46,124,246,.5);transform:translateY(-1px);}
+.life-opt.active{border-color:var(--gold);background:rgba(255,208,69,.08);box-shadow:0 0 0 1px var(--gold);}
+.life-opt.disabled{opacity:.35;cursor:not-allowed;}
+.life-opt .lo-name{font-weight:700;font-size:12.5px;color:var(--cream);}.life-opt .lo-desc{font-size:10.5px;color:var(--steel);margin-top:2px;line-height:1.4;}
+.life-opt .lo-cost{font-family:'Anton',sans-serif;font-size:14px;white-space:nowrap;}
+.lo-cost.free{color:#22C55E;}.lo-cost.pay{color:var(--gold);}.lo-cost.earn{color:#22C55E;}
 </style>
 </head>
 <body>
 <div id="app">
 <section id="s-home" class="screen">
-  <div class="home-head"><div class="crest"><span>SC</span></div><h1 class="D home-title">STAT<br><em>THIEF</em></h1><p class="home-sub">Two reels spin. A club, then a player. You steal one stat per round. 9 rounds to build a legend.</p></div>
+  <div class="home-head"><div class="crest"><span>SC</span></div><h1 class="D home-title">STAT<br><em>THIEF</em></h1><p class="home-sub">Two reels spin. A club, then a player. You steal one attribute per round. 10 rounds to build a legend.</p></div>
   <div class="rules">
     <div class="rule glass"><div class="rn">01</div><p><strong>Position filter.</strong> Only players matching your role appear in the draw.</p></div>
     <div class="rule glass"><div class="rn">02</div><p><strong>Steal freely.</strong> 8 stats graded S→F + 1 unique playstyle. Pick one per round.</p></div>
@@ -159,7 +188,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
 
 <section id="s-draft" class="screen hidden">
   <div class="draft-header">
-    <div class="pill D">Round <b id="rnd">1</b>/9</div>
+    <div class="pill D">Round <b id="rnd">1</b>/10</div>
     <div class="pill pill-gold D" id="pos-pill">—</div>
     <div class="spacer"></div>
     <div class="rsp" id="rc-pill">🏟 <span id="rc-n">1</span></div>
@@ -223,6 +252,13 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
   <button class="cta D" id="btn-to-transfer">Transfer Window →</button>
 </section>
 
+
+<section id="s-lifestyle" class="screen hidden">
+  <div class="season-badge" id="life-badge">Lifestyle Hub</div>
+  <div class="life-dashboard" id="life-dashboard"></div>
+  <div class="life-cats" id="life-cats"></div>
+  <button class="cta D" id="btn-life-confirm" style="margin-top:16px;">Confirm & Continue →</button>
+</section>
 <section id="s-transfer" class="screen hidden">
   <div class="season-badge" id="transfer-badge">Transfer Window</div>
   <div class="transfer-card glass">
@@ -244,6 +280,36 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);background:radi
 </section>
 
 <div class="event-overlay" id="event-overlay"><div class="event-card"><div class="ev-icon" id="ev-icon">🔥</div><div class="ev-title D" id="ev-title">—</div><div class="ev-desc" id="ev-desc">—</div><button class="ev-ok D" id="ev-ok">Continue</button></div></div>
+
+<section id="s-info" class="screen" style="margin-top:48px;">
+  <div class="glass" style="padding:34px 26px 38px;">
+
+    <h2 class="D" style="font-size:22px;color:var(--gold);margin-bottom:12px;">About Stat Thief</h2>
+    <p style="color:var(--steel);font-size:13.5px;line-height:1.75;margin-bottom:30px;">Stat Thief turns Premier League history into a drafting game. Instead of picking a squad, you build a single fictional legend one attribute at a time — spinning through real clubs and real players, and "stealing" one statistic from each name that comes up. By the end of a ten-round draft you're left with a composite footballer built entirely out of other players' careers: maybe blistering pace lifted from a winger, cool finishing borrowed from a veteran striker, and passing range taken from a deep-lying playmaker. It's a way of asking a simple question fans argue about constantly — if you could combine your favourite Premier League players into one player, what would they look like? Every stat and rarity used in the draft is simplified and approximate, built for entertainment rather than as an official record of performance.</p>
+
+    <h2 class="D" style="font-size:22px;color:var(--gold);margin-bottom:12px;">How to play</h2>
+    <p style="color:var(--steel);font-size:13.5px;line-height:1.75;margin-bottom:14px;">Every run starts with a position. Choosing Forward, Midfielder, or Defender filters the pool of clubs and players you'll draw from, so the reels only ever surface names that make sense for the legend you're building.</p>
+    <p style="color:var(--steel);font-size:13.5px;line-height:1.75;margin-bottom:14px;">From there, the draft runs for ten rounds. Each round spins two reels in sequence: first a club, then a player from that club. Once the player lands, eight stats — graded on an S-to-F scale — plus one unique playstyle trait appear on screen, and you pick exactly one to steal and add to your build. The rest of that player's numbers are discarded; only what you choose carries over.</p>
+    <p style="color:var(--steel);font-size:13.5px;line-height:1.75;margin-bottom:14px;">Two safety nets are built into every draft: one club respin and one player respin, usable whenever a name you don't want comes up. Random events can also appear mid-draft and tilt the odds in your favour or against you, so no two runs play out quite the same way.</p>
+    <p style="color:var(--steel);font-size:13.5px;line-height:1.75;margin-bottom:30px;">Once all ten rounds are complete, your finished legend gets an overall rating, a tier, and a nickname based on how the stats came together. From there you can send your player to a club, simulate a season with a league table, push through the Champions League knockout rounds, and see whether the Ballon d'Or ceremony calls your name. In the off-season, your build can keep evolving through stat progression and transfer windows, carrying the same legend into another season.</p>
+
+    <h2 class="D" style="font-size:22px;color:var(--gold);margin-bottom:14px;">Frequently asked questions</h2>
+
+    <h3 style="font-size:13.5px;font-weight:700;color:var(--cream);margin-bottom:6px;">Where do the stats come from?</h3>
+    <p style="color:var(--steel);font-size:13px;line-height:1.7;margin-bottom:18px;">Each pull is loosely inspired by the well-known strengths of real Premier League players, simplified into a single S-to-F grade so drafts stay fast and readable. They're meant to feel familiar to football fans, not to serve as accurate performance data.</p>
+
+    <h3 style="font-size:13.5px;font-weight:700;color:var(--cream);margin-bottom:6px;">Is Stat Thief affiliated with the Premier League or any club?</h3>
+    <p style="color:var(--steel);font-size:13px;line-height:1.7;margin-bottom:18px;">No. Stat Thief is an independent, unofficial fan project. Club names, colours and player references are used purely for entertainment purposes and Stat Thief has no affiliation with any league, club, or player.</p>
+
+    <h3 style="font-size:13.5px;font-weight:700;color:var(--cream);margin-bottom:6px;">Can I restart or try a different position?</h3>
+    <p style="color:var(--steel);font-size:13px;line-height:1.7;margin-bottom:18px;">Yes — at any point during a draft you can reset and start over with a new position, and once a career is finished you can begin a brand new one from scratch.</p>
+
+    <h3 style="font-size:13.5px;font-weight:700;color:var(--cream);margin-bottom:6px;">Does progress save between visits?</h3>
+    <p style="color:var(--steel);font-size:13px;line-height:1.7;">Each career lives in the current browser session. Closing or reloading the page starts a brand new legend from round one.</p>
+
+  </div>
+</section>
+
 </div>
 <script>
 
@@ -525,6 +591,7 @@ P("Rio Ferdinand","DC","Young Rio","Modern Sweeper",78,34,76,66,84,78,80,78),
 P("Lucas Radebe","DC","The Chief","Aerial Captain",72,28,62,52,86,82,82,82),
 P("Ian Harte","DG","The Left-footer","Attacking Fullback",72,72,74,68,74,68,60,74),
 P("Gary Kelly","DD","The Fast One","Pressing Fullback",82,38,64,68,78,72,60,76),
+P("Omar Omary","MC","The Hedi Smasher","Orchestrator",92,92,92,92,92,92,92,92),
 ]},
 {name:"Sunderland",color:"#EB172B",players:[
 P("Kevin Phillips","BU","Super Kev","Clinical Finisher",82,90,62,78,24,70,68,78),
@@ -640,6 +707,7 @@ N(["Papa Bouba Diop"],"🇸🇳","Senegal");
 N(["Shola Ameobi","José Enrique"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
 N(["Ryan Giggs"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
 N(["Roy Keane","Robbie Keane"],"🇮🇪","Ireland");
+N(["Omar Omary"],"🇱🇧","Lebanon");
 // Fallback for any missing
 function getNat(name){return NATS[name]||{f:"🏳️",c:"Unknown"};}
 
@@ -654,7 +722,7 @@ const W={ATT:{spd:.18,sho:.22,pas:.08,dri:.18,def:.04,phy:.12,aer:.10,men:.08},M
 const POS_L={ATT:"Forward",MID:"Midfielder",DEF:"Defender"};
 const TIERS=[{min:0,n:"Sunday League",d:"Good vibes, bad left foot."},{min:60,n:"Championship Battler",d:"Solid in the second tier."},{min:70,n:"PL Starter",d:"Reliable mid-table starter."},{min:78,n:"Top 6 Material",d:"European-level squad player."},{min:85,n:"Ballon d'Or Nominee",d:"A season-defining player."},{min:91,n:"Legendary Icon",d:"They'll build a statue outside the ground."}];
 let ST={},phase="idle",selectedKey=null,statBonus=0,simClubName="",simLeaguePos=0;
-const TOTAL_ROUNDS=9;
+const TOTAL_ROUNDS=10;
 function init(pos){ST={pos,round:1,clubLeft:1,playerLeft:1,owned:{},lastCI:-1,lastPI:-1,club:null,player:null};phase="idle";statBonus=0;}
 function elig(c){return c.players.filter(p=>posG(p.pos)===ST.pos);}
 function eClubs(){return CLUBS.filter(c=>elig(c).length>0);}
@@ -662,7 +730,7 @@ function drawC(){const p=eClubs();let i;do{i=Math.floor(Math.random()*p.length)}
 function drawP(){const p=elig(ST.club);let i;do{i=Math.floor(Math.random()*p.length)}while(p.length>1&&i===ST.lastPI);ST.lastPI=i;ST.player=p[i];}
 function finalStat(k){const base=ST.owned[k]?ST.owned[k].v:50;if(k==="ps")return base;const ps=ST.owned.ps?ST.owned.ps.v:"";const boost=PS_BOOST[ps]||{};return Math.min(99,base+(boost[k]||0));}
 const $=id=>document.getElementById(id);
-function showS(id){["s-home","s-draft","s-result","s-offseason","s-transfer","s-career","s-name"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+function showS(id){["s-home","s-draft","s-result","s-offseason","s-transfer","s-career","s-name","s-lifestyle"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
 function rNav(){$("rnd").textContent=ST.round;$("pos-pill").textContent=POS_L[ST.pos];$("rc-n").textContent=ST.clubLeft;$("rc-badge").textContent=ST.clubLeft;$("rp-n").textContent=ST.playerLeft;$("rp-badge").textContent=ST.playerLeft;$("rc-pill").classList.toggle("empty",ST.clubLeft<=0);$("rp-pill").classList.toggle("empty",ST.playerLeft<=0);$("btn-rc").disabled=phase!=="ready"||ST.clubLeft<=0;$("btn-rp").disabled=phase!=="ready"||ST.playerLeft<=0;$("btn-spin").disabled=phase!=="idle";}
 function rProg(){const p=$("prog");p.innerHTML="";for(let i=1;i<=TOTAL_ROUNDS;i++){const s=document.createElement("span");if(i<ST.round)s.className="done";else if(i===ST.round)s.className="cur";p.appendChild(s);}}
 function hide(){$("rar-badge").classList.remove("show");$("style-tag").classList.remove("show");$("stat-grid").classList.remove("show");$("stat-grid").innerHTML="";$("confirm-wrap").classList.remove("show");selectedKey=null;}
@@ -708,6 +776,51 @@ function genNickname(){const v=k=>finalStat(k),ps=ST.owned.ps?ST.owned.ps.v:"";
 function calcOVR(){const w=W[ST.pos];let o=0;SK.forEach(k=>{o+=finalStat(k)*w[k];});return Math.round(o);}
 const TEAM_STR={"Manchester City":92,"Arsenal":90,"Liverpool":89,"Chelsea":86,"Manchester United":83,"Tottenham":82,"Newcastle":81,"Aston Villa":80,"West Ham":76,"Brighton":77,"Crystal Palace":75,"Wolverhampton":74,"Fulham":73,"Brentford":73,"Bournemouth":72,"Everton":71,"Nottm Forest":72,"Leicester":70,"Leeds United":69,"Sunderland":68};
 
+
+/* SALARY & TRANSFER SYSTEM */
+function calcWeeklySalary(clubName, ovr, status){
+  const str=TEAM_STR[clubName]||72;
+  // INVERTED: less prestigious clubs pay MORE to attract talent
+  let base;
+  if(str>=88) base=rng(150,250);
+  else if(str>=82) base=rng(130,200);
+  else if(str>=76) base=rng(100,160);
+  else if(str>=72) base=rng(80,140);
+  else base=rng(60,120);
+  const ovrBonus=Math.max(0,(ovr-70)*2);
+  const statusMult=status==="Star player"?1.3:status==="Key player"?1.0:0.7;
+  const fameMult=career.fame>50?1.2:1.0;
+  return Math.round((base+ovrBonus)*statusMult*fameMult);
+}
+
+function calcTransferFee(ovr, age){
+  let base;
+  if(ovr>=90) base=rng(80,120);
+  else if(ovr>=85) base=rng(50,80);
+  else if(ovr>=80) base=rng(30,50);
+  else if(ovr>=75) base=rng(15,30);
+  else base=rng(5,15);
+  // Age discount after 28
+  if(age>28) base=Math.round(base*(1-(age-28)*0.12));
+  return Math.max(3,base);
+}
+
+function getPlayerStatus(clubName, ovr){
+  const str=TEAM_STR[clubName]||72;
+  if(ovr>=str+5) return "Star player";
+  if(ovr>=str-5) return "Key player";
+  return "Rotation player";
+}
+
+function formatMoney(millions){
+  if(millions>=1000) return "£"+(millions/1000).toFixed(1)+"B";
+  return "£"+millions+"M";
+}
+
+function seasonEarnings(weeklySalary){
+  return Math.round(weeklySalary*52/1000); // Convert to £M per year
+}
+
 function doResult(){const ovr=calcOVR();$("ovr-n").textContent=ovr;$("ovr-c").style.setProperty("--p",Math.min(ovr,99));$("ovr-pos").textContent=POS_L[ST.pos];let tier=TIERS[0];TIERS.forEach(t=>{if(ovr>=t.min)tier=t;});$("tier-n").textContent=tier.n;$("tier-d").textContent=tier.d;$("nickname").textContent=`« ${playerName||genNickname()} » — ${genNickname()}`;const pt=$("ps-tag");if(ST.owned.ps){pt.textContent="✦ "+ST.owned.ps.v;pt.style.display="inline-block";}else pt.style.display="none";
   const f=$("final-9");f.innerHTML="";ALL_KEYS.forEach(k=>{const c=document.createElement("div");c.className="fc glass";if(k==="ps"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--gold)">✦ Style</div>${o?`<span class="cat D" style="color:var(--gold);background:rgba(255,208,69,.15);border:1.5px solid rgba(255,208,69,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}else if(k==="nat"){const o=ST.owned[k];c.innerHTML=`<div class="fl" style="color:var(--blue-bright)">🌍 Nation</div>${o?`<span class="cat D" style="color:var(--blue-bright);background:rgba(46,124,246,.15);border:1.5px solid rgba(46,124,246,.4);font-size:13px;padding:2px 8px;border-radius:6px">${o.v}</span>`:`<span style="color:var(--steel-dim)">—</span>`}`;}else{const fv=finalStat(k);const hb=ST.owned[k]&&fv>ST.owned[k].v;c.innerHTML=`<div class="fl">${SL(k)}${hb?' <span style="color:#22C55E;font-size:8px;">▲PS</span>':''}</div>${ST.owned[k]?catH(fv):`<span style="color:var(--steel-dim)">—</span>`}`;}f.appendChild(c);});
   const shuffled=[...CLUBS].sort(()=>Math.random()-.5).slice(0,5);const tg=$("team-grid");tg.innerHTML="";shuffled.forEach(cl=>{const b=document.createElement("button");b.className="team-btn";b.dataset.cn=cl.name;b.innerHTML=`<span class="tc" style="background:${cl.color};box-shadow:0 0 6px ${cl.color}55"></span><div class="tn">${cl.name}</div>`;b.addEventListener("click",()=>{tg.querySelectorAll(".team-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");showCompo(cl);});tg.appendChild(b);});
@@ -719,7 +832,15 @@ function showCompo(club){const ourPos=ST.pos;const byG={ATT:[],MID:[],DEF:[]};cl
   const r1=document.createElement("div");r1.className="compo-row";(ourPos==="ATT"?[you,...byG.ATT.slice(0,need.ATT)]:[...byG.ATT.slice(0,need.ATT)]).forEach(p=>r1.appendChild(makePN(p,club.color)));pitch.appendChild(r1);
   const r2=document.createElement("div");r2.className="compo-row";(ourPos==="MID"?[you,...byG.MID.slice(0,need.MID)]:[...byG.MID.slice(0,need.MID)]).forEach(p=>r2.appendChild(makePN(p,club.color)));pitch.appendChild(r2);
   const r3=document.createElement("div");r3.className="compo-row";(ourPos==="DEF"?[you,...byG.DEF.slice(0,need.DEF)]:[...byG.DEF.slice(0,need.DEF)]).forEach(p=>r3.appendChild(makePN(p,club.color)));pitch.appendChild(r3);
-  cc.appendChild(pitch);$("compo-block").classList.remove("hidden");$("sim-block").classList.remove("hidden");$("btn-sim").disabled=false;$("btn-sim").dataset.cn=club.name;$("btn-sim").textContent="Simulate season →";$("sim-results").classList.add("hidden");$("cl-block").classList.add("hidden");$("cl-results").classList.add("hidden");}
+  cc.appendChild(pitch);$("compo-block").classList.remove("hidden");$("sim-block").classList.remove("hidden");$("btn-sim").disabled=false;$("btn-sim").dataset.cn=club.name;$("btn-sim").textContent="Simulate season →";
+  // Calculate salary
+  const ovr2=calcOVR();const status2=getPlayerStatus(club.name,ovr2);
+  career.weeklySalary=calcWeeklySalary(club.name,ovr2,status2);
+  if(career.season===1){career.balance=seasonEarnings(career.weeklySalary);}
+  // Show salary info in compo
+  let salaryDiv=document.getElementById("salary-info");
+  if(!salaryDiv){salaryDiv=document.createElement("div");salaryDiv.id="salary-info";$("compo-content").appendChild(salaryDiv);}
+  salaryDiv.innerHTML=`<div class="money-bar" style="margin-top:12px;"><span class="label">💰 Weekly Wage</span><span class="amount">£${career.weeklySalary}k/wk</span></div><div style="display:flex;justify-content:space-between;align-items:center;"><span class="salary-badge">${status2}</span><span style="font-size:11px;color:var(--steel);">Season earnings: ~${formatMoney(seasonEarnings(career.weeklySalary))}/yr</span></div>`;$("sim-results").classList.add("hidden");$("cl-block").classList.add("hidden");$("cl-results").classList.add("hidden");}
 function makePN(p,color){const d=document.createElement("div");d.className="compo-player";const y=p.you;d.innerHTML=`<div class="cp-circle ${y?"you":""}" style="background:${y?"rgba(255,208,69,.2)":"rgba(255,255,255,.08)"}">${y?"⭐":p.name.split(" ").pop().slice(0,3).toUpperCase()}</div><div class="cp-name">${y?"YOU":p.name.split(" ").pop()}</div><div class="cp-pos">${y?POS_L[ST.pos]:p.pos}</div>`;return d;}
 function genLeague(cn,ovr){const boost=Math.max(0,(ovr-70)/5);const table=CLUBS.map(c=>{let str=TEAM_STR[c.name]||72;if(c.name===cn)str+=boost;return{name:c.name,pts:Math.round(str*1.1+rng(-8,8)),color:c.color,ours:c.name===cn};});table.sort((a,b)=>b.pts-a.pts);return table;}
 function rng(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
@@ -829,7 +950,7 @@ function setupBigGame(clubName,ovr,rating,leaguePos){
 
 function resolveBigGame(type,choice,ovr,clubName){
   const scale=(ovr-50)/50;
-  const baseWin=0.45+scale*0.3;
+  const baseWin=0.45+scale*0.3+(career.bigGameBonus||0)/100;
   // Choice 0 = aggressive (higher variance), choice 1 = measured (more consistent)
   const roll=Math.random();
   const won=choice===0?roll<baseWin+0.05:roll<baseWin+0.1;
@@ -851,6 +972,203 @@ function resolveBigGame(type,choice,ovr,clubName){
     res.innerHTML=`❌ <strong>Defeat.</strong><br>A tough night for ${pn}. Sometimes the ball just doesn't bounce your way. Head up — there's always next time.`;
   }
 }
+
+
+/* ============================================================
+   FAME & SOCIAL MEDIA SYSTEM
+============================================================ */
+function calcFollowers(fame){
+  if(fame>=85) return rng(60,150)*1000000;
+  if(fame>=70) return rng(20,60)*1000000;
+  if(fame>=50) return rng(5,20)*1000000;
+  if(fame>=30) return rng(1,5)*1000000;
+  if(fame>=15) return rng(200,999)*1000;
+  return rng(10,200)*1000;
+}
+
+function formatFollowers(n){
+  if(n>=1000000) return (n/1000000).toFixed(1)+"M";
+  if(n>=1000) return Math.round(n/1000)+"K";
+  return n+"";
+}
+
+function updateFameAfterSeason(){
+  const f=career.fame;
+  let delta=Math.round((achievements.simRating||70)/15);
+  if(achievements.leagueChamp) delta+=8;
+  if(achievements.clWinner) delta+=12;
+  if(achievements.clSemi) delta+=4;
+  if(achievements.goldenBoot||achievements.assistKing) delta+=6;
+  if(achievements.poty) delta+=8;
+  // Club prestige bonus/malus
+  const str=TEAM_STR[career.club]||72;
+  if(str>=85) delta+=3;
+  else if(str<72) delta-=2;
+  if(simLeaguePos>=18) delta-=5;
+  career.fame=Math.max(0,Math.min(100,f+delta));
+  career.followers=calcFollowers(career.fame);
+}
+
+function getBrandDealIncome(){
+  if(career.followers>=20000000) return 5;
+  if(career.followers>=5000000) return 3;
+  if(career.followers>=1000000) return 2;
+  return 1;
+}
+
+/* ============================================================
+   LIFESTYLE HUB
+============================================================ */
+let lifeChoices={training:0,lifestyle:0,recovery:0,mental:0,social:0};
+
+function showLifestyle(){
+  $("life-badge").textContent=`Lifestyle Hub · Season ${career.season}`;
+  lifeChoices={training:0,lifestyle:0,recovery:0,mental:0,social:0};
+  
+  // Add season salary to balance
+  const yearEarn=seasonEarnings(career.weeklySalary);
+  career.balance+=yearEarn;
+  career.sponsorIncome=0;
+  
+  updateFameAfterSeason();
+  renderLifestyle();
+  showS("s-lifestyle");
+}
+
+const LIFE_CATS=[
+  {key:"training",icon:"💪",title:"Training Camp",opts:[
+    {name:"Basic pre-season",desc:"Standard training. No bonus.",cost:0,effect:"None"},
+    {name:"Elite camp",desc:"+2 on a stat of your choice next season.",cost:2,effect:"+2 stat"},
+    {name:"World-class facility",desc:"+3 on a stat of your choice. Injury risk halved.",cost:5,effect:"+3 stat, -injury"},
+  ]},
+  {key:"lifestyle",icon:"🎭",title:"Lifestyle & Image",opts:[
+    {name:"Stay low-key",desc:"No distractions, no buzz.",cost:0,effect:"None"},
+    {name:"Social media push",desc:"+3 fame. Grow your brand.",cost:1,effect:"+3 fame"},
+    {name:"Brand deal + foundation",desc:"+5 fame but 20% chance of distraction (-1 stat).",cost:3,effect:"+5 fame, risk"},
+  ]},
+  {key:"recovery",icon:"🏥",title:"Recovery & Health",opts:[
+    {name:"Standard recovery",desc:"Normal injury risk.",cost:0,effect:"None"},
+    {name:"Private physio",desc:"Injury risk halved.",cost:1.5,effect:"-injury"},
+    {name:"Full medical staff",desc:"Near-zero injury risk + recover a lost stat (+2).",cost:4,effect:"heal+immune"},
+  ]},
+  {key:"mental",icon:"🎓",title:"Mental Coaching",opts:[
+    {name:"No coaching",desc:"No bonus.",cost:0,effect:"None"},
+    {name:"Performance coach",desc:"+2 to your mental stat.",cost:1.5,effect:"+2 men"},
+    {name:"Elite mentorship",desc:"+3 mental + Big Game win bonus (+10%).",cost:3,effect:"+3 men, +bigGame"},
+  ]},
+  {key:"social",icon:"📱",title:"Social Media",opts:[
+    {name:"Stay private",desc:"No posts. No buzz. No risk.",cost:0,effect:"None"},
+    {name:"Post highlights",desc:"+3 fame, followers x1.3. Free.",cost:0,effect:"+3 fame, x1.3 followers"},
+    {name:"Go viral campaign",desc:"+6 fame, followers x2. 15% controversy risk.",cost:1,effect:"+6 fame, x2, risk"},
+    {name:"Brand partnership",desc:"EARN money! +5 fame. 10% distraction risk.",cost:-1,effect:"+5 fame, earn, risk"},
+  ]},
+];
+
+function renderLifestyle(){
+  // Dashboard
+  const db=$("life-dashboard");
+  const brandDeal=getBrandDealIncome();
+  db.innerHTML=`
+    <div class="life-top">
+      <div class="life-stat"><div class="ls-label">💰 Balance</div><div class="ls-val green" id="life-balance">£${career.balance.toFixed(1)}M</div></div>
+      <div class="life-stat"><div class="ls-label">⭐ Fame</div><div class="ls-val">${career.fame}/100</div><div class="fame-bar"><div class="fame-fill" style="width:${career.fame}%"></div></div></div>
+      <div class="life-stat"><div class="ls-label">📱 Followers</div><div class="ls-val">@${playerName||"player"}</div><div class="followers-line">${formatFollowers(career.followers)} followers</div></div>
+      <div class="life-stat"><div class="ls-label">💵 Brand Value</div><div class="ls-val green">£${brandDeal}M/deal</div></div>
+    </div>`;
+  
+  // Categories
+  const cats=$("life-cats");cats.innerHTML="";
+  LIFE_CATS.forEach(cat=>{
+    const div=document.createElement("div");div.className="life-cat";
+    div.innerHTML=`<h4 style="color:var(--cream)">${cat.icon} ${cat.title}</h4>`;
+    const optsDiv=document.createElement("div");optsDiv.className="life-opts";
+    cat.opts.forEach((opt,i)=>{
+      const actualCost=opt.cost<0?-getBrandDealIncome():opt.cost;
+      const canAfford=actualCost<=0||career.balance>=actualCost;
+      const btn=document.createElement("div");
+      btn.className=`life-opt${i===0?" active":""}${!canAfford&&i>0?" disabled":""}`;
+      btn.dataset.cat=cat.key;btn.dataset.idx=i;
+      let costLabel;
+      if(opt.cost<0) costLabel=`<span class="lo-cost earn">+£${getBrandDealIncome()}M</span>`;
+      else if(opt.cost===0) costLabel=`<span class="lo-cost free">Free</span>`;
+      else costLabel=`<span class="lo-cost pay">£${opt.cost}M</span>`;
+      btn.innerHTML=`<div><div class="lo-name">${opt.name}</div><div class="lo-desc">${opt.desc}</div></div>${costLabel}`;
+      if(canAfford||i===0) btn.addEventListener("click",()=>selectLifeOpt(cat.key,i));
+      optsDiv.appendChild(btn);
+    });
+    div.appendChild(optsDiv);
+    cats.appendChild(div);
+  });
+}
+
+function selectLifeOpt(catKey,idx){
+  // Deselect others in same category
+  document.querySelectorAll(`.life-opt[data-cat="${catKey}"]`).forEach(b=>b.classList.remove("active"));
+  document.querySelector(`.life-opt[data-cat="${catKey}"][data-idx="${idx}"]`).classList.add("active");
+  lifeChoices[catKey]=idx;
+}
+
+$("btn-life-confirm").addEventListener("click",()=>{
+  // Apply all choices
+  const c=lifeChoices;
+  
+  // Training
+  if(c.training===1){career.balance-=2; boostRandomStat(2);}
+  if(c.training===2){career.balance-=5; boostRandomStat(3); career.injuryReduction+=50;}
+  
+  // Lifestyle
+  if(c.lifestyle===1){career.balance-=1; career.fame=Math.min(100,career.fame+3);}
+  if(c.lifestyle===2){career.balance-=3; career.fame=Math.min(100,career.fame+5); if(Math.random()<0.2) degradeRandomStat(1);}
+  
+  // Recovery
+  if(c.recovery===1){career.balance-=1.5; career.injuryReduction+=50;}
+  if(c.recovery===2){career.balance-=4; career.injuryReduction+=90; healStat(2);}
+  
+  // Mental
+  if(c.mental===1){career.balance-=1.5; boostStat("men",2);}
+  if(c.mental===2){career.balance-=3; boostStat("men",3); career.bigGameBonus+=10;}
+  
+  // Social Media
+  if(c.social===1){career.fame=Math.min(100,career.fame+3); career.followers=Math.round(career.followers*1.3);}
+  if(c.social===2){career.balance-=1; career.fame=Math.min(100,career.fame+6); career.followers*=2; if(Math.random()<0.15){career.fame=Math.max(0,career.fame-4);}}
+  if(c.social===3){
+    const earn=getBrandDealIncome();career.balance+=earn;career.sponsorIncome=earn;
+    career.fame=Math.min(100,career.fame+5);career.followers=Math.round(career.followers*1.5);
+    if(Math.random()<0.1) degradeRandomStat(1);
+  }
+  
+  career.followers=calcFollowers(career.fame);
+  career.balance=Math.round(career.balance*10)/10;
+  
+  showTransfer();
+});
+
+function boostRandomStat(amount){
+  const keys=SK.filter(k=>ST.owned[k]);
+  if(keys.length===0)return;
+  const k=keys[Math.floor(Math.random()*keys.length)];
+  ST.owned[k].v=Math.min(99,ST.owned[k].v+amount);
+}
+
+function boostStat(k,amount){
+  if(ST.owned[k]) ST.owned[k].v=Math.min(99,ST.owned[k].v+amount);
+}
+
+function degradeRandomStat(amount){
+  const keys=SK.filter(k=>ST.owned[k]);
+  if(keys.length===0)return;
+  const k=keys[Math.floor(Math.random()*keys.length)];
+  ST.owned[k].v=Math.max(30,ST.owned[k].v-amount);
+}
+
+function healStat(amount){
+  // Find lowest stat and boost it
+  const keys=SK.filter(k=>ST.owned[k]);
+  if(keys.length===0)return;
+  const sorted=keys.sort((a,b)=>ST.owned[a].v-ST.owned[b].v);
+  ST.owned[sorted[0]].v=Math.min(99,ST.owned[sorted[0]].v+amount);
+}
+
 
 /* ACHIEVEMENT TRACKING */
 let achievements={leagueChamp:false,top4:false,clWinner:false,clSemi:false,goldenBoot:false,assistKing:false,poty:false,toty:false,bestDef:false,simRating:0};
@@ -883,7 +1201,7 @@ const BDO_RIVALS=[
 
 function calcBdoScore(){
   const ovr=calcOVR();
-  let score=ovr*0.5+achievements.simRating*0.3;
+  let score=ovr*0.5+achievements.simRating*0.3+Math.min(10,career.fame*0.1);
   if(achievements.leagueChamp) score+=15;
   if(achievements.top4) score+=8;
   if(achievements.clWinner) score+=20;
@@ -975,13 +1293,16 @@ $("btn-bdo").addEventListener("click",()=>{
 /* ============================================================
    CAREER MODE — 6 seasons
 ============================================================ */
-let career={season:1,club:null,history:[],totalG:0,totalA:0,totalApps:0,plTitles:0,clTitles:0,bdos:0,age:22};
+let career={season:1,club:null,history:[],totalG:0,totalA:0,totalApps:0,plTitles:0,clTitles:0,bdos:0,age:22,totalEarnings:0,weeklySalary:0,fame:5,balance:0,followers:10000,sponsorIncome:0,bigGameBonus:0,injuryReduction:0};
 let seasonData={};
 
-function resetCareer(){career={season:1,club:null,history:[],totalG:0,totalA:0,totalApps:0,plTitles:0,clTitles:0,bdos:0,age:22};seasonData={};}
+function resetCareer(){career={season:1,club:null,history:[],totalG:0,totalA:0,totalApps:0,plTitles:0,clTitles:0,bdos:0,age:22,totalEarnings:0,weeklySalary:0,fame:5,balance:0,followers:10000,sponsorIncome:0,bigGameBonus:0,injuryReduction:0};seasonData={};}
 
 function recordSeason(g,a,apps,rating,leaguePos,clResult,bdoRank){
   const rec={season:career.season,club:career.club,g,a,apps,rating,leaguePos,clResult,bdoRank,awards:[...seasonData.awards||[]]};
+  rec.salary=career.weeklySalary;
+  rec.yearEarnings=seasonEarnings(career.weeklySalary);
+  career.totalEarnings+=rec.yearEarnings;
   career.history.push(rec);
   career.totalG+=g;career.totalA+=a;career.totalApps+=apps;
   if(leaguePos===1)career.plTitles++;
@@ -1040,7 +1361,7 @@ $("btn-next-season").addEventListener("click",()=>{
   }
   recordSeason(simGoals,simAssists,simApps,achievements.simRating,simLeaguePos,clRes,bdoRank);
   
-  career.season++;career.age++;
+  career.season++;career.age++;career.injuryReduction=0;career.bigGameBonus=0;career.sponsorIncome=0;
   showOffseason();
 });
 
@@ -1059,7 +1380,8 @@ function showOffseason(){
   
   // Age regression risk (age 27+, gentle)
   let injuryMsg="";
-  if(career.age>=27&&Math.random()<0.15){
+  const injuryChance=Math.max(0.02,0.15*(1-career.injuryReduction/100));
+  if(career.age>=27&&Math.random()<injuryChance){
     const k=["spd","phy"][Math.floor(Math.random()*2)];
     if(!changes[k])changes[k]=0;
     changes[k]-=rng(1,3);
@@ -1088,11 +1410,11 @@ function showOffseason(){
   showS("s-offseason");
 }
 
-$("btn-to-transfer").addEventListener("click",()=>showTransfer());
+$("btn-to-transfer").addEventListener("click",()=>showLifestyle());
 
 /* TRANSFER WINDOW */
 function showTransfer(){
-  $("transfer-badge").textContent=`Transfer Window · Season ${career.season}`;
+  $("transfer-badge").textContent=`Transfer Window · Season ${career.season} · Balance: £${career.balance.toFixed(1)}M`;
   const grid=$("offer-grid");grid.innerHTML="";
   let selectedClub=career.club;
   const ovr=calcOVR();
@@ -1100,14 +1422,15 @@ function showTransfer(){
   // Stay option
   const stayBtn=document.createElement("button");stayBtn.className="offer-btn active";
   const stayClub=CLUBS.find(c=>c.name===career.club);
-  stayBtn.innerHTML=`<span class="oc" style="background:${stayClub?stayClub.color:'#888'}"></span><div><div class="on">${career.club}</div><div class="od">Stay — you know this club</div></div><span class="or" style="color:var(--gold);background:rgba(255,208,69,.15);">Current</span>`;
+  const staySalary=calcWeeklySalary(career.club,calcOVR(),getPlayerStatus(career.club,calcOVR()));
+  stayBtn.innerHTML=`<span class="oc" style="background:${stayClub?stayClub.color:'#888'}"></span><div><div class="on">${career.club}</div><div class="od">Stay — £${staySalary}k/wk</div></div><span class="or" style="color:var(--gold);background:rgba(255,208,69,.15);">Current</span>`;
   stayBtn.addEventListener("click",()=>{grid.querySelectorAll(".offer-btn").forEach(b=>b.classList.remove("active"));stayBtn.classList.add("active");selectedClub=career.club;$("btn-confirm-transfer").disabled=false;});
   grid.appendChild(stayBtn);
   
   // Generate 2-3 offers based on OVR
   const available=CLUBS.filter(c=>c.name!==career.club);
   const pool=[];
-  if(ovr>=85)pool.push(...available.filter(c=>(TEAM_STR[c.name]||72)>=82));
+  if(ovr>=85||career.fame>=60)pool.push(...available.filter(c=>(TEAM_STR[c.name]||72)>=82));
   if(ovr>=75)pool.push(...available.filter(c=>{const s=TEAM_STR[c.name]||72;return s>=74&&s<86;}));
   if(ovr<75)pool.push(...available.filter(c=>(TEAM_STR[c.name]||72)<78));
   
@@ -1119,7 +1442,9 @@ function showTransfer(){
     const tag=str>=85?"Contender":str>=75?"Mid-table":"Project";
     const tagColor=str>=85?"#A855F7":str>=75?"#2563EB":"#16A34A";
     const btn=document.createElement("button");btn.className="offer-btn";
-    btn.innerHTML=`<span class="oc" style="background:${cl.color}"></span><div><div class="on">${cn}</div><div class="od">${role}</div></div><span class="or" style="color:${tagColor};background:${tagColor}22;">${tag}</span>`;
+    const offerSalary=calcWeeklySalary(cn,calcOVR(),role);
+    const fee=calcTransferFee(calcOVR(),career.age);
+    btn.innerHTML=`<span class="oc" style="background:${cl.color}"></span><div><div class="on">${cn}</div><div class="od">${role} — £${offerSalary}k/wk</div><div class="transfer-fee">Fee: ${formatMoney(fee)}</div></div><span class="or" style="color:${tagColor};background:${tagColor}22;">${tag}</span>`;
     btn.addEventListener("click",()=>{grid.querySelectorAll(".offer-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");selectedClub=cn;$("btn-confirm-transfer").disabled=false;});
     grid.appendChild(btn);
   });
@@ -1212,7 +1537,7 @@ function showCareerSummary(){
     if(h.clResult==="Winner")badges+=`<span class="ct-badge" style="color:#2563EB;background:rgba(37,99,235,.15);">⭐ CL</span>`;
     if(h.bdoRank===1)badges+=`<span class="ct-badge" style="color:#A855F7;background:rgba(168,85,247,.15);">🏆 BdO</span>`;
     if(h.bdoRank<=3&&h.bdoRank>1)badges+=`<span class="ct-badge" style="color:#CA8A04;background:rgba(202,138,4,.15);">BdO #${h.bdoRank}</span>`;
-    row.innerHTML=`<span class="ct-season">S${h.season}</span><span class="ct-club">${h.club}</span><span class="ct-stats">${h.g}G ${h.a}A · ${h.leaguePos}${h.leaguePos===1?"st":h.leaguePos===2?"nd":h.leaguePos===3?"rd":"th"}</span><span class="ct-badges">${badges}</span>`;
+    row.innerHTML=`<span class="ct-season">S${h.season}</span><span class="ct-club">${h.club} <small style="color:var(--steel-dim)">£${h.salary||0}k/wk</small></span><span class="ct-stats">${h.g}G ${h.a}A · ${h.leaguePos}${h.leaguePos===1?"st":h.leaguePos===2?"nd":h.leaguePos===3?"rd":"th"}</span><span class="ct-badges">${badges}</span>`;
     tl.appendChild(row);
   });
   
