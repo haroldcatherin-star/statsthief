@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://statsthief.win/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://statsthief.win/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://statsthief.win/contact.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://statsthief.win/privacy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://statsthief.win/terms.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://statsthief.win/guides/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/guides/how-to-play.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/guides/stat-grades-explained.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/guides/choosing-your-position.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/guides/draft-strategy.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/guides/career-mode.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

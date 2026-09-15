@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>About Stat Thief - who builds it and where the stats come from</title>
+<meta name="description" content="Stat Thief is an independent, fan-made Premier League drafting game. Read who makes it, how the player ratings are built, and what the project deliberately is not.">
+<meta property="og:title" content="About Stat Thief - who builds it and where the stats come from">
+<meta property="og:description" content="Stat Thief is an independent, fan-made Premier League drafting game. Read who makes it, how the player ratings are built, and what the project deliberately is not.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+
+</head>
+<body>
+<header class="site-nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="index.html"><span class="nav-crest"></span>STAT <em>THIEF</em></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html">Play</a>
+      <a href="guides/index.html">Guides</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<div class="crumb"><a href="index.html">Home</a> / About</div>
+<h1 class="page-title">About <em>Stat Thief</em></h1>
+<p class="lede">Who makes this game, why it exists, and what it is honest about.</p>
+<div class="meta">Last updated: September 2026</div>
+<article>
+
+<h2>The short version</h2>
+<p>Stat Thief is a free browser game about an argument football fans have been having for as long as the sport has had statistics: <strong>if you could take the best single quality from a handful of different players and glue them into one footballer, what would that footballer look like?</strong></p>
+<p>The game answers it by making you build that player yourself, one stolen attribute at a time, across a ten-round draft. No account, no download, no in-app purchase, no leaderboard chasing. You open the page, pick a position, and in about eight minutes you have a finished legend with an overall rating, a tier, a nickname, a club and a season to play out.</p>
+
+<h2>Who builds it</h2>
+<p>Stat Thief is made by one person: a first-year engineering student in France who plays football, watches far too much of it, and started writing the game as a way to learn front-end development properly rather than by following tutorials. It is written from scratch in plain HTML, CSS and JavaScript - no framework, no build step, no backend. The entire game is a single file that runs in your browser, which is also why it loads instantly and works offline once the page is open.</p>
+<p>That also means the project is slow-moving and hand-made. Every club list, every playstyle trait, every random event and every line of the season simulation was written by hand and balanced by playing the thing several hundred times. If a build feels overpowered or a stat grade seems wrong to you, there is a real person on the other end of the <a href="contact.html">contact page</a> who will read the message.</p>
+
+<h2>Where the numbers come from</h2>
+<p>This is the part the project wants to be completely transparent about, because it is the question fans ask first.</p>
+<p>The stats in Stat Thief are <strong>not real data</strong>. They are not scraped from Opta, FBref, Transfermarkt, any video game, or any official league source. Each player in the pool is assigned eight numbers by hand, based on the qualities that player is widely and popularly remembered for - the pace that terrified defenders, the left foot, the aerial dominance, the calm in front of goal. Those numbers are then displayed as a simplified S-to-F grade so a draft stays fast to read.</p>
+<p>The result is a caricature, and it is meant to be. It is designed to feel <em>recognisable</em> to someone who watched these players, not to be defensible as analysis. If you want real numbers, go to a real data provider. If you want to argue about whether a certain winger really deserves an S for pace, that argument is the entire point of the game.</p>
+
+<h2>What Stat Thief is not</h2>
+<ul>
+  <li><strong>It is not official.</strong> Stat Thief has no affiliation with the Premier League, with any club, with any player, or with any football video game publisher. Club and player names are used to identify real footballers being discussed and commented on, in the same way a fan blog or a podcast names them.</li>
+  <li><strong>It is not gambling.</strong> Nothing in the game can be bought, wagered, or cashed out. The "reels" are a presentation device for a random draw. There is no currency that has value outside the browser tab, no purchase of any kind, and no mechanic designed to be paid for.</li>
+  <li><strong>It is not a database.</strong> There is no complete list of Premier League players here, no historic results archive, no statistics you should cite anywhere.</li>
+  <li><strong>It does not keep your career.</strong> Everything lives in the current page session. Reload and you start fresh. That is a deliberate design choice: it keeps runs short and makes each draft feel disposable in a good way.</li>
+</ul>
+
+<h2>Why the guides exist</h2>
+<p>A draft is quick, but the underlying maths is not obvious. Each position weighs the eight attributes differently, playstyle traits quietly add bonuses to specific stats, and the respin economy is the single biggest skill gap between a first run and a twentieth. Rather than bury that in tooltips, it is written out properly in the <a href="guides/index.html">guides section</a>, which is also where balance changes get explained when they happen.</p>
+
+<h2>Roadmap</h2>
+<p>Things currently being worked on, in rough order:</p>
+<ul>
+  <li>More clubs from the early Premier League era, so the draw is less weighted towards the last fifteen years.</li>
+  <li>An optional save so a career survives a reload, stored only in your own browser.</li>
+  <li>A goalkeeper position, which needs its own attribute set and its own weighting model.</li>
+  <li>A shareable summary card for a finished legend.</li>
+</ul>
+<p>If you want to push one of those up the list, say so.</p>
+
+<a class="cta" href="index.html">Play Stat Thief</a>
+</article>
+</main>
+<footer class="site-foot">
+  <div class="foot-in">
+    <div>
+      <h4>Stat Thief</h4>
+      <p>An independent fan-made drafting game built around Premier League history. Free to play, no account, no download.</p>
+    </div>
+    <div>
+      <h4>Guides</h4>
+      <a href="guides/how-to-play.html">How to play</a>
+      <a href="guides/stat-grades-explained.html">The S-to-F grade scale</a>
+      <a href="guides/choosing-your-position.html">Choosing your position</a>
+      <a href="guides/draft-strategy.html">Draft strategy</a>
+      <a href="guides/career-mode.html">Seasons &amp; career mode</a>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <a href="about.html">About the project</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy &amp; cookies</a>
+      <a href="terms.html">Terms of use</a>
+    </div>
+  </div>
+  <div class="foot-legal">
+    Stat Thief is an unofficial fan project. It is not affiliated with, endorsed by or associated with the Premier League, any football club, any player, or any of their licensors. Club and player names are referenced for identification and commentary only. Stats shown in the game are simplified approximations created for entertainment and do not represent official performance data.
+    <br><br>&copy; 2026 Stat Thief. All game design, text and code on this site are original work.
+  </div>
+</footer>
+</body>
+</html>
