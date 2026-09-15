@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Forward, midfielder or defender? Stat Thief position guide</title>
+<meta name="description" content="The exact attribute weightings Stat Thief uses for each position, what they mean for how you draft, and which of the three roles has the highest ceiling and the highest floor.">
+<meta property="og:title" content="Forward, midfielder or defender? Stat Thief position guide">
+<meta property="og:description" content="The exact attribute weightings Stat Thief uses for each position, what they mean for how you draft, and which of the three roles has the highest ceiling and the highest floor.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#020E1F;--blue-dark:#0A2347;--blue:#034694;--blue-mid:#1A5CBA;--blue-bright:#2E7CF6;--gold:#FFD045;--gold-dark:#B8900F;--cream:#EEF2F8;--steel:#7A90B3;--steel-dim:#3D4F6A;--glass:rgba(255,255,255,.04);--gb:rgba(255,255,255,.09);--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:var(--navy);}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--cream);background:radial-gradient(ellipse 140% 60% at 50% -5%,rgba(3,70,148,.45),transparent 55%),radial-gradient(ellipse 80% 50% at 95% 95%,rgba(3,40,100,.3),transparent 60%),var(--navy);background-attachment:fixed;overflow-x:hidden;line-height:1.7;}
+.D{font-family:'Anton',sans-serif;letter-spacing:.03em;text-transform:uppercase;}
+a{color:var(--blue-bright);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ---- site nav ---- */
+.site-nav{border-bottom:1px solid var(--gb);background:rgba(2,14,31,.72);backdrop-filter:blur(14px);position:sticky;top:env(safe-area-inset-top,0px);z-index:60;}
+.nav-in{max-width:980px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.nav-brand{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:17px;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:9px;}
+.nav-brand em{font-style:normal;color:var(--gold);}
+.nav-crest{width:22px;height:25px;background:linear-gradient(160deg,var(--blue-mid),var(--blue-dark));clip-path:polygon(50% 0%,100% 20%,100% 68%,50% 100%,0% 68%,0% 20%);display:inline-block;}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{font-size:13px;font-weight:600;color:var(--steel);text-decoration:none;}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--gold);}
+
+/* ---- article shell ---- */
+.wrap{max-width:780px;margin:0 auto;padding:40px 18px 70px;}
+.crumb{font-size:12px;color:var(--steel-dim);margin-bottom:18px;}
+.crumb a{color:var(--steel);}
+h1.page-title{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.02em;font-size:clamp(30px,6vw,44px);line-height:1.05;margin-bottom:14px;}
+h1.page-title em{font-style:normal;color:var(--gold);}
+.lede{color:var(--steel);font-size:16px;margin-bottom:8px;}
+.meta{font-size:12px;color:var(--steel-dim);margin-bottom:34px;padding-bottom:20px;border-bottom:1px solid var(--gb);}
+article h2{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:21px;color:var(--gold);margin:38px 0 12px;letter-spacing:.02em;}
+article h3{font-size:15.5px;font-weight:700;color:var(--cream);margin:24px 0 8px;}
+article p{color:#C3CFE0;font-size:15px;margin-bottom:14px;}
+article ul,article ol{color:#C3CFE0;font-size:15px;margin:0 0 16px 20px;}
+article li{margin-bottom:8px;}
+article strong{color:var(--cream);}
+blockquote{border-left:3px solid var(--gold-dark);padding:4px 0 4px 16px;margin:20px 0;color:var(--steel);font-size:14.5px;}
+.box{background:linear-gradient(160deg,rgba(26,92,186,.13),rgba(2,14,31,.5));border:1px solid var(--gb);border-radius:var(--r);padding:20px 22px;margin:24px 0;}
+.box h3{margin-top:0;}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;}
+.tablewrap{overflow-x:auto;}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--gb);color:#C3CFE0;}
+th{color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
+.cta{display:inline-block;margin:14px 0;background:linear-gradient(160deg,var(--blue-mid),var(--blue));border:1px solid rgba(255,255,255,.14);color:#fff;font-weight:700;font-size:14px;padding:12px 22px;border-radius:10px;text-decoration:none;}
+.cta:hover{text-decoration:none;filter:brightness(1.12);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:26px 0;}
+.card{background:linear-gradient(160deg,rgba(26,92,186,.13),rgba(2,14,31,.5));border:1px solid var(--gb);border-radius:var(--r);padding:18px 18px 20px;}
+.card h3{margin:0 0 6px;font-size:15px;}
+.card p{font-size:13px;color:var(--steel);margin:0 0 10px;}
+.card a{font-size:13px;font-weight:700;}
+
+/* ---- footer ---- */
+.site-foot{border-top:1px solid var(--gb);background:rgba(2,14,31,.6);}
+.foot-in{max-width:980px;margin:0 auto;padding:30px 18px calc(34px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px;}
+.foot-in h4{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:700;}
+.foot-in a{display:block;font-size:13px;color:var(--steel);margin-bottom:7px;text-decoration:none;}
+.foot-in a:hover{color:var(--cream);}
+.foot-in p{font-size:12.5px;color:var(--steel-dim);line-height:1.6;}
+.foot-legal{max-width:980px;margin:0 auto;padding:0 18px 30px;font-size:12px;color:var(--steel-dim);}
+@media(max-width:560px){.nav-links{gap:12px;}.nav-links a{font-size:12px;}}
+</style>
+
+</head>
+<body>
+<header class="site-nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="index.html"><span class="nav-crest"></span>STAT <em>THIEF</em></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html">Play</a>
+      <a href="guides.html">Guides</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<div class="crumb"><a href="index.html">Home</a> / <a href="guides.html">Guides</a> / Choosing your position</div>
+<h1 class="page-title">Choosing your <em>position</em></h1>
+<p class="lede">Forward, midfielder and defender share the same eight attributes and almost nothing else. Here are the actual weightings.</p>
+<div class="meta">Guide &middot; about 5 minutes to read &middot; updated September 2026</div>
+<article>
+
+<p>The position you pick at the start of a run is the closest thing Stat Thief has to a difficulty setting. It decides which players can appear, which attributes are worth stealing, and how forgiving a bad round is. This page gives you the exact numbers the game uses so you can stop guessing.</p>
+
+<h2>The weighting table</h2>
+<p>Each attribute contributes a fixed share of the final overall rating. The three columns below each add up to 100%.</p>
+<div class="tablewrap">
+<table>
+<tr><th>Attribute</th><th>Forward</th><th>Midfielder</th><th>Defender</th></tr>
+<tr><td>Pace</td><td>18%</td><td>10%</td><td>10%</td></tr>
+<tr><td>Finishing / Shooting</td><td>22%</td><td>8%</td><td>4%</td></tr>
+<tr><td>Key Pass / Passing / Build-up</td><td>8%</td><td>22%</td><td>10%</td></tr>
+<tr><td>Dribbling / Technique / Awareness</td><td>18%</td><td>14%</td><td>6%</td></tr>
+<tr><td>Pressing / Tackling</td><td>4%</td><td>10%</td><td>26%</td></tr>
+<tr><td>Power / Stamina</td><td>12%</td><td>14%</td><td>18%</td></tr>
+<tr><td>Heading / Aerial</td><td>10%</td><td>6%</td><td>16%</td></tr>
+<tr><td>Composure / Vision / Leadership</td><td>8%</td><td>16%</td><td>10%</td></tr>
+</table>
+</div>
+
+<h2>Forward</h2>
+<p><strong>Top-heavy. The easiest position to spike, the easiest to ruin.</strong></p>
+<p>Finishing, pace and dribbling together carry 58% of a forward's rating. Three good steals in those three attributes and you are already most of the way to a high build; three mediocre ones and nothing you do in the remaining seven rounds can rescue the run. Pressing at 4% is effectively a dead column - if a striker's only good grade is a defensive one, that round is a respin candidate.</p>
+<p>Forwards are also the position where the draw is kindest, because the pool is full of players whose reputation was built on exactly the attributes you need. Expect to see S grades early. Expect to be punished for taking the wrong ones.</p>
+<p><strong>Play it if</strong> you like a high ceiling and do not mind a run that is decided by round four.</p>
+
+<h2>Midfielder</h2>
+<p><strong>The most balanced position, and the one that rewards understanding the system.</strong></p>
+<p>Passing is the single heaviest attribute at 22%, but nothing else is negligible: vision at 16%, stamina and technique at 14%, tackling at 10%. There is no throwaway column. That makes midfield the forgiving option - almost every player you draw will have <em>something</em> worth taking - but also the position with the flattest ceiling, because you rarely get to concentrate several steals into one dominant area.</p>
+<p>Midfield is where playstyle traits pay off most reliably. A trait that adds to passing, vision and technique at once is touching 52% of your rating in a single steal, which no individual attribute can do.</p>
+<p><strong>Play it if</strong> you want consistent high-seventies and low-eighties builds and enjoy optimising rather than gambling.</p>
+
+<h2>Defender</h2>
+<p><strong>Narrow, physical, and the most deterministic of the three.</strong></p>
+<p>Tackling alone is 26% - more than any attribute in any other position. Add power at 18% and aerial at 16% and you have 60% of a defender's rating sitting in three attributes that tend to appear together on the same kind of player. That concentration means a defender build comes together quickly and predictably. It also means the position punishes greed: shooting at 4% and awareness at 6% are traps that look tempting when an attacking full-back rolls with a shiny grade attached.</p>
+<p>Defenders have the smallest eligible pool of the three positions, so you will see the same names recur across runs more often. Plan your respins accordingly - there is less to discover.</p>
+<p><strong>Play it if</strong> you want a build you can steer deliberately from round one, or if you are learning the weighting system and want feedback that is easy to read.</p>
+
+<h2>Which position scores highest?</h2>
+<p>All three can reach the top tier, but they get there differently. Forwards have the highest variance: the best forward runs beat the best runs of either other position, and the worst forward runs are the worst in the game. Defenders are the most reliable - the floor is high because the heavy attributes cluster. Midfielders sit in between and depend most on traits.</p>
+<p>If your goal is simply to see the <em>Legendary Icon</em> tier once, forward with aggressive early respins is the fastest route. If your goal is to average well across ten runs, defender is.</p>
+
+<div class="box">
+<h3>One habit that works in every position</h3>
+<p style="margin-bottom:0;">Write down - or just remember - your position's three heaviest attributes before you start spinning. Everything else is noise until those three are filled at A- or better. It sounds reductive, and it lifts a typical first-week rating by five to eight points.</p>
+</div>
+
+<p>Next, read <a href="draft-strategy.html">Draft strategy</a> for how to spend respins and when a playstyle trait is worth more than an S grade.</p>
+
+<a class="cta" href="index.html">Pick a position and draft</a>
+</article>
+</main>
+<footer class="site-foot">
+  <div class="foot-in">
+    <div>
+      <h4>Stat Thief</h4>
+      <p>An independent fan-made drafting game built around Premier League history. Free to play, no account, no download.</p>
+    </div>
+    <div>
+      <h4>Guides</h4>
+      <a href="how-to-play.html">How to play</a>
+      <a href="stat-grades-explained.html">The S-to-F grade scale</a>
+      <a href="choosing-your-position.html">Choosing your position</a>
+      <a href="draft-strategy.html">Draft strategy</a>
+      <a href="career-mode.html">Seasons &amp; career mode</a>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <a href="about.html">About the project</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy &amp; cookies</a>
+      <a href="terms.html">Terms of use</a>
+    </div>
+  </div>
+  <div class="foot-legal">
+    Stat Thief is an unofficial fan project. It is not affiliated with, endorsed by or associated with the Premier League, any football club, any player, or any of their licensors. Club and player names are referenced for identification and commentary only. Stats shown in the game are simplified approximations created for entertainment and do not represent official performance data.
+    <br><br>&copy; 2026 Stat Thief. All game design, text and code on this site are original work.
+  </div>
+</footer>
+</body>
+</html>

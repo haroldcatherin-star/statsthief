@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stat Thief draft strategy - how to build a 90-rated legend</title>
+<meta name="description" content="Ten concrete strategies for Stat Thief: respin economy, when a playstyle trait beats an S grade, how to play the random events, build shapes, and tier thresholds.">
+<meta property="og:title" content="Stat Thief draft strategy - how to build a 90-rated legend">
+<meta property="og:description" content="Ten concrete strategies for Stat Thief: respin economy, when a playstyle trait beats an S grade, how to play the random events, build shapes, and tier thresholds.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#020E1F;--blue-dark:#0A2347;--blue:#034694;--blue-mid:#1A5CBA;--blue-bright:#2E7CF6;--gold:#FFD045;--gold-dark:#B8900F;--cream:#EEF2F8;--steel:#7A90B3;--steel-dim:#3D4F6A;--glass:rgba(255,255,255,.04);--gb:rgba(255,255,255,.09);--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:var(--navy);}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--cream);background:radial-gradient(ellipse 140% 60% at 50% -5%,rgba(3,70,148,.45),transparent 55%),radial-gradient(ellipse 80% 50% at 95% 95%,rgba(3,40,100,.3),transparent 60%),var(--navy);background-attachment:fixed;overflow-x:hidden;line-height:1.7;}
+.D{font-family:'Anton',sans-serif;letter-spacing:.03em;text-transform:uppercase;}
+a{color:var(--blue-bright);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ---- site nav ---- */
+.site-nav{border-bottom:1px solid var(--gb);background:rgba(2,14,31,.72);backdrop-filter:blur(14px);position:sticky;top:env(safe-area-inset-top,0px);z-index:60;}
+.nav-in{max-width:980px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.nav-brand{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:17px;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:9px;}
+.nav-brand em{font-style:normal;color:var(--gold);}
+.nav-crest{width:22px;height:25px;background:linear-gradient(160deg,var(--blue-mid),var(--blue-dark));clip-path:polygon(50% 0%,100% 20%,100% 68%,50% 100%,0% 68%,0% 20%);display:inline-block;}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{font-size:13px;font-weight:600;color:var(--steel);text-decoration:none;}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--gold);}
+
+/* ---- article shell ---- */
+.wrap{max-width:780px;margin:0 auto;padding:40px 18px 70px;}
+.crumb{font-size:12px;color:var(--steel-dim);margin-bottom:18px;}
+.crumb a{color:var(--steel);}
+h1.page-title{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.02em;font-size:clamp(30px,6vw,44px);line-height:1.05;margin-bottom:14px;}
+h1.page-title em{font-style:normal;color:var(--gold);}
+.lede{color:var(--steel);font-size:16px;margin-bottom:8px;}
+.meta{font-size:12px;color:var(--steel-dim);margin-bottom:34px;padding-bottom:20px;border-bottom:1px solid var(--gb);}
+article h2{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:21px;color:var(--gold);margin:38px 0 12px;letter-spacing:.02em;}
+article h3{font-size:15.5px;font-weight:700;color:var(--cream);margin:24px 0 8px;}
+article p{color:#C3CFE0;font-size:15px;margin-bottom:14px;}
+article ul,article ol{color:#C3CFE0;font-size:15px;margin:0 0 16px 20px;}
+article li{margin-bottom:8px;}
+article strong{color:var(--cream);}
+blockquote{border-left:3px solid var(--gold-dark);padding:4px 0 4px 16px;margin:20px 0;color:var(--steel);font-size:14.5px;}
+.box{background:linear-gradient(160deg,rgba(26,92,186,.13),rgba(2,14,31,.5));border:1px solid var(--gb);border-radius:var(--r);padding:20px 22px;margin:24px 0;}
+.box h3{margin-top:0;}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;}
+.tablewrap{overflow-x:auto;}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--gb);color:#C3CFE0;}
+th{color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
+.cta{display:inline-block;margin:14px 0;background:linear-gradient(160deg,var(--blue-mid),var(--blue));border:1px solid rgba(255,255,255,.14);color:#fff;font-weight:700;font-size:14px;padding:12px 22px;border-radius:10px;text-decoration:none;}
+.cta:hover{text-decoration:none;filter:brightness(1.12);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:26px 0;}
+.card{background:linear-gradient(160deg,rgba(26,92,186,.13),rgba(2,14,31,.5));border:1px solid var(--gb);border-radius:var(--r);padding:18px 18px 20px;}
+.card h3{margin:0 0 6px;font-size:15px;}
+.card p{font-size:13px;color:var(--steel);margin:0 0 10px;}
+.card a{font-size:13px;font-weight:700;}
+
+/* ---- footer ---- */
+.site-foot{border-top:1px solid var(--gb);background:rgba(2,14,31,.6);}
+.foot-in{max-width:980px;margin:0 auto;padding:30px 18px calc(34px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px;}
+.foot-in h4{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:700;}
+.foot-in a{display:block;font-size:13px;color:var(--steel);margin-bottom:7px;text-decoration:none;}
+.foot-in a:hover{color:var(--cream);}
+.foot-in p{font-size:12.5px;color:var(--steel-dim);line-height:1.6;}
+.foot-legal{max-width:980px;margin:0 auto;padding:0 18px 30px;font-size:12px;color:var(--steel-dim);}
+@media(max-width:560px){.nav-links{gap:12px;}.nav-links a{font-size:12px;}}
+</style>
+
+</head>
+<body>
+<header class="site-nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="index.html"><span class="nav-crest"></span>STAT <em>THIEF</em></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html">Play</a>
+      <a href="guides.html">Guides</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<div class="crumb"><a href="index.html">Home</a> / <a href="guides.html">Guides</a> / Draft strategy</div>
+<h1 class="page-title">Draft <em>strategy</em></h1>
+<p class="lede">Respin economy, trait maths and event timing - the habits that move a run from the low seventies into the high eighties.</p>
+<div class="meta">Guide &middot; about 7 minutes to read &middot; updated September 2026</div>
+<article>
+
+<p>Once you know the <a href="choosing-your-position.html">weightings</a> and the <a href="stat-grades-explained.html">grade scale</a>, Stat Thief stops being a slot machine and becomes a resource game. You have ten steals, two respins and an unknown number of events, and the difference between players is almost entirely in how they spend the middle of that list.</p>
+
+<h2>1. Fill your heavy attributes first, always</h2>
+<p>Rounds one to four should be spent getting your position's three or four heaviest attributes to A- or better. Not because early players are better - they are drawn from the same pool - but because <strong>late rounds are where you have no leverage left</strong>. A hole in a 22% attribute discovered in round nine cannot be fixed. A hole in an 8% attribute discovered in round nine costs you a point and a half.</p>
+<p>The corollary is uncomfortable but correct: in round two you should sometimes take a B+ in a heavy attribute over an A+ in a light one. Run the arithmetic once and it stops feeling wrong. A B+ (call it 72) in a 22% slot contributes 15.8 points. An A+ (call it 87) in an 8% slot contributes 7.0.</p>
+
+<h2>2. Respins are worth more early than late</h2>
+<p>Most new players hoard both respins "in case something good comes up later". This is backwards. A respin used in round two protects a decision that will shape eight further rounds; a respin used in round nine protects a decision worth a point or two. Unless an event has handed you a spare, plan to have both respins spent by round six.</p>
+<p>Use the right one for the right problem:</p>
+<ul>
+  <li><strong>Player respin</strong> when the club is rich in your position - the big historic squads - but the specific name is wrong. You are very likely to improve.</li>
+  <li><strong>Club respin</strong> when the club itself is thin for your role, because a player respin inside a shallow squad often returns something equally unhelpful.</li>
+</ul>
+
+<h2>3. Know when a trait beats a grade</h2>
+<p>Playstyle traits cost your whole steal for the round, which makes them feel expensive. Compare them properly and they frequently are not.</p>
+<p>A trait applies permanent bonuses to two or three specific attributes. Multiply each bonus by that attribute's weight for your position and you get its true value. A trait adding four to tackling, three to power and two to aerial, taken by a defender, is worth 4x0.26 + 3x0.18 + 2x0.16 = <strong>1.9 rating points</strong> - modest on its own. But a trait is <em>additive to whatever you already own</em>, so it never overwrites a good steal and never goes to waste, whereas a duplicated attribute steal can be worth literally nothing.</p>
+<p>The practical rule: <strong>take the trait when the round is otherwise mediocre</strong>. If nothing on screen would upgrade one of your heavy slots, the trait is almost always the highest-value option available, and it is the single most common missed opportunity among players stuck in the seventies.</p>
+
+<h2>4. Never re-steal at the same grade</h2>
+<p>Stealing an attribute you already own replaces the old value. If the new one is not clearly higher, the entire round produced nothing. Before you commit, glance at your build. This is the most expensive unforced error in the game and it costs a full tenth of your run.</p>
+
+<h2>5. Play the events, do not just read them</h2>
+<p>The two positive stat events - +5 and +8 on the next draw - are the only moments in a run where the pool is temporarily better than it normally is. Treat them as a signal to be <strong>aggressive</strong>: this is the round to spend a respin hunting for a heavy attribute, because an inflated draw can push a B+ into A+ territory and lock a heavy slot at a grade you would not otherwise see.</p>
+<p>The two negative events are the mirror image. A round at -5 is the round to take a playstyle trait, because traits are unaffected by the stat modifier, or to fill a light attribute you were never going to spend a good round on.</p>
+<p>The two respin events are pure profit, and they should change your plan immediately: an extra club respin in round three means you can afford to be picky for the next several rounds rather than banking it to round ten.</p>
+
+<h2>6. Decide your build shape by round three</h2>
+<p>There are broadly two shapes that score well, and mixing them scores badly.</p>
+<h3>The spike</h3>
+<p>Concentrate everything into your position's top three attributes and accept C-grade baselines everywhere else. Because unfilled attributes default to a 50 rather than zero, the damage from ignoring light columns is smaller than it looks. This shape has the highest ceiling and is how most Legendary Icon runs happen, particularly as a forward.</p>
+<h3>The complete player</h3>
+<p>Take the best available option in any attribute above about 10% weight, and lean on traits to lift several at once. Lower ceiling, much higher floor, and by far the better approach in midfield where no attribute is negligible.</p>
+<p>Pick one by round three based on what the draw has given you. A player who spikes for four rounds and then panics into balance ends up with neither.</p>
+
+<h2>7. Read the club before the player lands</h2>
+<p>The club reel resolves first, and that gap is free information. A historically deep squad in your position means a player respin is likely to pay off; a club with one or two eligible names means it probably will not. Decide what you will do with a bad player <em>before</em> you see one, and you stop making emotional respins.</p>
+
+<h2>8. Ignore the names</h2>
+<p>This is the hardest one. You will draw a player you loved watching, and their best grade will be in an attribute your position barely weighs, and taking it will cost you the run. The game gives you no credit for sentiment. The good news is that the season simulation afterwards gives you plenty of room for it - see <a href="career-mode.html">career mode</a>.</p>
+
+<h2>9. Target thresholds, not maximums</h2>
+<p>Tiers change at 60, 70, 78, 85 and 91. If you are sitting on an estimated 84 with two rounds left, a single upgrade in a heavy attribute is worth far more than it looks, because it crosses a tier boundary and changes what happens in the Ballon d'Or ceremony later. Late in a run, count to the next threshold rather than trying to maximise blindly.</p>
+
+<h2>10. Run the same position three times before switching</h2>
+<p>The weightings only become intuitive through repetition, and switching positions every run resets that intuition - especially because the attributes are renamed per position. Three consecutive drafts in one role will teach you more than ten scattered ones.</p>
+
+<div class="box">
+<h3>A worked example</h3>
+<p>Midfielder, round five. Current build has A- passing, B vision, nothing in technique. The draw offers: S pace (10%), B+ technique (14%), and the trait <em>Orchestrator</em> (+3 passing, +3 mental, +2 dribbling).</p>
+<p style="margin-bottom:0;">The S pace is the trap - it is the biggest letter on screen and worth about 9 rating points in a 10% slot. The B+ technique fills an empty 14% slot for roughly 10 points. The Orchestrator trait is worth 3x0.22 + 3x0.16 + 2x0.14 = 1.4 points on top of everything you already have and everything you will steal later. Here, technique wins - but if technique were already filled at A, the trait would be the correct pick and the S pace would still be wrong.</p>
+</div>
+
+<a class="cta" href="index.html">Put it into practice</a>
+</article>
+</main>
+<footer class="site-foot">
+  <div class="foot-in">
+    <div>
+      <h4>Stat Thief</h4>
+      <p>An independent fan-made drafting game built around Premier League history. Free to play, no account, no download.</p>
+    </div>
+    <div>
+      <h4>Guides</h4>
+      <a href="how-to-play.html">How to play</a>
+      <a href="stat-grades-explained.html">The S-to-F grade scale</a>
+      <a href="choosing-your-position.html">Choosing your position</a>
+      <a href="draft-strategy.html">Draft strategy</a>
+      <a href="career-mode.html">Seasons &amp; career mode</a>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <a href="about.html">About the project</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy &amp; cookies</a>
+      <a href="terms.html">Terms of use</a>
+    </div>
+  </div>
+  <div class="foot-legal">
+    Stat Thief is an unofficial fan project. It is not affiliated with, endorsed by or associated with the Premier League, any football club, any player, or any of their licensors. Club and player names are referenced for identification and commentary only. Stats shown in the game are simplified approximations created for entertainment and do not represent official performance data.
+    <br><br>&copy; 2026 Stat Thief. All game design, text and code on this site are original work.
+  </div>
+</footer>
+</body>
+</html>

@@ -5,10 +5,10 @@
   <url><loc>https://statsthief.win/contact.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://statsthief.win/privacy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://statsthief.win/terms.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://statsthief.win/guides/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://statsthief.win/guides/how-to-play.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://statsthief.win/guides/stat-grades-explained.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://statsthief.win/guides/choosing-your-position.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://statsthief.win/guides/draft-strategy.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://statsthief.win/guides/career-mode.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/guides.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/how-to-play.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/stat-grades-explained.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/choosing-your-position.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/draft-strategy.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://statsthief.win/career-mode.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
