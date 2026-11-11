@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="canonical" href="https://statsthief.win/stat-thief/guides.html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stat Thief guides - rules, ratings and draft strategy</title>
+<meta name="description" content="Five in-depth guides to Stat Thief: the full rules, the S-to-F grade scale, position weightings, advanced draft strategy and how career mode works.">
+<meta property="og:title" content="Stat Thief guides - rules, ratings and draft strategy">
+<meta property="og:description" content="Five in-depth guides to Stat Thief: the full rules, the S-to-F grade scale, position weightings, advanced draft strategy and how career mode works.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#020E1F;--blue-dark:#0A2347;--blue:#034694;--blue-mid:#1A5CBA;--blue-bright:#2E7CF6;--gold:#FFD045;--gold-dark:#B8900F;--cream:#EEF2F8;--steel:#7A90B3;--steel-dim:#3D4F6A;--glass:rgba(255,255,255,.04);--gb:rgba(255,255,255,.09);--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:var(--navy);}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--cream);background:radial-gradient(ellipse 140% 60% at 50% -5%,rgba(3,70,148,.45),transparent 55%),radial-gradient(ellipse 80% 50% at 95% 95%,rgba(3,40,100,.3),transparent 60%),var(--navy);background-attachment:fixed;overflow-x:hidden;line-height:1.7;}
+.D{font-family:'Anton',sans-serif;letter-spacing:.03em;text-transform:uppercase;}
+a{color:var(--blue-bright);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ---- site nav ---- */
+.site-nav{border-bottom:1px solid var(--gb);background:rgba(2,14,31,.72);backdrop-filter:blur(14px);position:sticky;top:env(safe-area-inset-top,0px);z-index:60;}
+.nav-in{max-width:980px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.nav-brand{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:17px;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:9px;}
+.nav-brand em{font-style:normal;color:var(--gold);}
+.nav-crest{width:22px;height:25px;background:linear-gradient(160deg,var(--blue-mid),var(--blue-dark));clip-path:polygon(50% 0%,100% 20%,100% 68%,50% 100%,0% 68%,0% 20%);display:inline-block;}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{font-size:13px;font-weight:600;color:var(--steel);text-decoration:none;}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--gold);}
+
+/* ---- article shell ---- */
+.wrap{max-width:780px;margin:0 auto;padding:40px 18px 70px;}
+.crumb{font-size:12px;color:var(--steel-dim);margin-bottom:18px;}
+.crumb a{color:var(--steel);}
+h1.page-title{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.02em;font-size:clamp(30px,6vw,44px);line-height:1.05;margin-bottom:14px;}
+h1.page-title em{font-style:normal;color:var(--gold);}
+.lede{color:var(--steel);font-size:16px;margin-bottom:8px;}
+.meta{font-size:12px;color:var(--steel-dim);margin-bottom:34px;padding-bottom:20px;border-bottom:1px solid var(--gb);}
+article h2{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:21px;color:var(--gold);margin:38px 0 12px;letter-spacing:.02em;}
+article h3{font-size:15.5px;font-weight:700;color:var(--cream);margin:24px 0 8px;}
+article p{color:#C3CFE0;font-size:15px;margin-bottom:14px;}
+article ul,article ol{color:#C3CFE0;font-size:15px;margin:0 0 16px 20px;}
+article li{margin-bottom:8px;}
+article strong{color:var(--cream);}
+blockquote{border-left:3px solid var(--gold-dark);padding:4px 0 4px 16px;margin:20px 0;color:var(--steel);font-size:14.5px;}
+.box{background:linear-gradient(160deg,rgba(26,92,186,.13),rgba(2,14,31,.5));border:1px solid var(--gb);border-radius:var(--r);padding:20px 22px;margin:24px 0;}
+.box h3{margin-top:0;}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;}
+.tablewrap{overflow-x:auto;}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--gb);color:#C3CFE0;}
+th{color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
+.cta{display:inline-block;margin:14px 0;background:linear-gradient(160deg,var(--blue-mid),var(--blue));border:1px solid rgba(255,255,255,.14);color:#fff;font-weight:700;font-size:14px;padding:12px 22px;border-radius:10px;text-decoration:none;}
+.cta:hover{text-decoration:none;filter:brightness(1.12);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:26px 0;}
+.card{background:linear-gradient(160deg,rgba(26,92,186,.13),rgba(2,14,31,.5));border:1px solid var(--gb);border-radius:var(--r);padding:18px 18px 20px;}
+.card h3{margin:0 0 6px;font-size:15px;}
+.card p{font-size:13px;color:var(--steel);margin:0 0 10px;}
+.card a{font-size:13px;font-weight:700;}
+
+/* ---- footer ---- */
+.site-foot{border-top:1px solid var(--gb);background:rgba(2,14,31,.6);}
+.foot-in{max-width:980px;margin:0 auto;padding:30px 18px calc(34px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px;}
+.foot-in h4{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:700;}
+.foot-in a{display:block;font-size:13px;color:var(--steel);margin-bottom:7px;text-decoration:none;}
+.foot-in a:hover{color:var(--cream);}
+.foot-in p{font-size:12.5px;color:var(--steel-dim);line-height:1.6;}
+.foot-legal{max-width:980px;margin:0 auto;padding:0 18px 30px;font-size:12px;color:var(--steel-dim);}
+@media(max-width:560px){.nav-links{gap:12px;}.nav-links a{font-size:12px;}}
+</style>
+
+</head>
+<body>
+<header class="site-nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="/stat-thief/"><span class="nav-crest"></span>STAT <em>THIEF</em></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/">All games</a>
+      <a href="/stat-thief/">Play</a>
+      <a href="guides.html">Guides</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<div class="crumb"><a href="/stat-thief/">Home</a> / Guides</div>
+<h1 class="page-title">Stat Thief <em>guides</em></h1>
+<p class="lede">Everything the game does not stop to explain: the maths behind the overall rating, what each grade is worth, and how experienced players spend their respins.</p>
+<div class="meta">Five guides &middot; updated September 2026</div>
+<article>
+
+<p>A Stat Thief run takes eight minutes, which is not long enough to teach you the systems underneath it. These guides do that. They are written from the actual rules of the game rather than from guesswork, so the weightings, thresholds and bonuses quoted here are the ones the code really uses.</p>
+
+<div class="cards">
+  <div class="card">
+    <h3>How to play</h3>
+    <p>The complete rules of a draft, from position select to the final overall rating, including the parts the interface only hints at.</p>
+    <a href="how-to-play.html">Read the guide &rarr;</a>
+  </div>
+  <div class="card">
+    <h3>The S-to-F grade scale</h3>
+    <p>What each letter is actually worth, why a B+ is not halfway to an S, and how the eight attributes are named differently per position.</p>
+    <a href="stat-grades-explained.html">Read the guide &rarr;</a>
+  </div>
+  <div class="card">
+    <h3>Choosing your position</h3>
+    <p>Forward, midfielder or defender - the three roles weigh the same eight attributes completely differently. The full weighting table.</p>
+    <a href="choosing-your-position.html">Read the guide &rarr;</a>
+  </div>
+  <div class="card">
+    <h3>Draft strategy</h3>
+    <p>Respin economy, playstyle traits, event management, and the ten habits that separate a 74-rated run from a 90-rated one.</p>
+    <a href="draft-strategy.html">Read the guide &rarr;</a>
+  </div>
+  <div class="card">
+    <h3>Seasons &amp; career mode</h3>
+    <p>What happens after the draft: club choice, the league simulation, the Champions League, the Ballon d'Or, and the off-season economy.</p>
+    <a href="career-mode.html">Read the guide &rarr;</a>
+  </div>
+</div>
+
+<h2>Where to start</h2>
+<p>If you have never played, read <a href="how-to-play.html">How to play</a> and then just draft something - the systems make much more sense once you have watched a build come together badly. If you already have a few runs behind you and you are stuck somewhere in the high seventies, go straight to <a href="draft-strategy.html">Draft strategy</a>; that is where the ceiling usually is.</p>
+
+<a class="cta" href="/stat-thief/">Play Stat Thief</a>
+</article>
+</main>
+<footer class="site-foot">
+  <div class="foot-in">
+    <div>
+      <h4>Stat Thief</h4>
+      <p>An independent fan-made drafting game built around Premier League history. Free to play, no account, no download.</p>
+    </div>
+    <div>
+      <h4>Guides</h4>
+      <a href="how-to-play.html">How to play</a>
+      <a href="stat-grades-explained.html">The S-to-F grade scale</a>
+      <a href="choosing-your-position.html">Choosing your position</a>
+      <a href="draft-strategy.html">Draft strategy</a>
+      <a href="career-mode.html">Seasons &amp; career mode</a>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <a href="/about.html">About the project</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html">Privacy &amp; cookies</a>
+      <a href="/terms.html">Terms of use</a>
+    </div>
+  </div>
+  <div class="foot-legal">
+    Stat Thief is an unofficial fan project. It is not affiliated with, endorsed by or associated with the Premier League, any football club, any player, or any of their licensors. Club and player names are referenced for identification and commentary only. Stats shown in the game are simplified approximations created for entertainment and do not represent official performance data.
+    <br><br>&copy; 2026 Stat Thief. All game design, text and code on this site are original work.
+  </div>
+</footer>
+</body>
+</html>

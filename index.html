@@ -1,1397 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<link rel="canonical" href="https://statsthief.win/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Stat Thief - build a Premier League legend, one stolen stat at a time</title>
-<meta name="description" content="Stat Thief is a free browser game: spin through Premier League clubs and players, steal one attribute per round, and build a single fictional legend over a ten-round draft. Then play out a full career: titles, Europe and the Ballon d'Or.">
-<meta name="author" content="Stat Thief">
-<meta property="og:title" content="Stat Thief - build a Premier League legend, one stolen stat at a time">
-<meta property="og:description" content="A free fan-made drafting game. Ten rounds, ten stolen attributes, one composite footballer, then a full career with the Champions League and the Ballon d'Or. New daily draft every day.">
+<title>StatsThief : les jeux</title>
+<link rel="canonical" href="https://statsthief.win/">
+<meta name="description" content="Tous mes jeux gratuits, jouables directement dans le navigateur : Néon Drift, Gif T A, Stat Thief et l'univers Néon City.">
+<meta property="og:title" content="StatsThief : les jeux">
+<meta property="og:description" content="Jeux gratuits dans le navigateur : conduite en 3D, plateau du Moulon à l'échelle 1:1, draft de football et l'univers Néon City.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#050D1A">
+<meta property="og:url" content="https://statsthief.win/">
+<meta property="og:image" content="https://statsthief.win/img/neon-drift.webp">
+<meta name="theme-color" content="#07060F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
 <style>
-/* Layout: floodlit night match. Legend card pinned left, draw stage right; stacks on phones. Single dark look on purpose. */
+/* Mise en page : une salle d'arcade de nuit. Un seul thème sombre, volontairement, comme les jeux. */
 :root{
-  --night:#050D1A;      /* page ground */
-  --deck:#0B1A30;       /* raised panels */
-  --deck-2:#10243F;     /* hover / inner */
-  --line:rgba(170,195,235,.13);
-  --chalk:#ECF1F8;      /* main text */
-  --steel:#8EA2C2;      /* secondary text */
-  --steel-dim:#56698A;
-  --gold:#FFCF3F;       /* the one accent: steals, OVR */
-  --gold-ink:#1B1400;
-  --good:#3DD68C; --bad:#FF6B6B; --warn:#FFB547;
-  --g-s:#B17CFF; --g-a:#4F8BFF; --g-b:#2FC6A4; --g-c:#E8B23A; --g-d:#F06A4F;
-  --f-display:'Anton',Impact,'Arial Narrow',sans-serif;
+  --ground:#07060F;
+  --panel:#110F1E;
+  --panel-2:#181530;
+  --line:rgba(190,180,255,.12);
+  --line-2:rgba(190,180,255,.24);
+  --text:#EEEAF8;
+  --muted:#A49FBE;
+  --dim:#6E6990;
+  --pink:#FF3D9A;      /* accent principal : Néon City */
+  --cyan:#3FE0E8;      /* accent secondaire */
+  --gold:#FFCF3F;      /* Stat Thief */
+  --f-head:'Chakra Petch',system-ui,sans-serif;
   --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --f-data:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
-  --r:12px;
+  --f-tag:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
+  --r:14px;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
-body{margin:0;background:var(--night);color:var(--chalk);font-family:var(--f-body);font-size:15px;line-height:1.5;
-  background-image:radial-gradient(90% 55% at 15% -10%,rgba(80,130,220,.22),transparent 60%),radial-gradient(70% 50% at 100% 0%,rgba(255,207,63,.07),transparent 60%);
-  background-attachment:fixed;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--night)}
-button{font:inherit;color:inherit;cursor:pointer}
-button:disabled{cursor:not-allowed}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.D{font-family:var(--f-display);text-transform:uppercase;letter-spacing:.02em;font-weight:400}
-.num{font-family:var(--f-data);font-variant-numeric:tabular-nums}
-.lbl{font-family:var(--f-data);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel)}
-.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body{margin:0;background:var(--ground);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden;
+  background-image:radial-gradient(80% 50% at 10% -10%,rgba(255,61,154,.16),transparent 60%),radial-gradient(70% 45% at 100% 0%,rgba(63,224,232,.10),transparent 60%);
+  background-attachment:fixed}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
-/* top bar */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(5,13,26,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:14px;padding-block:10px;min-height:54px}
-.brand{display:flex;align-items:center;gap:9px;font-family:var(--f-display);font-size:20px;letter-spacing:.04em;text-transform:uppercase;background:none;border:0;padding:0}
-.brand b{color:var(--gold);font-weight:400}
-.brand svg{width:22px;height:24px}
-.top-info{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-family:var(--f-data);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);white-space:nowrap}
-.chip b{color:var(--chalk);font-weight:700}
-.chip.gold{border-color:rgba(255,207,63,.45);color:var(--gold)}
+/* barre du haut */
+.top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:rgba(7,6,15,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;min-height:56px}
+.brand{font-family:var(--f-head);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand i{width:10px;height:10px;border-radius:50%;background:var(--pink);box-shadow:0 0 12px var(--pink)}
+.brand b{color:var(--pink);font-weight:700}
+.top nav{margin-left:auto;display:flex;gap:18px}
+.top nav a{font-family:var(--f-tag);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.top nav a:hover{color:var(--text)}
 
-main{padding-block:22px 120px}
+/* en-tête */
+.hero{padding:56px 0 28px}
+.hero h1{font-family:var(--f-head);font-weight:700;font-size:clamp(40px,7.5vw,84px);line-height:.98;letter-spacing:-.01em;margin:0 0 18px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--pink);text-shadow:0 0 28px rgba(255,61,154,.45)}
+.hero p{color:var(--muted);font-size:18px;max-width:56ch;margin:0}
+.count{display:inline-flex;gap:8px;align-items:center;margin-bottom:18px;font-family:var(--f-tag);font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+.count::before{content:"";width:22px;height:2px;background:currentColor}
 
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;border:1px solid var(--line);background:var(--deck);padding:11px 18px;font-weight:600;font-size:15px;transition:background .15s,border-color .15s,transform .1s}
-.btn:hover:not(:disabled){background:var(--deck-2);border-color:rgba(170,195,235,.28)}
-.btn:active:not(:disabled){transform:translateY(1px)}
-.btn:disabled{opacity:.4}
-.btn.primary{background:var(--gold);color:var(--gold-ink);border-color:var(--gold);font-family:var(--f-display);text-transform:uppercase;letter-spacing:.05em;font-weight:400;font-size:18px;padding:12px 26px}
-.btn.primary:hover:not(:disabled){background:#FFDA6A;border-color:#FFDA6A}
-.btn.ghost{background:transparent}
-.btn.small{padding:7px 12px;font-size:13.5px}
-kbd{font-family:var(--f-data);font-size:11px;border:1px solid currentColor;border-radius:4px;padding:0 4px;opacity:.6;margin-left:2px}
+/* sections */
+section{padding:30px 0 10px}
+.sec-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 18px}
+.sec-h h2{font-family:var(--f-head);font-weight:600;font-size:24px;letter-spacing:.04em;text-transform:uppercase;margin:0}
+.sec-h p{margin:0;color:var(--dim);font-size:15px}
 
-/* home */
-.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:center;padding-block:18px 34px}
-.hero h1{font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:clamp(46px,8vw,96px);line-height:.92;margin:0 0 16px;letter-spacing:.005em;text-wrap:balance}
-.hero h1 em{font-style:normal;color:var(--gold)}
-.hero p{color:var(--steel);font-size:17px;max-width:52ch;margin:0 0 10px}
-.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
-.how div{border-top:2px solid var(--line);padding-top:10px}
-.how b{display:block;font-family:var(--f-data);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
-.how span{color:var(--steel);font-size:14px}
-.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:34px 0 14px;flex-wrap:wrap}
-.sec-h h2{font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:28px;margin:0;letter-spacing:.02em}
-.modes{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;background:var(--deck)}
-.modes button{border:0;background:transparent;padding:7px 14px;border-radius:7px;font-weight:600;color:var(--steel)}
-.modes button[aria-pressed="true"]{background:var(--deck-2);color:var(--chalk);box-shadow:inset 0 0 0 1px var(--line)}
-.positions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.pos-card{text-align:left;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(170deg,var(--deck-2),var(--deck));padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s,transform .15s}
-.pos-card:hover:not(:disabled){border-color:var(--gold);transform:translateY(-2px)}
-.pos-card:disabled{opacity:.35}
-.pos-card .D{font-size:30px;line-height:1}
-.pos-card p{margin:0;color:var(--steel);font-size:14px}
-.wbars{display:grid;gap:5px}
-.wbar{display:grid;grid-template-columns:86px 1fr 32px;gap:8px;align-items:center;font-family:var(--f-data);font-size:13px;color:var(--steel)}
-.wbar i{display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
-.wbar i::after{content:"";display:block;height:100%;width:var(--w);background:var(--steel)}
-.wbar.top i::after{background:var(--gold)}
-.wbar.top{color:var(--chalk)}
-.wbar span:last-child{text-align:right}
-.daily-note{margin:0 0 14px;color:var(--steel);font-size:14px}
-.hof{width:100%;border-collapse:collapse;font-size:14px}
-.hof th{font-family:var(--f-data);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--steel-dim);text-align:left;padding:6px 10px;border-bottom:1px solid var(--line)}
-.hof td{padding:9px 10px;border-bottom:1px solid var(--line)}
-.hof td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums;font-weight:700;font-size:16px}
-.tablewrap{overflow-x:auto}
-.empty{color:var(--steel);border:1px dashed var(--line);border-radius:var(--r);padding:18px;font-size:14px}
+/* cartes */
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+.grid.big{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
+.card{position:relative;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;transition:border-color .18s,transform .18s,background .18s}
+.card:hover{border-color:var(--line-2);background:var(--panel-2);transform:translateY(-3px)}
+.card:hover .shot img{transform:scale(1.04)}
+.shot{aspect-ratio:16/10;overflow:hidden;background:#0c0a18;border-bottom:1px solid var(--line)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tag{font-family:var(--f-tag);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc,var(--pink))}
+.card h3{font-family:var(--f-head);font-weight:700;font-size:24px;line-height:1.1;margin:0}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.meta{margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{font-family:var(--f-tag);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.play{margin-left:auto;font-family:var(--f-tag);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc,var(--pink))}
+.play::after{content:" →"}
+.card.gold{--acc:var(--gold)}
+.card.cyan{--acc:var(--cyan)}
 
-/* legend card */
-.lcard{--tc:#5B6F93;position:relative;border-radius:16px;padding:16px 16px 14px;background:linear-gradient(165deg,color-mix(in srgb,var(--tc) 38%,var(--deck)) 0%,var(--deck) 55%,#071324 100%);border:1px solid color-mix(in srgb,var(--tc) 55%,transparent);box-shadow:0 18px 50px -20px color-mix(in srgb,var(--tc) 60%,transparent);overflow:hidden}
-.lcard::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 22px,rgba(255,255,255,.025) 22px 23px);pointer-events:none}
-.lc-top{display:flex;gap:12px;align-items:flex-start;position:relative}
-.lc-ovr{font-family:var(--f-display);font-size:58px;line-height:.9;color:var(--chalk);min-width:2ch}
-.lc-ovr small{display:block;font-family:var(--f-data);font-size:12px;letter-spacing:.14em;color:var(--steel);margin-top:4px}
-.lc-meta{display:flex;flex-direction:column;gap:3px;padding-top:4px;min-width:0}
-.lc-name{font-family:var(--f-display);text-transform:uppercase;font-size:20px;line-height:1.05;overflow-wrap:anywhere}
-.lc-sub{color:var(--steel);font-size:13px}
-.lc-tier{font-family:var(--f-data);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px;color:var(--tc)}
-.lc-stats{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:14px}
-.lc-row{display:grid;grid-template-columns:1fr auto 26px;align-items:center;gap:6px;font-size:13.5px;padding:3px 0;border-bottom:1px solid rgba(170,195,235,.07)}
-.lc-row .k{color:var(--steel);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lc-row.has .k{color:var(--chalk)}
-.lc-row .v{font-family:var(--f-data);font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
-.lc-row .boost{color:var(--good);font-size:11px;font-family:var(--f-data);font-weight:700}
-.lc-row.flash{animation:flash 1s}
-@keyframes flash{0%{background:rgba(255,207,63,.35)}100%{background:transparent}}
-.lc-extra{position:relative;display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.tag{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;border-radius:6px;padding:3px 8px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--chalk)}
-.tag.trait{border-color:rgba(255,207,63,.4);color:var(--gold)}
-.tag.chem{border-color:rgba(61,214,140,.4);color:var(--good)}
-.tag.off{color:var(--steel-dim);border-style:dashed}
-.lc-from{position:relative;margin-top:12px;font-size:12px;color:var(--steel-dim);line-height:1.45}
+/* cartes univers, plus compactes */
+.grid.small{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.grid.small .card h3{font-size:20px}
+.grid.small .body{padding:14px 16px 16px}
 
-/* grade chips */
-.g{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:22px;padding:0 6px;border-radius:5px;font-family:var(--f-display);font-size:14px;letter-spacing:.02em;color:var(--gc);background:color-mix(in srgb,var(--gc) 16%,transparent);border:1px solid color-mix(in srgb,var(--gc) 45%,transparent)}
-.g.lg{min-width:44px;height:30px;font-size:19px}
+footer{margin-top:60px;border-top:1px solid var(--line);padding:26px 0 calc(40px + env(safe-area-inset-bottom,0px));color:var(--dim);font-size:14px}
+footer .wrap{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center}
+footer nav{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
 
-/* draft */
-.draft{display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;align-items:start}
-.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);display:flex;flex-direction:column;gap:12px}
-.progress{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
-.progress i{height:5px;border-radius:3px;background:var(--line)}
-.progress i.done{background:var(--steel)}
-.progress i.cur{background:var(--gold)}
-.stage{display:flex;flex-direction:column;gap:14px;min-width:0}
-.reels{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px;border:1px solid var(--line);border-radius:var(--r);padding:12px;background:var(--stage-bg,var(--deck));transition:background .5s}
-.reel-box{display:flex;flex-direction:column;gap:6px;min-width:0}
-.reel{position:relative;height:132px;overflow:hidden;border-radius:9px;background:rgba(0,0,0,.28);border:1px solid var(--line)}
-.reel::before,.reel::after{content:"";position:absolute;left:0;right:0;height:44px;z-index:2;pointer-events:none}
-.reel::before{top:0;background:linear-gradient(var(--night),transparent)}
-.reel::after{bottom:0;background:linear-gradient(transparent,var(--night))}
-.reel .win{position:absolute;left:6px;right:6px;top:44px;height:44px;border-top:1px solid rgba(255,207,63,.5);border-bottom:1px solid rgba(255,207,63,.5);z-index:1;pointer-events:none}
-.strip{will-change:transform}
-.ri{height:44px;display:flex;align-items:center;gap:9px;padding:0 14px;font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;color:var(--steel)}
-.ri.lit{color:var(--chalk);font-size:17px}
-.ri small{font-family:var(--f-data);color:var(--steel-dim);font-size:12px;letter-spacing:.08em}
-.ri .dot{width:10px;height:10px;border-radius:50%;flex:none}
-.ri.placeholder{color:var(--steel-dim);justify-content:center;font-family:var(--f-data);letter-spacing:.1em;text-transform:uppercase;font-size:13px}
-.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.controls .spacer{flex:1}
-.banner{display:flex;gap:12px;align-items:center;border-radius:var(--r);padding:11px 14px;border:1px solid;font-size:14.5px;animation:pop .4s}
-.banner b{font-family:var(--f-display);text-transform:uppercase;font-weight:400;font-size:17px;letter-spacing:.03em}
-.banner.good{border-color:rgba(61,214,140,.45);background:rgba(61,214,140,.08)}
-.banner.good b{color:var(--good)}
-.banner.bad{border-color:rgba(255,107,107,.45);background:rgba(255,107,107,.08)}
-.banner.bad b{color:var(--bad)}
-.banner .ic{font-size:22px}
-@keyframes pop{0%{transform:scale(.97);opacity:0}100%{transform:none;opacity:1}}
-.player-head{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
-.player-head h3{margin:0;font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:30px;line-height:1}
-.player-head .nick{color:var(--steel);font-style:italic}
-.rar{font-family:var(--f-data);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px;border-radius:5px;padding:2px 8px;border:1px solid}
-.opts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
-.opt{position:relative;text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--deck);padding:10px 10px 9px;display:flex;flex-direction:column;gap:6px;min-height:104px;transition:border-color .12s,background .12s,transform .12s}
-.opt:hover:not(:disabled){border-color:rgba(170,195,235,.35);background:var(--deck-2)}
-.opt[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--deck));box-shadow:0 0 0 1px var(--gold)}
-.opt:disabled{opacity:.45}
-.opt .k{font-weight:600;font-size:13.5px;line-height:1.2}
-.opt .row{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.opt .val{font-family:var(--f-data);font-weight:700;font-size:15px;color:var(--steel);font-variant-numeric:tabular-nums}
-.pips{display:flex;gap:2px}
-.pips i{width:6px;height:6px;border-radius:50%;background:var(--line)}
-.pips i.on{background:var(--gold)}
-.delta{font-family:var(--f-data);font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums}
-.delta.up{color:var(--good)}.delta.down{color:var(--bad)}.delta.zero{color:var(--steel-dim)}
-.opt .note{font-size:11.5px;color:var(--steel);line-height:1.3}
-.opt .hot{position:absolute;top:-7px;right:8px;background:var(--gold);color:var(--gold-ink);font-family:var(--f-data);font-weight:700;font-size:10.5px;letter-spacing:.08em;padding:1px 6px;border-radius:4px;text-transform:uppercase}
-.opt .key{position:absolute;top:9px;right:9px;font-family:var(--f-data);font-size:10.5px;color:var(--steel-dim)}
-.opt.trait .k{color:var(--gold)}
-.waiting{border:1px dashed var(--line);border-radius:var(--r);padding:26px;text-align:center;color:var(--steel)}
-.waiting .D{display:block;font-size:22px;color:var(--chalk);margin-bottom:4px}
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(5,13,26,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .2s;padding-bottom:env(safe-area-inset-bottom,0px)}
-.dock.show{transform:none}
-.dock .wrap{display:flex;align-items:center;gap:14px;padding-block:12px;flex-wrap:wrap}
-.dock .what{flex:1;min-width:0}
-.dock .what b{font-family:var(--f-display);text-transform:uppercase;font-weight:400;font-size:20px}
-.dock .what span{display:block;color:var(--steel);font-size:13.5px}
-.log{font-size:13px;color:var(--steel);display:flex;flex-direction:column;gap:3px;max-height:150px;overflow:auto}
-.log div{display:flex;gap:6px}
-.log .r{color:var(--steel-dim);font-family:var(--f-data);width:22px;flex:none}
-
-/* reveal */
-.reveal{display:grid;grid-template-columns:340px minmax(0,1fr);gap:30px;align-items:start}
-.reveal h2{font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:clamp(34px,6vw,58px);line-height:.95;margin:0 0 8px}
-.reveal .tierline{color:var(--steel);font-size:17px;margin:0 0 20px}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.field input,.field select{background:var(--deck);border:1px solid var(--line);border-radius:9px;padding:11px 12px;color:var(--chalk);font:inherit;font-size:16px;max-width:420px;width:100%}
-.ladder{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:6px 0 22px}
-.ladder div{border-top:4px solid var(--line);padding-top:5px;font-size:11.5px;color:var(--steel-dim);line-height:1.25}
-.ladder div.me{border-color:var(--gold);color:var(--chalk)}
-.ladder b{display:block;font-family:var(--f-data);font-size:13px}
-.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.insight{margin-top:22px;border-left:3px solid var(--gold);padding:4px 0 4px 14px;color:var(--steel);font-size:14.5px;max-width:62ch}
-.insight b{color:var(--chalk)}
-
-/* career */
-.career{display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;align-items:start}
-.panel{border:1px solid var(--line);border-radius:var(--r);background:var(--deck);padding:16px}
-.panel h3{margin:0 0 10px;font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:22px;letter-spacing:.02em}
-.panel h3 small{font-family:var(--f-data);color:var(--steel);font-size:13px;letter-spacing:.1em;margin-left:6px}
-.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
-.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
-.kv div{background:rgba(0,0,0,.18);border-radius:8px;padding:9px 11px}
-.kv b{display:block;font-family:var(--f-data);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
-.kv span{font-size:12px;color:var(--steel);font-family:var(--f-data);letter-spacing:.08em;text-transform:uppercase}
-.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.offer{text-align:left;border:1px solid var(--line);border-radius:var(--r);background:var(--deck);padding:14px;display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--cc)}
-.offer:hover{border-color:rgba(170,195,235,.35);border-top-color:var(--cc)}
-.offer[aria-pressed="true"]{box-shadow:0 0 0 2px var(--gold)}
-.offer h4{margin:0;font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:21px;line-height:1.05}
-.offer .tagline{font-size:13px;color:var(--steel)}
-.offer dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:13.5px}
-.offer dt{color:var(--steel)}
-.offer dd{margin:0;font-family:var(--f-data);font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
-.league{width:100%;border-collapse:collapse;font-size:14px}
-.league td,.league th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
-.league th{font-family:var(--f-data);font-size:12px;color:var(--steel-dim);letter-spacing:.1em;font-weight:600;text-transform:uppercase}
-.league td.n,.league th.n{text-align:right;font-family:var(--f-data);font-variant-numeric:tabular-nums;font-weight:600}
-.league tr.me td{background:rgba(255,207,63,.12);color:var(--gold);font-weight:700}
-.league tr.gap td{color:var(--steel-dim);text-align:center;padding:2px}
-.league .zone{width:4px;padding:0}
-.league .z-cl{background:var(--g-a)}.league .z-rel{background:var(--bad)}
-.ko{display:flex;flex-direction:column;gap:6px}
-.ko div{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.18);font-size:14px;animation:pop .35s both}
-.ko .rd{font-family:var(--f-data);font-size:12.5px;color:var(--steel);letter-spacing:.08em;text-transform:uppercase}
-.ko .sc{font-family:var(--f-data);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
-.ko .w{color:var(--good)}.ko .l{color:var(--bad)}
-.choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px}
-.choice button{text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--deck-2);padding:12px 14px;display:flex;flex-direction:column;gap:4px}
-.choice button:hover{border-color:var(--gold)}
-.choice small{color:var(--steel);font-size:12.5px}
-.trophies{display:flex;flex-wrap:wrap;gap:8px}
-.trophy{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(255,207,63,.35);color:var(--gold);border-radius:999px;padding:3px 11px;font-family:var(--f-data);font-weight:700;font-size:13.5px;letter-spacing:.04em}
-.trophy.none{border-color:var(--line);color:var(--steel-dim)}
-.bdo{display:flex;flex-direction:column;gap:3px;font-size:14px}
-.bdo div{display:grid;grid-template-columns:28px 1fr auto;gap:8px;padding:5px 8px;border-radius:6px;animation:pop .3s both}
-.bdo div.me{background:rgba(255,207,63,.14);color:var(--gold);font-weight:700}
-.bdo .p{font-family:var(--f-data);font-weight:700;color:var(--steel)}
-.bdo .s{font-family:var(--f-data);color:var(--steel);font-variant-numeric:tabular-nums}
-.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-.chg{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:7px;background:rgba(0,0,0,.18);font-size:14px}
-.chg b{font-family:var(--f-data);font-variant-numeric:tabular-nums}
-.chg .up{color:var(--good)}.chg .down{color:var(--bad)}
-.opts-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
-.opts-row button{text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--deck-2);padding:10px 12px;display:flex;flex-direction:column;gap:2px;font-size:14px}
-.opts-row button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
-.opts-row button small{color:var(--steel);font-size:12.5px}
-.opts-row .price{font-family:var(--f-data);font-weight:700;color:var(--gold)}
-.timeline{width:100%;border-collapse:collapse;font-size:14px}
-.timeline td,.timeline th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
-.timeline th{font-family:var(--f-data);font-size:12px;color:var(--steel-dim);letter-spacing:.1em;font-weight:600;text-transform:uppercase}
-.timeline td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums;font-weight:600}
-.muted{color:var(--steel)}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;z-index:50;background:var(--chalk);color:var(--night);border-radius:9px;padding:10px 16px;font-weight:600;transition:all .25s;pointer-events:none;max-width:calc(100% - 32px)}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-.share-fallback{width:100%;max-width:420px;height:120px;background:var(--deck);color:var(--chalk);border:1px solid var(--line);border-radius:8px;padding:8px;font-family:var(--f-data)}
-
-@media (max-width:900px){
-  .hero{grid-template-columns:1fr;gap:20px}
-  .draft,.reveal,.career{grid-template-columns:1fr}
-  .side{position:static}
-  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .opt{min-height:0}
+@media (max-width:560px){
+  .hero{padding:36px 0 18px}
+  .hero p{font-size:16px}
+  .top nav{gap:14px}
 }
-@media (max-width:640px){
-  .positions{grid-template-columns:1fr}
-  .how{grid-template-columns:1fr}
-  .reels{grid-template-columns:1fr}
-  .reel{height:88px}
-  .reel .win{top:22px}
-  .strip{transform:translateY(-22px)}
-  .lc-ovr{font-size:48px}
-  .top-info .hide-sm{display:none}
-  .dock .what{flex-basis:100%}
-  .dock .what b{font-size:18px}
-  kbd{display:none}
-  .ladder{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .ko div{grid-template-columns:84px 1fr auto}
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-.nav-links{display:flex;gap:16px;flex-wrap:wrap}
-.nav-links a{font-size:14px;font-weight:600;color:var(--steel);text-decoration:none}
-.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--gold)}
-.top .wrap{flex-wrap:wrap}
-.site-info{padding-block:10px 60px;border-top:1px solid var(--line)}
-.site-info .col{max-width:720px}
-.site-info h2{font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:24px;color:var(--gold);margin:34px 0 10px;letter-spacing:.02em}
-.site-info h3{font-size:15.5px;margin:20px 0 6px}
-.site-info p{color:#C3CFE0;font-size:15px;margin:0 0 12px;line-height:1.7}
-.guide-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:14px}
-.guide-links a{display:flex;flex-direction:column;gap:3px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--deck);color:var(--chalk);text-decoration:none}
-.guide-links a:hover{border-color:var(--gold)}
-.guide-links span{color:var(--steel);font-size:13.5px}
-.site-foot{border-top:1px solid var(--line);background:rgba(5,13,26,.7)}
-.foot-in{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:30px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px}
-.foot-in h4{font-family:var(--f-data);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
-.foot-in a{display:block;font-size:14px;color:var(--steel);margin-bottom:7px;text-decoration:none}
-.foot-in a:hover{color:var(--chalk)}
-.foot-in p{font-size:13px;color:var(--steel-dim);line-height:1.6;margin:0}
-.foot-legal{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 calc(30px + env(safe-area-inset-bottom,0px));font-size:12.5px;color:var(--steel-dim)}
-main{padding-block:22px 60px}
-@media (max-width:640px){.nav-links{order:3;width:100%;gap:14px}.nav-links a{font-size:13px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
 <header class="top"><div class="wrap">
-  <button class="brand" id="home-btn" type="button" aria-label="Stat Thief home">
-    <svg viewBox="0 0 22 24" aria-hidden="true"><path d="M11 0 22 4v9c0 6-5 9.5-11 11C5 22.5 0 19 0 13V4z" fill="#10243F" stroke="#FFCF3F" stroke-width="1.2"/><path d="M6 13h10M11 7v11" stroke="#FFCF3F" stroke-width="2"/></svg>
-    Stat <b>Thief</b>
-  </button>
-  <nav class="nav-links" aria-label="Main">
-    <a href="/" aria-current="page">Play</a>
-    <a href="guides.html">Guides</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
+  <a class="brand" href="/"><i aria-hidden="true"></i>Stats<b>Thief</b></a>
+  <nav aria-label="Principal">
+    <a href="#jeux">Jeux</a>
+    <a href="#neon-city">Néon City</a>
   </nav>
-  <div class="top-info" id="top-info"></div>
 </div></header>
-<main><div class="wrap" id="view"></div></main>
-<section class="site-info" id="site-info"><div class="wrap"><div class="col">
-  <h2>About Stat Thief</h2>
-  <p>Stat Thief turns Premier League history into a drafting game. Instead of picking a squad, you build a single fictional legend one attribute at a time. You spin through real clubs and real players and steal one statistic from each name that comes up. After ten rounds you are left with a composite footballer who never existed, and then you find out what kind of career that player has.</p>
 
-  <h2>How to play</h2>
-  <p>Every run starts with a position. Forward, Midfielder and Defender each weigh the eight attributes differently, and the reels only surface players who fit the role you picked.</p>
-  <p>Each round spins two reels: first a club, then a player from that club. When the player lands you see eight attributes graded from S to F, a playstyle trait and a nationality. You keep exactly one. Every option shows how much it would move your overall rating right now, so you can see when a B+ in a heavy attribute beats an S in a light one.</p>
-  <p>You get one club respin and one player respin per draft. Random events are announced before you spin: some boost or weaken the next player, others hand you an extra respin. Three steals from the same club, or a nationality backed by other steals from that country, earn a bond bonus on top of your rating.</p>
-  <p>After ten rounds your legend gets an overall rating and a tier. Then the career starts: pick from three contract offers, play the big game of the season, finish the league, chase the Champions League and the Ballon d'Or, and spend your wages on training and recovery as your player ages. Retire whenever you like after 30, and the best careers enter your Hall of Fame.</p>
-
-  <h2>Frequently asked questions</h2>
-  <h3>Where do the stats come from?</h3>
-  <p>Each player's numbers are loosely inspired by the qualities they are remembered for, simplified into an S-to-F grade so drafts stay fast and readable. They are meant to feel familiar to football fans, not to serve as accurate performance data.</p>
-  <h3>Is Stat Thief affiliated with the Premier League or any club?</h3>
-  <p>No. Stat Thief is an independent, unofficial fan project. Club names, colours and player references are used for identification and entertainment only, and Stat Thief has no affiliation with any league, club or player.</p>
-  <h3>What is the daily draft?</h3>
-  <p>Once a day everyone gets the same draft: the same position, the same clubs, players and events. Your choices are the only difference. Your best daily score is kept on your device.</p>
-  <h3>Does progress save between visits?</h3>
-  <p>Your best draft and your Hall of Fame of finished careers are stored in your own browser's local storage. Nothing is sent to a server. A draft or career in progress lasts as long as the tab is open.</p>
-
-  <h2>Guides and strategy</h2>
-  <p>The draft takes a few minutes, but the systems underneath it are not obvious. These guides explain the weightings, the grade scale and the decisions that separate a seventy-rated build from a ninety-rated one.</p>
-  <div class="guide-links">
-    <a href="how-to-play.html"><strong>How to play &rarr;</strong><span>The complete rules of a draft, round by round.</span></a>
-    <a href="stat-grades-explained.html"><strong>The S-to-F grade scale &rarr;</strong><span>What each letter is worth and why C is break-even.</span></a>
-    <a href="choosing-your-position.html"><strong>Choosing your position &rarr;</strong><span>The exact attribute weightings for all three roles.</span></a>
-    <a href="draft-strategy.html"><strong>Draft strategy &rarr;</strong><span>Respin economy, traits and event timing.</span></a>
-    <a href="career-mode.html"><strong>Seasons &amp; career mode &rarr;</strong><span>Clubs, wages, Europe and the Ballon d'Or.</span></a>
+<main>
+  <div class="wrap hero">
+    <div class="count">7 jeux · gratuits · dans le navigateur</div>
+    <h1>Mes jeux, <em>tous au même endroit.</em></h1>
+    <p>De la conduite en 3D sur le plateau du Moulon, une ville néon à explorer, et un jeu de draft de football. Rien à installer : clique et joue.</p>
   </div>
-</div></div></section>
-<footer class="site-foot">
-  <div class="foot-in">
-    <div>
-      <h4>Stat Thief</h4>
-      <p>An independent fan-made drafting game built around Premier League history. Free to play, no account, no download.</p>
+
+  <section id="jeux"><div class="wrap">
+    <div class="sec-h"><h2>Les jeux</h2></div>
+    <div class="grid big">
+
+      <a class="card" href="/neon-drift/">
+        <div class="shot"><img src="img/neon-drift.webp" width="640" height="400" alt="Écran titre de Néon Drift au-dessus de la ville de nuit"></div>
+        <div class="body">
+          <span class="tag">Conduite · bac à sable 3D</span>
+          <h3>Néon Drift</h3>
+          <p>Prépare ta voiture au garage, puis roule, drifte et saute dans la ville autour de l'arena, ou sur le plateau du Moulon reconstruit depuis OpenStreetMap.</p>
+          <div class="meta"><span class="pill">Clavier</span><span class="pill">Jour / nuit</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card cyan" href="/gif-t-a/">
+        <div class="shot"><img src="img/gif-t-a.webp" width="640" height="400" alt="Menu de Gif T A devant le quartier du Moulon en 3D" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Balade · voiture et métro</span>
+          <h3>Gif T A</h3>
+          <p>Le quartier du Moulon, rue par rue, à l'échelle 1:1. Trois voitures, la ligne 18 du métro à conduire, la météo, l'heure du jour et les feux tricolores.</p>
+          <div class="meta"><span class="pill">Clavier</span><span class="pill">Tactile</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card gold" href="/stat-thief/">
+        <div class="shot"><img src="img/stat-thief.webp" width="640" height="400" alt="Accueil de Stat Thief avec une carte de joueur" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Football · draft</span>
+          <h3>Stat Thief</h3>
+          <p>Vole une statistique par tour à des joueurs de Premier League, construis une légende en dix tours, puis joue toute sa carrière. Un nouveau draft chaque jour.</p>
+          <div class="meta"><span class="pill">En anglais</span><span class="pill">Souris / tactile</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
     </div>
-    <div>
-      <h4>Guides</h4>
-      <a href="how-to-play.html">How to play</a>
-      <a href="stat-grades-explained.html">The S-to-F grade scale</a>
-      <a href="choosing-your-position.html">Choosing your position</a>
-      <a href="draft-strategy.html">Draft strategy</a>
-      <a href="career-mode.html">Seasons &amp; career mode</a>
+  </div></section>
+
+  <section id="neon-city"><div class="wrap">
+    <div class="sec-h"><h2>L'univers Néon City</h2><p>Les coulisses de Néon Drift, à explorer à part.</p></div>
+    <div class="grid small">
+
+      <a class="card" href="/la-planque/">
+        <div class="shot"><img src="img/la-planque.webp" width="640" height="400" alt="Spectre devant l'entrepôt de la Planque, de nuit" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Exploration</span>
+          <h3>La Planque</h3>
+          <p>Un entrepôt anodin, un monte-charge, une base secrète et une supercar à prendre en main.</p>
+          <div class="meta"><span class="pill">Clavier</span><span class="play">Entrer</span></div>
+        </div>
+      </a>
+
+      <a class="card cyan" href="/le-repaire/">
+        <div class="shot"><img src="img/le-repaire.webp" width="640" height="400" alt="La voiture LAME L-01 sur sa plateforme dans le Repaire" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Visite 3D</span>
+          <h3>Le Repaire</h3>
+          <p>La base de Spectre au niveau -3, sous le parking de l'Arena, et sa voiture de poursuite LAME L-01.</p>
+          <div class="meta"><span class="pill">Souris / tactile</span><span class="play">Entrer</span></div>
+        </div>
+      </a>
+
+      <a class="card cyan" href="/spectre/">
+        <div class="shot"><img src="img/spectre.webp" width="640" height="400" alt="Spectre accroupi sur un socle lumineux en studio" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Showroom</span>
+          <h3>Spectre</h3>
+          <p>Le justicier de Néon Drift en studio : poses, angles de caméra et couleurs de néon.</p>
+          <div class="meta"><span class="pill">Souris / tactile</span><span class="play">Voir</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/labo-perso/">
+        <div class="shot"><img src="img/labo-perso.webp" width="640" height="400" alt="Personnage en costume dans l'atelier Labo Perso" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Atelier personnage</span>
+          <h3>Labo Perso</h3>
+          <p>Règle ton personnage avant d'entrer en ville : style, tenue, silhouette et animations.</p>
+          <div class="meta"><span class="pill">Clavier + souris</span><span class="play">Ouvrir</span></div>
+        </div>
+      </a>
+
     </div>
-    <div>
-      <h4>Site</h4>
-      <a href="about.html">About the project</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy &amp; cookies</a>
-      <a href="terms.html">Terms of use</a>
-    </div>
-  </div>
-  <div class="foot-legal">
-    Stat Thief is an unofficial fan project. It is not affiliated with, endorsed by or associated with the Premier League, any football club, any player, or any of their licensors. Club and player names are referenced for identification and commentary only. Stats shown in the game are simplified approximations created for entertainment and do not represent official performance data.
-    <br><br>&copy; 2026 Stat Thief. All game design, text and code on this site are original work.
-  </div>
-</footer>
+  </div></section>
+</main>
 
-<div class="dock" id="dock"><div class="wrap" id="dock-in"></div></div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script>
-const SK=["spd","sho","pas","dri","def","phy","aer","men"];
-const SL_POS={
-  ATT:{spd:"Pace",sho:"Finishing",pas:"Key Pass",dri:"Dribbling",def:"Pressing",phy:"Power",aer:"Heading",men:"Composure"},
-  MID:{spd:"Pace",sho:"Shooting",pas:"Passing",dri:"Technique",def:"Tackling",phy:"Stamina",aer:"Aerial",men:"Vision"},
-  DEF:{spd:"Pace",sho:"Shooting",pas:"Build-up",dri:"Awareness",def:"Tackling",phy:"Power",aer:"Aerial",men:"Leadership"},
-};
-function SL(k){return SL_POS[ST.pos][k];}
-const ALL_KEYS=[...SK,"ps","nat"];
-function P(n,pos,style,ps,s,h,p2,d,df,ph,ae,me){return{name:n,pos,style,ps,spd:s,sho:h,pas:p2,dri:d,def:df,phy:ph,aer:ae,men:me};}
-function posG(p){if(["BU","AIL","F9","SS"].includes(p))return"ATT";if(["MOC","MC","MDC","MG","MD"].includes(p))return"MID";if(["DC","DG","DD"].includes(p))return"DEF";return null;}
-
-const CLUBS=[
-{name:"Arsenal",color:"#EF0107",players:[
-P("Thierry Henry","BU","King of Highbury","Poacher",92,90,82,90,35,76,68,90),
-P("Dennis Bergkamp","F9","Dutch Virtuoso","False 9 Genius",78,84,88,92,30,68,55,92),
-P("Robert Pirès","AIL","Silky Frenchman","Dribbling Wizard",84,80,86,88,40,66,50,80),
-P("Ian Wright","BU","Arsenal's Arrow","Clinical Finisher",88,88,66,82,30,78,72,78),
-P("Patrick Vieira","MC","Colossal Captain","Box-to-Box",78,70,82,78,86,90,82,88),
-P("Cesc Fàbregas","MOC","Catalan Prodigy","Visionary Playmaker",72,74,92,86,55,62,48,86),
-P("Gilberto Silva","MDC","Invisible Wall","Relentless Anchor",66,58,78,68,88,82,72,84),
-P("Tony Adams","DC","Mr Arsenal","Aerial Captain",64,32,66,48,90,84,86,92),
-P("Sol Campbell","DC","Marble Rock","Defensive Titan",74,38,60,52,90,88,88,80),
-P("Ashley Cole","DG","Best English Fullback","Attacking Fullback",86,48,72,76,86,78,64,82),
-P("Lee Dixon","DD","Loyal Warrior","Pressing Fullback",76,40,66,62,84,74,66,80),
-]},
-{name:"Chelsea",color:"#034694",players:[
-
-P("Didier Drogba","BU","The Chosen One of Finals","Target Man",82,88,66,80,38,90,88,88),
-P("Gianfranco Zola","F9","Sardinian Wizard","False 9 Genius",80,84,86,92,30,60,48,86),
-P("Eden Hazard","AIL","Belgian Diamond","Dribbling Wizard",86,82,82,94,40,68,50,82),
-P("Jimmy F. Hasselbaink","BU","Dutch Cannon","Clinical Finisher",78,90,64,76,30,82,74,76),
-P("Frank Lampard","MC","Super Frank","Box-to-Box",72,88,82,78,68,76,70,90),
-P("Claude Makélélé","MDC","The Role Bears His Name","Relentless Anchor",68,44,78,72,90,78,66,88),
-P("Michael Essien","MC","The Bison","Diesel Engine",78,74,76,76,82,86,72,80),
-P("N'Golo Kanté","MDC","Tireless Little Prince","Diesel Engine",80,56,80,78,90,76,62,86),
-P("John Terry","DC","Captain Leader Legend","Aerial Captain",62,42,68,52,92,84,88,92),
-P("Marcel Desailly","DC","The Rock","Defensive Titan",72,34,66,58,90,88,86,82),
-P("Ashley Cole","DG","Best PL Fullback","Attacking Fullback",86,48,72,76,86,78,64,82),
-P("Branislav Ivanović","DD","Serbian Tank","Guard Dog",72,58,64,58,84,86,80,78),
-P("César Azpilicueta","DD","Captain Azpi","Clean Defender",74,36,70,64,88,76,72,88)
-]},
-{name:"Liverpool",color:"#C8102E",players:[
-
-P("Mohamed Salah","AIL","Dribbling Pharaoh","Poacher",90,90,80,90,40,74,60,88),
-P("Luis Suárez","BU","El Pistolero","Clinical Finisher",84,92,78,90,42,78,66,82),
-P("Roberto Firmino","F9","Brazilian Maestro","False 9 Genius",76,80,82,84,52,74,64,86),
-P("Kenny Dalglish","F9","King Kenny","False 9 Genius",78,86,88,90,35,70,60,90),
-P("Michael Owen","BU","Wonder Boy","Speed Demon",92,88,64,82,28,66,58,76),
-P("Steven Gerrard","MC","Fantastic Captain","Box-to-Box",80,86,86,80,78,82,76,90),
-P("Xabi Alonso","MC","Basque Architect","Visionary Playmaker",68,76,92,78,72,70,58,88),
-P("Javier Mascherano","MDC","Argentine Pitbull","Relentless Anchor",72,42,74,68,90,80,68,84),
-P("Virgil van Dijk","DC","Titan Captain","Aerial Captain",76,40,80,64,92,88,92,90),
-P("Jamie Carragher","DC","Liverpool Warrior","Guard Dog",64,28,64,48,86,82,82,88),
-P("Andrew Robertson","DG","Warrior Fullback","Attacking Fullback",86,52,80,78,76,74,64,80),
-P("Trent Alexander-Arnold","DD","Visionary Fullback","Visionary Playmaker",82,72,92,80,68,66,58,82)
-]},
-{name:"Manchester United",color:"#DA291C",players:[
-
-P("Cristiano Ronaldo","AIL","CR7","Speed Demon",94,92,78,90,34,80,86,88),
-P("Wayne Rooney","BU","Manchester's Kid","Poacher",84,88,80,84,48,82,76,84),
-P("George Best","AIL","The Fifth Beatle","Dribbling Wizard",86,84,76,94,34,68,62,78),
-P("Bobby Charlton","F9","Sir Bobby","Clinical Finisher",80,90,82,78,40,72,68,90),
-P("Eric Cantona","F9","The King","False 9 Genius",76,86,84,88,38,78,68,90),
-P("Ryan Giggs","MC","The Eternal Welshman","Orchestrator",84,74,84,90,48,68,54,82),
-P("Paul Scholes","MC","Ginger Prince","Visionary Playmaker",68,82,90,80,66,68,58,88),
-P("Roy Keane","MC","Fierce Captain","Box-to-Box",76,72,78,74,86,84,74,90),
-P("Michael Carrick","MDC","English Metronome","Ice-Cold Metronome",66,62,86,72,78,68,62,84),
-P("Rio Ferdinand","DC","Rolls Royce","Modern Sweeper",80,38,80,70,90,82,84,86),
-P("Nemanja Vidić","DC","The Unyielding Serb","Defensive Titan",64,34,58,48,92,88,90,84),
-P("Patrice Evra","DG","Uncle Pat","Attacking Fullback",82,48,76,74,82,78,68,80),
-P("Gary Neville","DD","The Local Warrior","Pressing Fullback",74,38,72,64,86,74,68,82)
-]},
-{name:"Manchester City",color:"#6CABDD",players:[
-
-P("Sergio Agüero","BU","Agüerooo!","Clinical Finisher",86,92,72,86,30,74,68,84),
-P("Raheem Sterling","AIL","Manchester Sprinter","Speed Demon",92,78,76,88,38,68,52,72),
-P("Carlos Tevez","BU","Apache","Kamikaze Winger",82,84,70,84,42,80,68,80),
-P("Bernardo Silva","AIL","Portuguese Little Prince","Dribbling Wizard",76,76,86,90,52,62,48,82),
-P("Kevin De Bruyne","MC","Belgian Architect","Visionary Playmaker",78,84,94,86,52,68,56,88),
-P("David Silva","MOC","El Mago","Orchestrator",74,76,92,90,40,56,44,86),
-P("Yaya Touré","MC","Ivorian Colossus","Box-to-Box",76,82,84,82,74,86,76,82),
-P("Fernandinho","MDC","Brazilian Sentinel","Diesel Engine",72,58,80,72,86,80,68,82),
-P("Rodri","MDC","Spanish Brain","Ice-Cold Metronome",64,68,90,78,86,82,76,92),
-P("Vincent Kompany","DC","Captain Kompany","Aerial Captain",72,38,74,56,90,86,86,90),
-P("Joleon Lescott","DC","English Wall","Defensive Titan",66,32,62,50,84,82,82,76),
-P("Pablo Zabaleta","DD","Argentine Warrior","Pressing Fullback",80,52,68,66,82,80,66,80),
-P("Aleksandar Kolarov","DG","Serbian Cannon","Attacking Fullback",76,72,72,68,74,76,66,72),
-P("Kyle Walker","DD","PL's Fastest","Pressing Fullback",92,44,70,72,82,78,66,78)
-]},
-{name:"Tottenham",color:"#132257",players:[
-
-P("Harry Kane","BU","Captain Hurricane","Clinical Finisher",78,92,80,82,38,80,80,86),
-P("Son Heung-min","AIL","Korean Captain","Poacher",90,86,76,86,40,72,58,82),
-P("Gareth Bale","AIL","The Fast Welshman","Speed Demon",94,84,72,88,38,76,68,76),
-P("Jimmy Greaves","BU","Total Legend","Poacher",82,94,68,86,28,66,60,82),
-P("Glenn Hoddle","MOC","English Maestro","Orchestrator",72,78,90,86,52,62,50,84),
-P("Luka Modrić","MC","Croatian Wizard","Ice-Cold Metronome",76,72,90,88,62,60,50,88),
-P("Mousa Dembélé","MC","The Ball Carrier","Dribbling Wizard",76,62,78,90,76,84,66,78),
-P("Dele Alli","MOC","The Spurs Kid","Attacking Maestro",78,80,74,82,48,74,64,72),
-P("Christian Eriksen","MOC","Danish Maestro","Visionary Playmaker",72,80,90,84,42,58,50,84),
-P("Ledley King","DC","King Without Knees","Clean Defender",76,34,72,68,90,80,82,84),
-P("Jan Vertonghen","DC","Super Jan","Modern Sweeper",74,38,76,64,86,78,80,82),
-P("Toby Alderweireld","DC","The Iron Belgian","Defensive Titan",68,32,74,56,88,82,84,86),
-P("Danny Rose","DG","Explosive Fullback","Attacking Fullback",84,50,68,74,74,72,60,70),
-P("Gareth Bale","DG","Fullback Turned Star","Attacking Fullback",90,60,68,78,72,74,62,72)
-]},
-{name:"Newcastle",color:"#241F20",players:[
-P("Alan Shearer","BU","Tyneside Legend","Clinical Finisher",78,94,68,76,32,86,84,86),
-P("Les Ferdinand","BU","Sir Les","Target Man",82,86,64,78,30,86,82,78),
-P("David Ginola","AIL","The Magnificent","Dribbling Wizard",82,76,78,92,28,68,52,76),
-P("Hatem Ben Arfa","AIL","Unpredictable Genius","Dribbling Wizard",84,78,72,92,32,64,48,62),
-P("Robert Lee","MC","Box-to-Box Midfielder","Box-to-Box",78,72,78,76,68,74,66,78),
-P("Gary Speed","MC","Welsh Captain","Box-to-Box",74,70,78,72,72,76,70,82),
-P("Nicky Butt","MDC","English Destroyer","Relentless Anchor",68,52,72,64,82,78,64,76),
-P("Fabricio Coloccini","DC","Argentine Elegance","Modern Sweeper",72,30,72,64,84,76,80,78),
-P("Shola Ameobi","BU","Mackem Slayer","Target Man",74,72,56,68,30,82,78,68),
-P("José Enrique","DG","Spanish Fullback","Attacking Fullback",78,42,68,72,74,72,58,68),
-P("Kieran Trippier","DD","Right-footed Left Foot","Visionary Playmaker",76,68,80,70,76,70,62,80),
-]},
-{name:"Aston Villa",color:"#670E36",players:[
-
-P("Dwight Yorke","BU","The Smiling Trinidadian","False 9 Genius",82,84,78,86,34,74,70,78),
-P("Gabriel Agbonlahor","AIL","Fast Gabby","Speed Demon",90,76,62,80,36,76,64,68),
-P("Juan Pablo Ángel","BU","Colombian Angel","Clinical Finisher",78,84,68,78,28,72,72,76),
-P("Jack Grealish","AIL","Prince of Birmingham","Dribbling Wizard",80,74,80,90,38,66,48,78),
-P("James Milner","MC","Mr Versatile","Box-to-Box",78,68,80,74,74,78,66,84),
-P("Stiliyan Petrov","MC","Bulgarian Captain","Orchestrator",72,70,80,76,70,72,62,80),
-P("Gareth Barry","MDC","Quiet Boss","Ice-Cold Metronome",66,62,80,66,80,74,68,82),
-P("Martin Laursen","DC","Danish Viking","Defensive Titan",70,28,60,48,86,84,86,78),
-P("Olof Mellberg","DC","Swedish Wall","Aerial Captain",68,32,62,50,86,84,84,80),
-P("Wilfred Bouma","DG","Dutch Tank","Guard Dog",72,28,64,54,82,80,74,74),
-P("Alan Hutton","DD","Fast Fullback","Pressing Fullback",82,38,58,64,76,76,62,70)
-]},
-{name:"Everton",color:"#003399",players:[
-
-P("Romelu Lukaku","BU","Big Rom","Target Man",84,86,62,76,30,90,82,74),
-P("Tim Cahill","F9","King of the Air","Kamikaze Winger",74,80,66,70,52,78,88,80),
-P("Kevin Mirallas","AIL","Belgian Lightning","Dribbling Wizard",84,78,68,84,34,66,50,68),
-P("Wayne Rooney","BU","Goodison's Kid","Poacher",84,86,76,82,44,80,72,80),
-P("Steven Pienaar","AIL","South African Maestro","Visionary Playmaker",78,68,82,84,42,60,46,76),
-P("Leon Osman","MOC","Local Hero","Attacking Maestro",72,72,78,80,56,60,48,78),
-P("Marouane Fellaini","MC","The Belgian Tower","Box-to-Box",68,72,66,68,68,84,88,72),
-P("Phil Jagielka","DC","Brave Captain","Defensive Titan",72,30,60,48,86,82,80,80),
-P("Sylvain Distin","DC","French Longevity","Clean Defender",74,28,62,52,84,82,82,76),
-P("Leighton Baines","DG","The Left-footer","Attacking Fullback",76,62,80,76,78,68,60,80),
-P("Séamus Coleman","DD","Everton Legend","Pressing Fullback",80,48,66,68,80,74,66,78)
-]},
-{name:"West Ham",color:"#7A263A",players:[
-
-P("Paolo Di Canio","F9","The Brilliant Madman","Dribbling Wizard",78,82,76,90,28,66,56,68),
-P("Carlton Cole","BU","Big Carlton","Target Man",72,76,58,66,32,86,80,70),
-P("Dimitri Payet","AIL","The Réunion Magician","Visionary Playmaker",76,80,88,88,38,64,48,78),
-P("Marlon Harewood","BU","Fast and Strong","Speed Demon",84,76,56,70,28,82,72,64),
-P("Jarrod Bowen","AIL","The Lion of the East","Poacher",84,82,72,82,44,74,60,76),
-P("Scott Parker","MC","Midfield Gentleman","Diesel Engine",70,62,78,72,82,76,64,82),
-P("Mark Noble","MC","Mr West Ham","Orchestrator",62,66,78,68,72,70,60,82),
-P("Declan Rice","MDC","The English Rock","Relentless Anchor",70,60,82,74,88,84,78,86),
-P("Rio Ferdinand","DC","Before the Glory","Modern Sweeper",80,34,76,66,86,80,80,80),
-P("James Collins","DC","Ginger Pele","Aerial Captain",62,28,58,44,82,82,84,74),
-P("Aaron Cresswell","DG","The Left-footer","Attacking Fullback",74,50,72,66,74,66,62,74),
-P("Glen Johnson","DD","Versatile Fullback","Attacking Fullback",82,56,66,72,74,72,60,68)
-]},
-{name:"Leicester",color:"#003090",players:[
-P("Jamie Vardy","BU","Royal Street Cat","Speed Demon",94,84,56,78,30,78,68,78),
-P("Riyad Mahrez","AIL","Algerian Wizard","Dribbling Wizard",80,82,82,92,34,58,48,80),
-P("Gary Lineker","BU","Golden Boot","Clinical Finisher",88,90,66,80,24,68,66,82),
-P("Emile Heskey","BU","The Tank","Target Man",76,72,62,66,34,90,80,72),
-P("N'Golo Kanté","MDC","The Little Prince","Diesel Engine",82,56,80,80,92,78,62,86),
-P("Youri Tielemans","MC","Elegant Belgian","Ice-Cold Metronome",66,74,84,78,68,68,58,80),
-P("Danny Drinkwater","MC","Surprise Champion","Box-to-Box",68,66,76,68,76,74,62,76),
-P("Wes Morgan","DC","Captain Morgan","Aerial Captain",60,28,54,42,84,84,86,82),
-P("Robert Huth","DC","German Tank","Defensive Titan",58,32,52,40,86,88,88,76),
-P("Ben Chilwell","DG","English Fullback","Attacking Fullback",82,52,74,76,74,68,58,74),
-P("Ricardo Pereira","DD","Portuguese Fullback","Pressing Fullback",80,52,72,74,76,72,60,74),
-]},
-{name:"Wolverhampton",color:"#FDB913",players:[
-P("Raúl Jiménez","BU","Mexican Wolf","Poacher",76,82,68,78,34,82,80,78),
-P("Robbie Keane","BU","Travelling Irishman","Clinical Finisher",82,84,72,82,30,70,66,78),
-P("Diogo Jota","AIL","Portuguese Genius","Kamikaze Winger",84,82,70,84,36,72,60,76),
-P("Matt Jarvis","AIL","English Winger","Speed Demon",86,66,68,78,38,64,50,68),
-P("Rúben Neves","MC","Portuguese Maestro","Orchestrator",66,76,86,76,72,70,60,82),
-P("Joao Moutinho","MC","The Portuguese Sage","Visionary Playmaker",68,68,88,80,64,58,48,84),
-P("Dave Edwards","MC","Welsh Midfielder","Box-to-Box",72,64,72,66,72,74,66,74),
-P("Conor Coady","DC","Brave Captain","Guard Dog",64,28,66,50,82,78,80,80),
-P("Willy Boly","DC","French Titan","Defensive Titan",66,30,64,50,84,84,84,74),
-P("Jonny Castro","DG","Spanish Fullback","Attacking Fullback",78,48,72,74,74,72,58,72),
-P("Matt Doherty","DD","Irish Fullback","Attacking Fullback",80,58,72,70,72,74,64,72),
-]},
-{name:"Brighton",color:"#0057B8",players:[
-
-P("Glenn Murray","BU","The Veteran","Poacher",62,82,60,64,28,78,78,80),
-P("Leandro Trossard","AIL","Belgian Super Sub","Super Sub",82,78,76,84,40,68,52,76),
-P("Kaoru Mitoma","AIL","Japanese Genius","Dribbling Wizard",88,76,72,92,38,66,48,74),
-P("Bobby Zamora","BU","Bobby Dazzler","Target Man",72,76,62,70,28,82,76,72),
-P("Yves Bissouma","MDC","Malian Warrior","Relentless Anchor",68,58,74,72,84,82,66,76),
-P("Pascal Groß","MC","German Brain","Visionary Playmaker",66,70,84,74,60,60,50,80),
-P("Moisés Caicedo","MDC","Ecuadorian Wall","Diesel Engine",76,58,80,74,86,80,66,80),
-P("Alexis Mac Allister","MC","World Champion","Box-to-Box",72,72,86,82,68,70,56,82),
-P("Lewis Dunk","DC","Seagulls Captain","Aerial Captain",60,32,70,50,86,82,86,84),
-P("Shane Duffy","DC","Irish Colossus","Defensive Titan",56,30,54,40,82,82,86,72),
-P("Tariq Lamptey","DD","Ghanaian Thunder","Pressing Fullback",90,54,68,80,68,66,54,66),
-P("Marc Cucurella","DG","Spanish Fullback","Pressing Fullback",80,44,72,74,76,70,60,72)
-]},
-{name:"Crystal Palace",color:"#1B458F",players:[
-P("Wilfried Zaha","AIL","King of Selhurst","Dribbling Wizard",88,78,70,92,38,72,56,72),
-P("Ian Wright","BU","Before Arsenal","Speed Demon",86,86,62,80,28,76,68,76),
-P("Andrew Johnson","BU","AJ the Scorer","Clinical Finisher",80,82,58,76,28,72,66,72),
-P("Christian Benteke","BU","Belgian Tower","Target Man",72,78,56,68,30,86,86,68),
-P("Yohan Cabaye","MC","The Chic Frenchman","Orchestrator",70,72,84,78,66,62,52,80),
-P("Mile Jedinak","MDC","Australian Captain","Relentless Anchor",62,58,70,58,82,82,74,80),
-P("James McArthur","MC","Tireless Scot","Diesel Engine",68,58,72,66,72,74,62,78),
-P("Scott Dann","DC","English Captain","Aerial Captain",62,28,60,46,84,82,84,78),
-P("Marc Guéhi","DC","Elegant Defender","Clean Defender",76,30,72,58,86,80,84,82),
-P("Patrick van Aanholt","DG","Dutch Fullback","Attacking Fullback",82,52,68,72,70,68,56,66),
-P("Joel Ward","DD","Faithful Soldier","Pressing Fullback",72,32,60,54,80,76,68,76),
-]},
-{name:"Bournemouth",color:"#DA291C",players:[
-P("Callum Wilson","BU","English Scorer","Clinical Finisher",84,82,62,78,30,76,68,74),
-P("Joshua King","BU","Quiet Norwegian","Poacher",82,78,64,80,34,76,68,72),
-P("Ryan Fraser","AIL","Little Scot","Visionary Playmaker",84,70,78,82,36,56,44,68),
-P("Junior Stanislas","AIL","English Winger","Dribbling Wizard",76,76,72,82,34,64,52,70),
-P("David Brooks","MC","Welsh Artisan","Attacking Maestro",74,68,78,80,44,58,48,72),
-P("Lewis Cook","MC","English Midfielder","Ice-Cold Metronome",68,60,78,70,68,66,56,74),
-P("Andrew Surman","MDC","English Veteran","Relentless Anchor",64,52,74,62,78,72,64,76),
-P("Steve Cook","DC","Cherries Captain","Aerial Captain",60,28,60,44,82,80,84,78),
-P("Nathan Aké","DC","Dutch Defender","Modern Sweeper",74,30,72,60,84,78,76,78),
-P("Charlie Daniels","DG","English Fullback","Attacking Fullback",76,52,66,66,72,68,58,70),
-P("Adam Smith","DD","Faithful Soldier","Pressing Fullback",74,44,66,64,76,72,60,72),
-]},
-{name:"Brentford",color:"#E30613",players:[
-P("Ivan Toney","BU","The Comeback Kid","Target Man",74,84,66,76,32,84,80,78),
-P("Bryan Mbeumo","AIL","Cameroonian Eagle","Poacher",82,84,72,80,38,74,64,78),
-P("Ollie Watkins","BU","English Scorer","Speed Demon",84,80,66,78,38,76,68,76),
-P("Saïd Benrahma","AIL","Algerian Dribbler","Dribbling Wizard",80,76,74,88,34,60,48,68),
-P("Christian Eriksen","MOC","Danish Maestro","Visionary Playmaker",70,78,90,82,44,58,50,84),
-P("Vitaly Janelt","MC","German Warrior","Box-to-Box",72,62,72,66,74,78,66,74),
-P("Christian Nørgaard","MDC","Unyielding Viking","Relentless Anchor",62,52,76,64,82,82,70,84),
-P("Pontus Jansson","DC","Swedish Captain","Aerial Captain",66,30,64,50,84,82,86,80),
-P("Ethan Pinnock","DC","Jamaican Fortress","Defensive Titan",64,26,62,48,82,84,86,78),
-P("Rico Henry","DG","Technical Fullback","Attacking Fullback",82,44,70,74,72,70,56,70),
-P("Aaron Hickey","DD","Quiet Scot","Pressing Fullback",76,44,68,68,76,72,60,72),
-]},
-{name:"Fulham",color:"#CC0000",players:[
-P("Louis Saha","BU","The Fast Frenchman","Speed Demon",88,82,66,82,28,74,68,72),
-P("Clint Dempsey","F9","Captain America","Poacher",76,82,72,78,40,72,66,78),
-P("Bobby Zamora","BU","Bobby Dazzler","Target Man",72,76,62,70,28,82,76,72),
-P("Moussa Dembélé","AIL","The Belgian","Dribbling Wizard",74,62,76,88,72,82,64,76),
-P("Papa Bouba Diop","MDC","Senegalese Cheetah","Box-to-Box",70,58,68,62,80,86,78,72),
-P("Danny Murphy","MC","English Captain","Visionary Playmaker",66,72,82,72,62,64,54,80),
-P("Simon Davies","MC","Welsh Winger","Attacking Maestro",78,66,76,78,52,64,52,72),
-P("Brede Hangeland","DC","Norwegian Tower","Aerial Captain",62,28,62,46,86,86,88,80),
-P("Carlos Salcido","DG","Mexican Fullback","Pressing Fullback",74,42,66,62,78,74,62,72),
-P("John Paintsil","DD","Ghanaian Fullback","Pressing Fullback",80,34,58,60,76,72,60,68),
-]},
-{name:"Nottm Forest",color:"#DD0000",players:[
-P("Stan Collymore","BU","The Tormented Genius","Dribbling Wizard",84,84,66,84,28,80,68,64),
-P("Pierre van Hooijdonk","BU","The Deadly Lefty","Clinical Finisher",70,86,72,74,28,78,80,74),
-P("Bryan Roy","AIL","Dutch Lightning","Speed Demon",86,76,72,84,30,64,48,68),
-P("Chris Wood","BU","New Zealand Machine","Target Man",68,82,58,64,34,82,84,76),
-P("David Platt","MC","English Captain","Box-to-Box",74,78,78,72,68,72,68,82),
-P("Andy Reid","MC","The Irish Lefty","Visionary Playmaker",60,72,82,76,50,66,48,74),
-P("Stuart Pearce","DG","Psycho","Guard Dog",74,64,66,58,88,84,74,90),
-P("Des Walker","DC","The Fastest","Clean Defender",86,24,58,54,90,78,76,80),
-P("Steve Chettle","DC","Local Hero","Defensive Titan",64,26,56,44,82,82,82,76),
-P("Viv Anderson","DD","Pioneer","Pressing Fullback",78,38,64,62,82,76,66,78),
-]},
-{name:"Leeds United",color:"#FFCD00",players:[
-P("Mark Viduka","BU","The Kangaroo","Target Man",74,84,72,82,28,84,78,74),
-P("Robbie Keane","BU","The Irishman","Clinical Finisher",82,84,72,82,30,70,66,78),
-P("Harry Kewell","AIL","Australian Lightning","Dribbling Wizard",84,78,76,88,34,66,52,72),
-P("Alan Smith","F9","Leeds' Kid","Kamikaze Winger",78,76,62,74,48,80,68,78),
-P("David Batty","MDC","Yorkshire Warrior","Relentless Anchor",66,50,72,66,86,78,62,82),
-P("Lee Bowyer","MC","Box-to-Box","Box-to-Box",76,72,74,72,72,76,68,74),
-P("Gary McAllister","MC","Scottish Maestro","Orchestrator",68,72,86,74,66,64,56,82),
-P("Rio Ferdinand","DC","Young Rio","Modern Sweeper",78,34,76,66,84,78,80,78),
-P("Lucas Radebe","DC","The Chief","Aerial Captain",72,28,62,52,86,82,82,82),
-P("Ian Harte","DG","The Left-footer","Attacking Fullback",72,72,74,68,74,68,60,74),
-P("Gary Kelly","DD","The Fast One","Pressing Fullback",82,38,64,68,78,72,60,76),
-P("Omar Omary","MC","The Hedi Smasher","Orchestrator",92,92,92,92,92,92,92,92),
-]},
-{name:"Sunderland",color:"#EB172B",players:[
-P("Kevin Phillips","BU","Super Kev","Clinical Finisher",82,90,62,78,24,70,68,78),
-P("Niall Quinn","BU","The Big Irishman","Target Man",72,74,64,62,28,84,90,76),
-P("Darren Bent","BU","The Finisher","Poacher",84,84,56,72,24,72,66,72),
-P("Asamoah Gyan","AIL","Fast Ghanaian","Speed Demon",88,80,60,78,32,76,68,64),
-P("Julio Arca","MG","Argentine Left-footer","Wing Engine",76,66,78,80,58,64,52,74),
-P("Lee Cattermole","MDC","The Bulldog","Guard Dog",62,52,66,56,82,82,66,72),
-P("Kevin Richardson","MC","Quiet Midfielder","Ice-Cold Metronome",66,54,76,64,74,70,60,78),
-P("Wes Brown","DC","English Defender","Clean Defender",74,28,62,56,82,78,76,76),
-P("John O'Shea","DC","Mr Versatile","Modern Sweeper",68,32,68,56,80,76,74,80),
-P("Michael Gray","DG","English Fullback","Attacking Fullback",78,48,68,72,72,68,58,70),
-P("Phil Bardsley","DD","Combative Fullback","Pressing Fullback",72,36,58,56,78,76,62,72),
-]},
-];
-
-const PS_BOOST={
-  "Poacher":{sho:3,men:3},"Clinical Finisher":{sho:4,men:2},"Speed Demon":{spd:4,phy:2},
-  "Dribbling Wizard":{dri:4,spd:2},"False 9 Genius":{pas:3,dri:3,sho:2},"Target Man":{phy:4,aer:3},
-  "Super Sub":{men:3,sho:3},"Kamikaze Winger":{spd:3,phy:2,dri:2},"Visionary Playmaker":{pas:4,dri:2,men:2},
-  "Box-to-Box":{phy:3,def:2,spd:2},"Ice-Cold Metronome":{pas:3,men:3},"Relentless Anchor":{def:4,phy:2,men:2},
-  "Orchestrator":{pas:3,men:3,dri:2},"Attacking Maestro":{sho:3,dri:3,pas:2},"Wing Engine":{spd:3,pas:2,phy:2},
-  "Diesel Engine":{def:3,phy:3,spd:2},"Defensive Titan":{def:4,phy:3,aer:2},"Modern Sweeper":{pas:3,def:2,dri:2},
-  "Attacking Fullback":{spd:3,pas:2,dri:2},"Guard Dog":{def:3,phy:3,men:2},"Aerial Captain":{aer:4,def:2,men:2},
-  "Clean Defender":{def:3,men:3,pas:2},"Zonal Shield":{def:3,men:3},"Pressing Fullback":{spd:3,def:2,phy:2},
-};
-
-/* NATIONALITY LOOKUP */
-const NATS={};
-function N(names,f,c){names.forEach(n=>NATS[n]={f,c});}
-N(["Thierry Henry","Robert Pirès","Claude Makélélé","Marcel Desailly","Patrick Vieira","Gilberto Silva","N'Golo Kanté","Gianfranco Zola","Michael Essien","Louis Saha","Dimitri Payet","Nicolas Anelka","Samir Nasri"],"🇫🇷","France");
-N(["Dennis Bergkamp","Ruud van Nistelrooy","Robin van Persie","Marc Overmars","Jaap Stam","Edwin van der Sar","Jan Vertonghen"],"🇳🇱","Netherlands");
-N(["Ian Wright","Tony Adams","Sol Campbell","Ashley Cole","Lee Dixon","Frank Lampard","John Terry","Steven Gerrard","Michael Owen","Wayne Rooney","Gary Neville","Rio Ferdinand","Paul Scholes","David Beckham","Jamie Carragher","Michael Carrick","Andrew Robertson","Trent Alexander-Arnold","Robbie Fowler","Jack Grealish","Declan Rice","Jarrod Bowen","Harry Kane","Jimmy Greaves","Glenn Hoddle","Mousa Dembélé","Ledley King","Danny Rose","Alan Shearer","Les Ferdinand","Robert Lee","Nicky Butt","Gabriel Agbonlahor","Leon Osman","Scott Parker","Mark Noble","Jamie Vardy","Gary Lineker","Glenn Murray","Wilfried Zaha","Andrew Johnson","Scott Dann","Marc Guéhi","Joel Ward","Callum Wilson","David Brooks","Lewis Cook","Andrew Surman","Steve Cook","Ivan Toney","Bryan Mbeumo","Ollie Watkins","Clint Dempsey","Danny Murphy","Brede Hangeland","Stan Collymore","Chris Wood","David Platt","Stuart Pearce","Des Walker","Steve Chettle","Viv Anderson","Mark Viduka","Harry Kewell","Alan Smith","Lee Bowyer","Kevin Phillips","Darren Bent","Phil Bardsley","Michael Gray","Wes Brown","John O'Shea","Adam Smith","Lewis Dunk","Shane Duffy","Tariq Lamptey","James McArthur","Mile Jedinak","Yohan Cabaye","Junior Stanislas","Aaron Hickey","Kenny Tete","Charlie Daniels","Nathan Aké","Rico Henry","Ethan Pinnock","Pontus Jansson"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Cristiano Ronaldo","Bernardo Silva","Nuno Tavares","Nelson Semedo","Rúben Dias","Manuel Akanji","Joao Moutinho","Rúben Neves"],"🇵🇹","Portugal");
-N(["Luis Suárez","Nemanja Vidić","Patrice Evra"],"🇺🇾","Uruguay");
-N(["Roberto Firmino","Carlos Tevez","Fernandinho","Josko Gvardiol"],"🇧🇷","Brazil");
-N(["Eric Cantona","Ryan Giggs"],"🇫🇷","France");
-N(["Bobby Charlton","George Best"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Sergio Agüero","Aleksandar Kolarov","Pablo Zabaleta","Fabricio Coloccini"],"🇦🇷","Argentina");
-N(["Raheem Sterling","Kyle Walker","Rico Lewis","Phil Foden","Cole Palmer"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Kevin De Bruyne","Eden Hazard","Vincent Kompany","Romelu Lukaku","Marouane Fellaini","Kevin Mirallas","Toby Alderweireld","Mousa Dembélé"],"🇧🇪","Belgium");
-N(["David Silva","Marc Cucurella","César Azpilicueta","Jonny Castro"],"🇪🇸","Spain");
-N(["Yaya Touré"],"🇨🇮","Ivory Coast");
-N(["Rodri"],"🇪🇸","Spain");
-N(["Joleon Lescott"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Son Heung-min"],"🇰🇷","South Korea");
-N(["Gareth Bale"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
-N(["Luka Modrić"],"🇭🇷","Croatia");
-N(["Christian Eriksen","Mikkel Damsgaard","Pontus Jansson"],"🇩🇰","Denmark");
-N(["Dele Alli"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["David Ginola","Hatem Ben Arfa"],"🇫🇷","France");
-N(["Gary Speed"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
-N(["Kieran Trippier"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Dwight Yorke"],"🇹🇹","Trinidad");
-N(["Juan Pablo Ángel"],"🇨🇴","Colombia");
-N(["James Milner","Gareth Barry"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Stiliyan Petrov"],"🇧🇬","Bulgaria");
-N(["Martin Laursen"],"🇩🇰","Denmark");
-N(["Olof Mellberg"],"🇸🇪","Sweden");
-N(["Wilfred Bouma"],"🇳🇱","Netherlands");
-N(["Alan Hutton"],"🏴󠁧󠁢󠁳󠁣󠁴󠁿","Scotland");
-N(["Tim Cahill"],"🇦🇺","Australia");
-N(["Steven Pienaar"],"🇿🇦","South Africa");
-N(["Phil Jagielka","Séamus Coleman"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Sylvain Distin"],"🇫🇷","France");
-N(["Leighton Baines"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Paolo Di Canio"],"🇮🇹","Italy");
-N(["Carlton Cole","Glen Johnson","Aaron Cresswell","James Collins"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Marlon Harewood"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Riyad Mahrez"],"🇩🇿","Algeria");
-N(["Emile Heskey","Danny Drinkwater","Wes Morgan","Ben Chilwell","Ricardo Pereira"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Robert Huth"],"🇩🇪","Germany");
-N(["Raúl Jiménez"],"🇲🇽","Mexico");
-N(["Robbie Keane"],"🇮🇪","Ireland");
-N(["Diogo Jota"],"🇵🇹","Portugal");
-N(["Matt Jarvis","Dave Edwards","Conor Coady"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Willy Boly"],"🇫🇷","France");
-N(["Matt Doherty"],"🇮🇪","Ireland");
-N(["Bobby Zamora","Leandro Trossard"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Kaoru Mitoma"],"🇯🇵","Japan");
-N(["Yves Bissouma"],"🇲🇱","Mali");
-N(["Pascal Groß"],"🇩🇪","Germany");
-N(["Moisés Caicedo"],"🇪🇨","Ecuador");
-N(["Alexis Mac Allister"],"🇦🇷","Argentina");
-N(["Patrick van Aanholt"],"🇳🇱","Netherlands");
-N(["Christian Benteke"],"🇧🇪","Belgium");
-N(["Joshua King"],"🇳🇴","Norway");
-N(["Ryan Fraser"],"🏴󠁧󠁢󠁳󠁣󠁴󠁿","Scotland");
-N(["Saïd Benrahma"],"🇩🇿","Algeria");
-N(["Vitaly Janelt"],"🇩🇪","Germany");
-N(["Christian Nørgaard"],"🇩🇰","Denmark");
-N(["Carlos Salcido"],"🇲🇽","Mexico");
-N(["John Paintsil"],"🇬🇭","Ghana");
-N(["Pierre van Hooijdonk"],"🇳🇱","Netherlands");
-N(["Bryan Roy"],"🇳🇱","Netherlands");
-N(["Andy Reid"],"🇮🇪","Ireland");
-N(["Gary McAllister","David Batty"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Lucas Radebe"],"🇿🇦","South Africa");
-N(["Ian Harte","Gary Kelly"],"🇮🇪","Ireland");
-N(["Niall Quinn"],"🇮🇪","Ireland");
-N(["Asamoah Gyan"],"🇬🇭","Ghana");
-N(["Julio Arca"],"🇦🇷","Argentina");
-N(["Lee Cattermole","Kevin Richardson"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Branislav Ivanović"],"🇷🇸","Serbia");
-N(["Xabi Alonso"],"🇪🇸","Spain");
-N(["Javier Mascherano"],"🇦🇷","Argentina");
-N(["Virgil van Dijk"],"🇳🇱","Netherlands");
-N(["Kenny Dalglish"],"🏴󠁧󠁢󠁳󠁣󠁴󠁿","Scotland");
-N(["Mohamed Salah"],"🇪🇬","Egypt");
-N(["Jimmy F. Hasselbaink"],"🇳🇱","Netherlands");
-N(["Simon Davies"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
-N(["Papa Bouba Diop"],"🇸🇳","Senegal");
-N(["Shola Ameobi","José Enrique"],"🏴󠁧󠁢󠁥󠁮󠁧󠁿","England");
-N(["Ryan Giggs"],"🏴󠁧󠁢󠁷󠁬󠁳󠁿","Wales");
-N(["Roy Keane","Robbie Keane"],"🇮🇪","Ireland");
-N(["Omar Omary"],"🇱🇧","Lebanon");
-// Fallback for any missing
-function getNat(name){return NATS[name]||{f:"🏳️",c:"Unknown"};}
-
-/* ================= STAT THIEF v2 ================= */
-const $=s=>document.querySelector(s);
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let RNG=Math.random;
-const rnd=()=>RNG();
-const ri=(a,b)=>Math.floor(rnd()*(b-a+1))+a;
-const pick=a=>a[Math.floor(rnd()*a.length)];
-const deco=a=>a[Math.floor(Math.random()*a.length)]; // visual only, never touches game RNG
-function mulberry(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
-function hashStr(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
-const store={get(k,d){try{const v=localStorage.getItem("st2:"+k);return v?JSON.parse(v):d;}catch(e){return d;}},set(k,v){try{localStorage.setItem("st2:"+k,JSON.stringify(v));}catch(e){}}};
-const reduced=(()=>{try{return matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){return false;}})();
-const wait=ms=>new Promise(r=>setTimeout(r,reduced?Math.min(ms,60):ms));
-function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),2200);}
-const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
-
-/* ---------- rules ---------- */
-const W={ATT:{spd:.18,sho:.22,pas:.08,dri:.18,def:.04,phy:.12,aer:.10,men:.08},MID:{spd:.10,sho:.08,pas:.22,dri:.14,def:.10,phy:.14,aer:.06,men:.16},DEF:{spd:.10,sho:.04,pas:.10,dri:.06,def:.26,phy:.18,aer:.16,men:.10}};
-const POS_L={ATT:"Forward",MID:"Midfielder",DEF:"Defender"};
-const POS_BLURB={ATT:"Pace, finishing and dribbling carry 58% of the rating.",MID:"Passing and vision lead. Every slot counts for something.",DEF:"Tackling alone is 26%. Power and aerial ability follow."};
-const LBL=k=>SL_POS[D?D.pos:C.pos][k];
-const GRADES=[[90,"S","--g-s"],[85,"A+","--g-a"],[80,"A","--g-a"],[75,"A-","--g-a"],[70,"B+","--g-b"],[65,"B","--g-b"],[60,"B-","--g-b"],[55,"C+","--g-c"],[50,"C","--g-c"],[45,"C-","--g-d"],[35,"D","--g-d"],[25,"E","--g-d"],[0,"F","--g-d"]];
-const grade=v=>GRADES.find(g=>v>=g[0]);
-const gHTML=(v,lg)=>{const g=grade(v);return`<span class="g${lg?" lg":""}" style="--gc:var(${g[2]})">${g[1]}</span>`;};
-const TIERS=[{min:91,n:"Legendary Icon",c:"#B17CFF",d:"They'll build a statue outside the ground."},{min:85,n:"Ballon d'Or Nominee",c:"#FFCF3F",d:"A season-defining player."},{min:78,n:"Top 6 Material",c:"#4F8BFF",d:"European-level squad player."},{min:70,n:"PL Starter",c:"#2FC6A4",d:"Reliable top-flight starter."},{min:60,n:"Championship Battler",c:"#E8B23A",d:"Solid in the second tier."},{min:0,n:"Sunday League",c:"#8EA2C2",d:"Good vibes, bad left foot."}];
-const tierOf=o=>TIERS.find(t=>o>=t.min);
-const TOTAL=10;
-const EVENTS=[
-  {id:"hot",ic:"🔥",t:"Hot Streak",d:"Next player's attributes +5.",good:1,fx:()=>D.bonus=5},
-  {id:"magic",ic:"⭐",t:"Magic Night",d:"Next player's attributes +8.",good:1,fx:()=>D.bonus=8},
-  {id:"scout",ic:"🎁",t:"Generous Scout",d:"You gain a club respin.",good:1,fx:()=>D.rc++},
-  {id:"door",ic:"🔓",t:"Back Door",d:"You gain a player respin.",good:1,fx:()=>D.rp++},
-  {id:"rain",ic:"🌧️",t:"Rainy Day",d:"Next player's attributes −3.",good:0,fx:()=>D.bonus=-3},
-  {id:"wind",ic:"💨",t:"Headwind",d:"Next player's attributes −5.",good:0,fx:()=>D.bonus=-5},
-];
-const natOf=name=>getNat(name);
-const elig=c=>c.players.filter(p=>posG(p.pos)===D.pos);
-const eClubs=()=>CLUBS.filter(c=>elig(c).length>0);
-
-/* finalStat & OVR over an "owned" map */
-function fStat(owned,k){const base=owned[k]?owned[k].v:50;const b=(PS_BOOST[owned.ps&&owned.ps.v]||{})[k]||0;return Math.min(99,base+b);}
-function chemistry(owned){
-  const out=[];const cnt={};
-  Object.values(owned).forEach(e=>{cnt[e.club]=(cnt[e.club]||0)+1;});
-  let best=null;for(const c in cnt)if(!best||cnt[c]>cnt[best])best=c;
-  if(best&&cnt[best]>=3)out.push({t:"Club bond",d:`${cnt[best]} steals from ${best}`,v:cnt[best]>=5?3:cnt[best]>=4?2:1});
-  if(owned.nat){const nc=owned.nat.v.c;const n=Object.entries(owned).filter(([k,e])=>k!=="nat"&&e.nc===nc).length;
-    const v=n>=4?3:n>=2?2:n>=1?1:0;if(v)out.push({t:"National bond",d:`${n} steal${n>1?"s":""} from ${nc} players`,v});}
-  return out;
-}
-function ovrRaw(owned,pos){const w=W[pos];let o=0;SK.forEach(k=>o+=fStat(owned,k)*w[k]);return o+chemistry(owned).reduce((s,c)=>s+c.v,0);}
-const ovrOf=(owned,pos)=>Math.round(ovrRaw(owned,pos));
-
-const siteInfo=v=>{const e=document.getElementById("site-info");if(e)e.hidden=!v;};
-/* ---------- state ---------- */
-let D=null, C=null, VIEW="home";
-let homeMode="classic";
-
-/* ---------- top bar ---------- */
-function topInfo(html){$("#top-info").innerHTML=html||"";}
-$("#home-btn").addEventListener("click",()=>{if((VIEW==="draft"&&D&&D.round>1)||VIEW==="career"){if(!confirm2())return;}goHome();});
-function confirm2(){ // inline confirm via toast-like dock
-  return true;
-}
-function dock(html){const d=$("#dock");if(!html){d.classList.remove("show");return;}$("#dock-in").innerHTML=html;d.classList.add("show");}
-
-/* ================= HOME ================= */
-function goHome(){siteInfo(true);VIEW="home";D=null;C=null;RNG=Math.random;dock(null);topInfo(`<span class="chip">Best <b>${store.get("best",{})?.ovr??"–"}</b></span>`);renderHome();window.scrollTo(0,0);}
-function renderHome(){
-  const best=store.get("best",null);
-  const today=todayStr();const dailyDone=store.get("daily:"+today,null);
-  const dPos=["ATT","MID","DEF"][hashStr(today)%3];
-  const hof=store.get("hof",[]);
-  $("#view").innerHTML=`
-  <section class="hero">
-    <div>
-      <h1>Steal one stat.<br>Build a <em>legend.</em></h1>
-      <p>Ten rounds. Each one hands you a Premier League great, and you walk away with a single attribute. After the tenth steal, the pieces become one footballer, and that footballer gets a career.</p>
-      <div class="how">
-        <div><b>Spin</b><span>A club, then a player from it who fits your position.</span></div>
-        <div><b>Steal</b><span>Take one of ten: eight attributes, a playstyle or a nationality.</span></div>
-        <div><b>Play</b><span>Sign for a club, chase titles, the Champions League and the Ballon d'Or.</span></div>
-      </div>
-    </div>
-    <div id="hero-card">${cardHTML(sampleOwned(),"MID",{name:"Your legend here",sub:"Example build",sample:1})}</div>
-  </section>
-
-  <div class="sec-h"><h2>Pick a position</h2>
-    <div class="modes" role="group" aria-label="Game mode">
-      <button type="button" data-mode="classic" aria-pressed="${homeMode==="classic"}">Classic</button>
-      <button type="button" data-mode="daily" aria-pressed="${homeMode==="daily"}">Daily draft</button>
-    </div>
-  </div>
-  ${homeMode==="daily"?`<p class="daily-note">Today's draft (${today}) is the same for everyone: same clubs, same players, same events. The position is fixed to <b>${POS_L[dPos]}</b>. ${dailyDone?`Your score today: <b>${dailyDone.ovr}</b>. You can replay, only your best counts.`:""}</p>`:""}
-  <div class="positions">
-    ${["ATT","MID","DEF"].map(p=>{const w=W[p];const ks=[...SK].sort((a,b)=>w[b]-w[a]);
-      return`<button class="pos-card" type="button" data-pos="${p}" ${homeMode==="daily"&&p!==dPos?"disabled":""}>
-        <span class="D">${POS_L[p]}</span><p>${POS_BLURB[p]}</p>
-        <div class="wbars">${ks.map((k,i)=>`<div class="wbar ${i<3?"top":""}"><span>${SL_POS[p][k]}</span><i style="--w:${w[k]/0.26*100}%"></i><span class="num">${Math.round(w[k]*100)}%</span></div>`).join("")}</div>
-      </button>`;}).join("")}
-  </div>
-
-  <div class="sec-h"><h2>Hall of Fame</h2><span class="lbl">${best?`Best draft: ${best.ovr} OVR · ${esc(best.name)}`:"Saved on this device"}</span></div>
-  ${hof.length?`<div class="tablewrap"><table class="hof"><thead><tr><th>Legend</th><th>Pos</th><th>OVR</th><th>Seasons</th><th>Trophies</th><th>Legacy</th></tr></thead><tbody>
-    ${hof.slice(0,8).map(h=>`<tr><td>${h.flag||""} ${esc(h.name)}</td><td>${POS_L[h.pos]}</td><td class="n">${h.ovr}</td><td class="n">${h.seasons}</td><td>${esc(h.trophies||"–")}</td><td class="n">${h.legacy}</td></tr>`).join("")}
-  </tbody></table></div>`:`<div class="empty">Finished careers land here with their trophies and a legacy score. Nothing yet on this device.</div>`}
-  `;
-  document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{homeMode=b.dataset.mode;renderHome();});
-  document.querySelectorAll("[data-pos]").forEach(b=>b.onclick=()=>startDraft(b.dataset.pos,homeMode));
-}
-function sampleOwned(){
-  return{spd:{v:84,club:"Arsenal"},pas:{v:92,club:"Arsenal"},dri:{v:86,club:"Chelsea"},men:{v:90,club:"Chelsea"},phy:{v:76,club:"Liverpool"},def:{v:68,club:"Arsenal"},ps:{v:"Visionary Playmaker",club:"Arsenal"}};
-}
-
-/* ================= LEGEND CARD ================= */
-function cardHTML(owned,pos,o={}){
-  const ovr=o.ovr??ovrOf(owned,pos);const t=tierOf(ovr);const ps=owned.ps&&owned.ps.v;const boost=PS_BOOST[ps]||{};
-  const ks=[...SK].sort((a,b)=>W[pos][b]-W[pos][a]);
-  const chem=chemistry(owned);
-  return`<div class="lcard" style="--tc:${t.c}">
-    <div class="lc-top">
-      <div class="lc-ovr">${ovr}<small>OVR</small></div>
-      <div class="lc-meta">
-        <span class="lc-name">${esc(o.name||"Unnamed legend")}</span>
-        <span class="lc-sub">${owned.nat?owned.nat.v.f+" ":""}${POS_L[pos]}${o.sub?" · "+esc(o.sub):""}</span>
-        <span class="lc-tier">${t.n}</span>
-      </div>
-    </div>
-    <div class="lc-stats">${ks.map(k=>{const has=!!owned[k];const v=fStat(owned,k);
-      return`<div class="lc-row ${has?"has":""} ${o.flash===k?"flash":""}"><span class="k">${SL_POS[pos][k]}</span>${boost[k]&&has?`<span class="boost">+${boost[k]}</span>`:"<span></span>"}<span class="v" style="color:${has?`var(${grade(v)[2]})`:"var(--steel-dim)"}">${has?v:"50"}</span></div>`;}).join("")}</div>
-    ${o.extra!=null?`<div class="lc-extra">${o.extra}</div>`:`<div class="lc-extra">
-      <span class="tag trait ${ps?"":"off"}">${ps?esc(ps):"No playstyle"}</span>
-      ${owned.nat?`<span class="tag">${owned.nat.v.f} ${esc(owned.nat.v.c)}</span>`:`<span class="tag off">No nation</span>`}
-      ${chem.map(c=>`<span class="tag chem" title="${esc(c.d)}">${c.t} +${c.v}</span>`).join("")}
-    </div>`}
-    ${o.sample||o.extra!=null?"":`<div class="lc-from">Empty slots count as 50 (a C).</div>`}
-  </div>`;
-}
-
-/* ================= DRAFT ================= */
-function startDraft(pos,mode){
-  const daily=mode==="daily";
-  if(daily){const today=todayStr();RNG=mulberry(hashStr("statthief:"+today));pos=["ATT","MID","DEF"][hashStr(today)%3];}else RNG=Math.random;
-  D={pos,mode,daily:daily?todayStr():null,round:1,owned:{},rc:1,rp:1,club:null,player:null,bonus:0,event:null,lastC:null,lastP:null,phase:"idle",sel:null,log:[],flash:null};
-  siteInfo(false);VIEW="draft";dock(null);renderDraft();startRound();window.scrollTo(0,0);
-}
-function startRound(){
-  D.event=null;D.bonus=0;
-  if(D.round>1&&rnd()<0.42){const ev=pick(EVENTS);ev.fx();D.event=ev;}
-  D.phase="idle";D.club=null;D.player=null;D.sel=null;renderDraft();
-}
-function drawClub(){const p=eClubs();let c;do{c=pick(p);}while(p.length>1&&c===D.lastC);D.lastC=c;D.club=c;drawPlayer();}
-function drawPlayer(){const p=elig(D.club);let q;do{q=pick(p);}while(p.length>1&&q===D.lastP);D.lastP=q;D.player=q;}
-function rarity(q){const a=SK.reduce((s,k)=>s+q[k],0)/8;if(a>=82)return["Icon","var(--g-s)"];if(a>=74)return["Elite","var(--g-a)"];if(a>=64)return["Proven","var(--g-b)"];return["Squad","var(--steel)"];}
-const statVal=(q,k)=>clamp(q[k]+D.bonus,1,99);
-
-function optionList(){
-  const q=D.player,o=D.owned,base=ovrRaw(o,D.pos),nat=natOf(q.name);
-  const mk=(k,entry)=>{const n={...o,[k]:entry};return ovrRaw(n,D.pos)-base;};
-  const entry=v=>({v,name:q.name,club:D.club.name,color:D.club.color,nc:nat.c});
-  const list=SK.map(k=>{const v=statVal(q,k);const own=o[k];const better=!own||v>own.v;
-    return{k,label:SL_POS[D.pos][k],v,own,disabled:!better,delta:better?mk(k,entry(v)):0,w:W[D.pos][k]};});
-  const tr={k:"ps",label:q.ps,trait:1,own:o.ps,disabled:o.ps&&o.ps.v===q.ps,delta:mk("ps",entry(q.ps)),boost:PS_BOOST[q.ps]||{}};
-  const na={k:"nat",label:`${nat.f} ${nat.c}`,nat:1,own:o.nat,disabled:o.nat&&o.nat.v.c===nat.c,delta:mk("nat",entry(nat)),natv:nat};
-  const all=[...list,tr,na];
-  const bestD=Math.max(...all.filter(x=>!x.disabled).map(x=>x.delta));
-  all.forEach(x=>x.best=!x.disabled&&bestD>0.05&&Math.abs(x.delta-bestD)<1e-6);
-  return all;
-}
-const pipsOf=w=>{const n=w>=.2?5:w>=.16?4:w>=.12?3:w>=.08?2:1;return`<span class="pips" aria-label="weight ${n} of 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?"on":""}"></i>`).join("")}</span>`;};
-const fmtD=d=>{const r=Math.round(d*10)/10;return r>0?`<span class="delta up">+${r.toFixed(1)}</span>`:r<0?`<span class="delta down">${r.toFixed(1)}</span>`:`<span class="delta zero">±0</span>`;};
-
-function renderDraft(){
-  topInfo(`<span class="chip gold">Round <b>${Math.min(D.round,TOTAL)}</b>/${TOTAL}</span><span class="chip hide-sm">${POS_L[D.pos]}</span>${D.daily?`<span class="chip hide-sm">Daily ${D.daily}</span>`:""}`);
-  const hasDraw=D.phase==="pick"||D.phase==="spinning";
-  const opts=D.phase==="pick"?optionList():null;
-  const q=D.player;
-  $("#view").innerHTML=`
-  <div class="draft">
-    <aside class="side">
-      <div class="progress" aria-label="Round ${D.round} of ${TOTAL}">${Array.from({length:TOTAL},(_,i)=>`<i class="${i+1<D.round?"done":i+1===D.round?"cur":""}"></i>`).join("")}</div>
-      <div id="card-slot">${cardHTML(D.owned,D.pos,{name:"Your legend",sub:`Round ${D.round}`,flash:D.flash})}</div>
-      ${D.log.length?`<div class="panel"><div class="lbl" style="margin-bottom:6px">Steals</div><div class="log">${D.log.map((l,i)=>`<div><span class="r">R${i+1}</span><span>${esc(l)}</span></div>`).join("")}</div></div>`:""}
-    </aside>
-    <section class="stage">
-      ${D.event?`<div class="banner ${D.event.good?"good":"bad"}"><span class="ic" aria-hidden="true">${D.event.ic}</span><div><b>${D.event.t}</b><br>${D.event.d}${D.bonus&&D.phase==="idle"?" Respin carefully: the modifier lasts for this round.":""}</div></div>`:""}
-      <div class="reels" id="reels" style="${D.club?`--stage-bg:linear-gradient(160deg,${D.club.color}38,var(--deck) 70%)`:""}">
-        <div class="reel-box"><span class="lbl">Club</span><div class="reel" id="reel-c"><div class="win"></div><div class="strip">${D.club&&D.phase!=="spinning"?`<div class="ri"></div><div class="ri lit">${clubItem(D.club)}</div>`:`<div class="ri"></div><div class="ri placeholder">${D.phase==="spinning"?"":"Waiting"}</div>`}</div></div></div>
-        <div class="reel-box"><span class="lbl">Player</span><div class="reel" id="reel-p"><div class="win"></div><div class="strip">${q&&D.phase!=="spinning"?`<div class="ri"></div><div class="ri lit">${playerItem(q)}</div>`:`<div class="ri"></div><div class="ri placeholder">${D.phase==="spinning"?"":"Waiting"}</div>`}</div></div></div>
-      </div>
-      <div class="controls">
-        ${D.phase==="idle"?`<button class="btn primary" id="b-spin" type="button">Spin round ${D.round} <kbd>Space</kbd></button>`:""}
-        <button class="btn small" id="b-rc" type="button" ${D.phase!=="pick"||D.rc<1?"disabled":""}>New club · ${D.rc} <kbd>C</kbd></button>
-        <button class="btn small" id="b-rp" type="button" ${D.phase!=="pick"||D.rp<1?"disabled":""}>New player · ${D.rp} <kbd>P</kbd></button>
-        <span class="spacer"></span>
-        <span class="lbl">OVR now <b class="num" style="color:var(--chalk);font-size:16px">${ovrOf(D.owned,D.pos)}</b></span>
-      </div>
-      ${D.phase==="pick"?`
-        <div class="player-head"><h3>${esc(q.name)}</h3><span class="nick">${esc(q.style)}</span>
-          <span class="rar" style="color:${rarity(q)[1]};border-color:${rarity(q)[1]}">${rarity(q)[0]}</span>
-          <span class="muted">${natOf(q.name).f} ${esc(D.club.name)} · ${q.pos}</span></div>
-        <div class="opts" id="opts">${opts.map((x,i)=>optHTML(x,i)).join("")}</div>
-        <p class="muted" style="margin:0;font-size:13px">Green numbers show how much each steal moves your overall right now. Dots show how much your position weighs that attribute.</p>`
-      :!hasDraw?`<div class="waiting"><span class="D">Round ${D.round}</span>Spin to draw a club and a player. ${D.round===1?"You have one club respin and one player respin for the whole draft.":""}</div>`:""}
-    </section>
-  </div>`;
-  D.flash=null;
-  const sp=$("#b-spin");if(sp)sp.onclick=doSpin;
-  $("#b-rc").onclick=()=>respin("c");$("#b-rp").onclick=()=>respin("p");
-  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>select(b.dataset.k));
-  renderDock();
-}
-const clubItem=c=>`<span class="dot" style="background:${c.color};box-shadow:0 0 8px ${c.color}"></span>${esc(c.name)}`;
-const playerItem=q=>`<span>${esc(q.name)}</span><small>${q.pos}</small>`;
-function optHTML(x,i){
-  const key=i<9?i+1:0;
-  let body;
-  if(x.trait){const bs=Object.entries(x.boost).map(([k,v])=>`${SL_POS[D.pos][k]} +${v}`).join(", ");
-    body=`<span class="k">${esc(x.label)}</span><span class="note">${bs}${x.own&&!x.disabled?`<br>Replaces ${esc(x.own.v)}`:""}${x.disabled?"<br>Already yours":""}</span><span class="row"><span class="lbl" style="font-size:10.5px">Playstyle</span>${fmtD(x.delta)}</span>`;}
-  else if(x.nat){body=`<span class="k">${esc(x.label)}</span><span class="note">${x.disabled?"Already yours":x.delta>0?"Unlocks a national bond":"Bond needs players from this nation"}</span><span class="row"><span class="lbl" style="font-size:10.5px">Nation</span>${fmtD(x.delta)}</span>`;}
-  else{body=`<span class="k">${esc(x.label)}</span><span class="row">${gHTML(x.v)}<span class="val">${x.v}</span></span><span class="row">${pipsOf(x.w)}${x.disabled?`<span class="delta zero">Own ${x.own.v}</span>`:fmtD(x.delta)}</span>${x.own&&!x.disabled?`<span class="note">Upgrades your ${x.own.v}</span>`:""}`;}
-  return`<button type="button" class="opt ${x.trait?"trait":""}" data-k="${x.k}" aria-pressed="${D.sel===x.k}" ${x.disabled?"disabled":""}>${x.best?`<span class="hot">Best</span>`:""}${body}<span class="key">${key}</span></button>`;
-}
-function renderDock(){
-  if(VIEW!=="draft"||D.phase!=="pick"||!D.sel){dock(null);return;}
-  const x=optionList().find(o=>o.k===D.sel);
-  const what=x.trait?`playstyle ${x.label}`:x.nat?`nationality ${x.label}`:`${x.label} ${x.v}`;
-  const left=TOTAL-D.round;
-  dock(`<div class="what"><b>Steal ${esc(what)}</b><span>OVR ${ovrOf(D.owned,D.pos)} → ${Math.round(ovrRaw(D.owned,D.pos)+x.delta)} · ${left?`${left} round${left>1?"s":""} left after this`:"Final steal"}</span></div>
-    <button class="btn ghost small" id="b-cancel" type="button">Cancel</button>
-    <button class="btn primary" id="b-ok" type="button">Steal it <kbd>Enter</kbd></button>`);
-  $("#b-ok").onclick=confirmSteal;$("#b-cancel").onclick=()=>{D.sel=null;renderDraft();};
-}
-function select(k){if(D.phase!=="pick")return;D.sel=D.sel===k?null:k;document.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===D.sel));renderDock();}
-
-async function spinReel(id,pool,finalHTML,dur){
-  const reel=$(id);if(!reel)return;const strip=reel.querySelector(".strip");
-  const H=reel.clientHeight>100?44:22; const n=reduced?2:16;
-  let h="";for(let i=0;i<n;i++)h+=`<div class="ri">${deco(pool)}</div>`;
-  h+=`<div class="ri lit">${finalHTML}</div><div class="ri">${deco(pool)}</div>`;
-  strip.innerHTML=h;strip.style.transition="none";strip.style.transform="translateY(0)";void strip.offsetHeight;
-  const target=-(n*44-H);
-  strip.style.transition=`transform ${reduced?50:dur}ms cubic-bezier(.12,.7,.12,1)`;strip.style.transform=`translateY(${target}px)`;
-  await wait(dur+40);
-}
-async function animateDraw(club,player){
-  D.phase="spinning";D.sel=null;const keepClub=!club;renderDraft();
-  if(club){$("#reels").style.setProperty("--stage-bg",`linear-gradient(160deg,${D.club.color}38,var(--deck) 70%)`);
-    await spinReel("#reel-c",eClubs().map(clubItem),clubItem(D.club),1300);}
-  else{const s=$("#reel-c .strip");s.innerHTML=`<div class="ri"></div><div class="ri lit">${clubItem(D.club)}</div>`;}
-  await spinReel("#reel-p",elig(D.club).map(playerItem),playerItem(D.player),keepClub?900:1100);
-  D.phase="pick";renderDraft();
-}
-function doSpin(){if(D.phase!=="idle")return;drawClub();animateDraw(true,true);}
-function respin(t){if(D.phase!=="pick")return;if(t==="c"){if(D.rc<1)return;D.rc--;drawClub();animateDraw(true,true);}else{if(D.rp<1)return;if(elig(D.club).length<2){toast("This club has no other player for your position.");return;}D.rp--;drawPlayer();animateDraw(false,true);}}
-function confirmSteal(){
-  if(D.phase!=="pick"||!D.sel)return;
-  const x=optionList().find(o=>o.k===D.sel);if(!x||x.disabled)return;
-  const q=D.player,nat=natOf(q.name);
-  const v=x.trait?q.ps:x.nat?nat:x.v;
-  D.owned[x.k]={v,name:q.name,club:D.club.name,color:D.club.color,nc:nat.c};
-  D.log.push(`${x.trait?q.ps:x.nat?nat.c:x.label+" "+x.v} from ${q.name}`);
-  D.flash=x.k;dock(null);
-  if(D.round>=TOTAL){finishDraft();return;}
-  D.round++;startRound();
-}
-
-document.addEventListener("keydown",e=>{
-  if(VIEW!=="draft"||!D)return;if(e.target.closest("input,textarea,select"))return;
-  if(e.code==="Space"&&D.phase==="idle"){e.preventDefault();doSpin();}
-  else if(D.phase==="pick"){
-    if(e.key==="c"||e.key==="C")respin("c");
-    else if(e.key==="p"||e.key==="P")respin("p");
-    else if(e.key==="Enter"&&D.sel){e.preventDefault();confirmSteal();}
-    else if(e.key==="Escape"){D.sel=null;renderDraft();}
-    else if(/^[0-9]$/.test(e.key)){const i=e.key==="0"?9:+e.key-1;const b=document.querySelectorAll(".opt")[i];if(b&&!b.disabled)select(b.dataset.k);}
-  }
-});
-
-/* ================= REVEAL ================= */
-function genName(owned){
-  const donors=[...new Set(Object.values(owned).map(e=>e.name))];
-  if(donors.length<2)return donors[0]||"The Thief";
-  const a=deco(donors);let b=deco(donors);let g=0;while(b===a&&g++<10)b=deco(donors);
-  const first=a.split(" ")[0];const lastParts=b.split(" ");return first+" "+lastParts[lastParts.length-1];
-}
-function finishDraft(){
-  RNG=Math.random;VIEW="reveal";
-  const ovr=ovrOf(D.owned,D.pos);D.ovr=ovr;D.name=genName(D.owned);
-  if(D.daily){const prev=store.get("daily:"+D.daily,null);if(!prev||ovr>prev.ovr)store.set("daily:"+D.daily,{ovr,pos:D.pos});}
-  renderReveal(true);
-}
-function insight(){
-  const w=W[D.pos];const o=D.owned;
-  const wasted=SK.filter(k=>o[k]&&w[k]<=.06).map(k=>SL_POS[D.pos][k]);
-  const empty=SK.filter(k=>!o[k]&&w[k]>=.14).map(k=>SL_POS[D.pos][k]);
-  const parts=[];
-  if(empty.length)parts.push(`You left <b>${empty.join(", ")}</b> empty, and your position weighs ${empty.length>1?"them":"it"} heavily.`);
-  if(wasted.length)parts.push(`<b>${wasted.join(", ")}</b> barely counts for a ${POS_L[D.pos].toLowerCase()}, so that steal moved your OVR by less than a point.`);
-  const chem=chemistry(o);if(chem.length)parts.push(`Your bonds added <b>+${chem.reduce((s,c)=>s+c.v,0)}</b>.`);
-  else parts.push(`No bonds this time. Three steals from one club, or a nationality matched by other steals, add up to +3 each.`);
-  return parts.join(" ");
-}
-function renderReveal(first){
-  const ovr=D.ovr,t=tierOf(ovr);
-  topInfo(`<span class="chip gold">Draft complete</span>${D.daily?`<span class="chip hide-sm">Daily ${D.daily}</span>`:""}`);
-  $("#view").innerHTML=`
-  <div class="reveal">
-    <div id="rv-card">${cardHTML(D.owned,D.pos,{name:D.name,sub:"Drafted"})}</div>
-    <div>
-      <span class="lbl">${POS_L[D.pos]} · ${D.daily?"Daily draft":"Classic draft"}</span>
-      <h2><span class="num" id="rv-ovr">${first&&!reduced?0:ovr}</span> OVR · ${t.n}</h2>
-      <p class="tierline">${t.d}</p>
-      <div class="ladder">${[...TIERS].reverse().map(x=>`<div class="${x===t?"me":""}"><b>${x.min||"<60"}${x.min?"+":""}</b>${x.n}</div>`).join("")}</div>
-      <div class="field"><label class="lbl" for="lg-name">Name your legend</label><input id="lg-name" maxlength="28" value="${esc(D.name)}" autocomplete="off"></div>
-      <div class="btn-row">
-        <button class="btn primary" id="b-career" type="button">Start the career</button>
-        <button class="btn" id="b-share" type="button">Copy result</button>
-        <button class="btn ghost" id="b-again" type="button">Draft again</button>
-      </div>
-      <div id="share-fb"></div>
-      <p class="insight">${insight()}</p>
-    </div>
-  </div>`;
-  if(first&&!reduced){const el=$("#rv-ovr");let v=0;const step=()=>{v=Math.min(ovr,v+Math.max(1,Math.round((ovr-v)/8)));el.textContent=v;if(v<ovr)requestAnimationFrame(step);};requestAnimationFrame(step);setTimeout(()=>{el.textContent=ovr;},1600);}
-  $("#lg-name").oninput=e=>{D.name=e.target.value.trim()||"The Thief";$("#rv-card").innerHTML=cardHTML(D.owned,D.pos,{name:D.name,sub:"Drafted"});};
-  $("#b-again").onclick=()=>startDraft(D.pos,D.mode);
-  $("#b-share").onclick=()=>share();
-  $("#b-career").onclick=()=>{saveBest();startCareer();};
-  saveBest();
-}
-function saveBest(){const b=store.get("best",null);if(!b||D.ovr>=b.ovr)store.set("best",{ovr:D.ovr,name:D.name,pos:D.pos});}
-function share(){
-  const sq=v=>v>=90?"🟪":v>=75?"🟦":v>=60?"🟩":v>=50?"🟨":"🟥";
-  const ks=[...SK].sort((a,b)=>W[D.pos][b]-W[D.pos][a]);
-  const line=ks.map(k=>D.owned[k]?sq(fStat(D.owned,k)):"⬜").join("");
-  const txt=`STAT THIEF${D.daily?" · Daily "+D.daily:""}\n${D.name} · ${POS_L[D.pos]}\n${D.ovr} OVR · ${tierOf(D.ovr).n}\n${line}${D.owned.ps?"\n"+D.owned.ps.v:""}`;
-  const fb=()=>{$("#share-fb").innerHTML=`<p class="muted" style="margin:12px 0 6px;font-size:13px">Copy this text:</p><textarea class="share-fallback" id="share-txt" readonly>${esc(txt)}</textarea>`;const t=$("#share-txt");t.focus();t.select();};
-  try{navigator.clipboard.writeText(txt).then(()=>toast("Result copied"),fb);}catch(e){fb();}
-}
-
-/* ================= CAREER ================= */
-const TEAM_STR={"Manchester City":92,"Arsenal":90,"Liverpool":89,"Chelsea":86,"Manchester United":83,"Tottenham":82,"Newcastle":81,"Aston Villa":80,"Brighton":77,"West Ham":76,"Crystal Palace":75,"Wolverhampton":74,"Fulham":73,"Brentford":73,"Nottm Forest":72,"Bournemouth":72,"Everton":71,"Leicester":70,"Leeds United":69,"Sunderland":68};
-const CLUB_COL=Object.fromEntries(CLUBS.map(c=>[c.name,c.color]));
-const CL_TEAMS=[{name:"Real Madrid",str:93},{name:"FC Barcelona",str:90},{name:"Bayern Munich",str:89},{name:"PSG",str:88},{name:"Inter Milan",str:86},{name:"AC Milan",str:84},{name:"Juventus",str:83},{name:"Atlético Madrid",str:83},{name:"Borussia Dortmund",str:82},{name:"Napoli",str:82},{name:"RB Leipzig",str:81},{name:"Benfica",str:80},{name:"Porto",str:79},{name:"Sporting CP",str:78},{name:"Ajax",str:78},{name:"Celtic",str:74}];
-const BDO_RIVALS=[["Kylian Mbappé",82,94],["Erling Haaland",78,92],["Harry Kane",80,90],["Lamine Yamal",74,88],["Michael Olise",76,88],["Khvicha Kvaratskhelia",75,87],["Rodri",76,86],["Mohamed Salah",74,86],["Ousmane Dembélé",74,85],["Jude Bellingham",75,85],["Bukayo Saka",74,85],["Vinícius Jr",73,84],["Cole Palmer",73,84],["Pedri",72,83],["Florian Wirtz",72,83],["Jamal Musiala",72,84]];
-const BIG=[
-  {t:"Derby day",s:"A sold-out derby. Local bragging rights and three points on the line.",c:[{l:"Take them on from the first whistle",k:["dri","spd"]},{l:"Stay disciplined and pick the moment",k:["men","pas"]}],stake:"pts"},
-  {t:"Cup final",s:"Wembley, 90,000 people, one trophy.",c:[{l:"Play your natural game",k:["men","pas"]},{l:"Take the big risks",k:["sho","dri"]}],stake:"cup"},
-  {t:"Title run-in",s:"Five games left and the gap at the top is two points.",c:[{l:"Carry the team physically",k:["phy","def"]},{l:"Decide games with quality",k:["sho","pas"]}],stake:"pts"},
-  {t:"European night",s:"Floodlights, a hostile away end, a knockout tie.",c:[{l:"Silence them early",k:["spd","sho"]},{l:"Absorb, then strike late",k:["men","aer"]}],stake:"cl"},
-];
-const fmtM=m=>m>=1000?`£${(m/1000).toFixed(1)}B`:`£${m.toFixed(m<10?1:0)}M`;
-const cBase=()=>C.base;
-function cOwned(){const o={};SK.forEach(k=>o[k]={v:C.base[k],club:"x"+k});if(C.ps)o.ps={v:C.ps,club:"x"};return o;}
-function cOvr(){const w=W[C.pos];const boost=PS_BOOST[C.ps]||{};let o=0;SK.forEach(k=>o+=Math.min(99,C.base[k]+(boost[k]||0))*w[k]);return Math.round(o+C.chem);}
-function cStat(k){return Math.min(99,C.base[k]+((PS_BOOST[C.ps]||{})[k]||0));}
-function status(club,ovr){const s=TEAM_STR[club];return ovr>=s+3?"Star":ovr>=s-5?"Key player":"Rotation";}
-function wage(club,ovr,st){const s=TEAM_STR[club];const base=s>=88?190:s>=82?165:s>=76?135:s>=72?115:95;
-  const m=st==="Star"?1.3:st==="Key player"?1:.7;const fame=1+Math.min(.4,C.fame/250);return Math.round((base+Math.max(0,(ovr-70)*4))*m*fame);} // £k / week
-function makeOffers(exclude){
-  const ovr=cOvr();const names=Object.keys(TEAM_STR).filter(n=>n!==exclude);
-  const by=t=>names.filter(n=>!picked.includes(n)).sort((a,b)=>Math.abs(TEAM_STR[a]-t)-Math.abs(TEAM_STR[b]-t)+ (Math.random()-.5)*3)[0];
-  const picked=[];
-  [[ovr+3,"Title challenger"],[ovr-3,"Built around you"],[ovr-10,"Big fish, small pond"]].forEach(([t,tag])=>{const n=by(clamp(t,68,92));if(n){picked.push(n);}});
-  return picked.map((n,i)=>{const st=status(n,ovr);return{name:n,str:TEAM_STR[n],st,wage:wage(n,ovr,st),tag:["Title challenger","Built around you","Big fish, small pond"][i]};});
-}
-function startCareer(){
-  const o=D.owned;
-  C={name:D.name,pos:D.pos,nat:o.nat?o.nat.v:null,ps:o.ps?o.ps.v:null,chem:chemistry(o).reduce((s,c)=>s+c.v,0),
-    base:Object.fromEntries(SK.map(k=>[k,o[k]?o[k].v:50])),draftOvr:D.ovr,
-    age:21,season:1,club:null,money:0,fame:10,history:[],tro:{league:0,cl:0,cup:0,bdo:0},tot:{apps:0,g:0,a:0,cs:0},
-    lastFinish:null,phase:"sign",offers:null,sel:null,cur:null,train:"none",rec:false,media:"none",changes:null,inj:false};
-  C.offers=makeOffers(null);
-  D=null;VIEW="career";dock(null);renderCareer();window.scrollTo(0,0);
-}
-function careerSide(){
-  const ovr=cOvr();
-  const extra=`${C.ps?`<span class="tag trait">${esc(C.ps)}</span>`:""}${C.nat?`<span class="tag">${C.nat.f} ${esc(C.nat.c)}</span>`:""}${C.chem?`<span class="tag chem">Bonds +${C.chem}</span>`:""}`;
-  return`<aside class="side">${cardHTML(cOwned(),C.pos,{name:C.name,sub:C.club?C.club:"Free agent",ovr,extra})}
-    <div class="panel"><div class="kv">
-      <div><b>${C.age}</b><span>Age</span></div><div><b>${fmtM(C.money)}</b><span>Bank</span></div>
-      <div><b>${C.fame}</b><span>Fame</span></div><div><b>${C.season}</b><span>Season</span></div>
-    </div></div>
-    <div class="panel"><div class="lbl" style="margin-bottom:8px">Trophy cabinet</div>${trophyHTML()}</div>
-    ${C.age>=30&&C.phase!=="done"?`<button class="btn ghost small" id="b-retire" type="button">Retire now</button>`:""}
-  </aside>`;
-}
-function trophyHTML(){const t=C.tro;const a=[[t.league,"Premier League"],[t.cl,"Champions League"],[t.cup,"FA Cup"],[t.bdo,"Ballon d'Or"]].filter(x=>x[0]);
-  return`<div class="trophies">${a.length?a.map(x=>`<span class="trophy">${x[0]}× ${x[1]}</span>`).join(""):`<span class="trophy none">Empty for now</span>`}</div>`;}
-function renderCareer(){
-  topInfo(`<span class="chip gold">Season <b>${C.season}</b></span><span class="chip hide-sm">${esc(C.name)} · <b>${cOvr()}</b></span>`);
-  let main="";
-  if(C.phase==="sign")main=signHTML();
-  else if(C.phase==="pre")main=preHTML();
-  else if(C.phase==="big")main=bigHTML();
-  else if(C.phase==="results")main=resultsHTML();
-  else if(C.phase==="off")main=offHTML();
-  else if(C.phase==="done")main=doneHTML();
-  $("#view").innerHTML=`<div class="career">${careerSide()}<section class="stack">${main}</section></div>`;
-  bindCareer();
-}
-function offersBlock(offers,stay){
-  return`<div class="offers">${stay?offerHTML(stay,true):""}${offers.map(o=>offerHTML(o)).join("")}</div>`;
-}
-function offerHTML(o,stay){return`<button type="button" class="offer" data-club="${esc(o.name)}" aria-pressed="${C.sel===o.name}" style="--cc:${CLUB_COL[o.name]||"#888"}">
-  <span class="lbl">${stay?"Stay":esc(o.tag)}</span><h4>${esc(o.name)}</h4>
-  <dl><dt>Team strength</dt><dd>${o.str}</dd><dt>Your role</dt><dd>${o.st}</dd><dt>Wage</dt><dd>£${o.wage}k/wk</dd>${o.fee?`<dt>Fee</dt><dd>${fmtM(o.fee)}</dd>`:""}</dl></button>`;}
-function signHTML(){
-  return`<div class="panel"><h3>Sign your first contract</h3><p class="muted" style="margin:0 0 14px">Stronger clubs win more and impress Ballon d'Or voters. Smaller clubs pay more and give you the ball. Stars lift their team; rotation players mostly get carried.</p>
-  ${offersBlock(C.offers)}<div class="btn-row" style="margin-top:14px"><button class="btn primary" id="b-sign" type="button" ${C.sel?"":"disabled"}>Sign${C.sel?" for "+esc(C.sel):""}</button></div></div>`;
-}
-function preHTML(){
-  const ovr=cOvr(),st=status(C.club,ovr),wg=wage(C.club,ovr,st);
-  const risk=injRisk();
-  return`<div class="panel"><h3>${esc(C.club)} <small>Season ${C.season} · age ${C.age}</small></h3>
-    <div class="kv"><div><b>${ovr}</b><span>Your OVR</span></div><div><b>${TEAM_STR[C.club]}</b><span>Team strength</span></div><div><b>${st}</b><span>Role</span></div><div><b>£${wg}k</b><span>Per week</span></div><div><b>${Math.round(risk*100)}%</b><span>Injury risk</span></div></div>
-    <p class="muted" style="margin:14px 0">${goalText(st)}</p>
-    <button class="btn primary" id="b-play" type="button">Play the season</button></div>`;
-}
-function goalText(st){const s=TEAM_STR[C.club];
-  if(s>=88)return"The board expects the title. Anything outside the top two is a failure.";
-  if(s>=80)return"Champions League places are the target. A title push would be a bonus.";
-  if(s>=74)return st==="Star"?"You are the reason this club could sneak into Europe.":"Mid-table safety, with an eye on Europe.";
-  return"Stay up. If you are the star here, the team will lean on you every week.";}
-function injRisk(){return clamp(.08+(C.age>29?(C.age-29)*.035:0)-(C.rec?.06:0),.02,.45);}
-
-/* season sim */
-function simSeason(bigWon,bigStake){
-  const ovr=cOvr(),st=status(C.club,ovr),own=TEAM_STR[C.club];
-  const impact=st==="Star"?.45:st==="Key player"?.25:.1;
-  const eff=own+(ovr-own)*impact;
-  C.inj=Math.random()<injRisk();
-  const rows=Object.keys(TEAM_STR).map(n=>{const s=n===C.club?eff:TEAM_STR[n];const r=s+(Math.random()*2-1)*3.2;return{n,pts:Math.round(clamp(28+(r-68)*2.3+(Math.random()*8-4),18,100))};});
-  const me=rows.find(r=>r.n===C.club);
-  if(bigStake==="pts")me.pts+=bigWon?3:-2;
-  rows.sort((a,b)=>b.pts-a.pts||Math.random()-.5);
-  const finish=rows.findIndex(r=>r.n===C.club)+1;
-  const apps0=st==="Star"?ri(33,38):st==="Key player"?ri(27,35):ri(12,24);
-  const apps=C.inj?Math.round(apps0*.55):apps0;
-  const s=k=>cStat(k);let g=0,a=0,cs=0;
-  if(C.pos==="ATT"){g=Math.round(apps*Math.max(.05,(s("sho")*.6+s("men")*.2+s("dri")*.2-52)/58)*(.8+Math.random()*.4));a=Math.round(apps*Math.max(.03,(s("pas")-45)/160)*(.7+Math.random()*.6));}
-  else if(C.pos==="MID"){g=Math.round(apps*Math.max(.02,(s("sho")-45)/220)*(.7+Math.random()*.6));a=Math.round(apps*Math.max(.04,(s("pas")*.7+s("men")*.3-45)/120)*(.7+Math.random()*.6));}
-  else{g=Math.round(apps*Math.max(.01,(s("aer")-50)/700)*(.5+Math.random()));a=Math.round(apps*Math.max(.01,(s("pas")-50)/500)*(.5+Math.random()));cs=Math.round(apps*clamp((eff-62)/62,.08,.55)*(.8+Math.random()*.4));}
-  // cup
-  let cup=false;if(bigStake==="cup")cup=bigWon;else cup=Math.random()<clamp((eff-74)/90,.02,.22);
-  // CL: qualify by last season top-4, or strong club in first season
-  const inCL=C.lastFinish?C.lastFinish<=4:own>=82;
-  let cl=null;
-  if(inCL){cl=[];const rounds=["Round of 16","Quarter-final","Semi-final","Final"];const pool=[...CL_TEAMS].sort(()=>Math.random()-.5);let mom=bigStake==="cl"?(bigWon?5:-4):0;
-    for(let i=0;i<4;i++){const opp=pool[i];const p=clamp(.5+(eff+mom-opp.str)/28,.12,.86);const won=Math.random()<p;
-      let x=ri(1,3),y=ri(0,2);if(won&&x<=y)x=y+1;if(!won&&y<=x)y=x+1;cl.push({rd:rounds[i],opp:opp.name,won,sc:`${x}–${y}`});if(!won)break;mom+=1;}}
-  const clWon=cl&&cl.length===4&&cl[3].won;const clDepth=cl?cl.filter(r=>r.won).length:-1;
-  // personal rating
-  const avgR=clamp(6.1+(ovr-70)/14+(finish<=4?.15:0)+(Math.random()*.3-.15),5.6,9.2);
-  // ballon d'or
-  const out=C.pos==="ATT"?Math.min(9,(g+a*.5)/3.5):C.pos==="MID"?Math.min(8,(g+a)/3.5):Math.min(7,cs/2.5);
-  const my=ovr+(finish===1?4:finish===2?2:finish<=4?1:0)+(clWon?5:clDepth===3?3:clDepth===2?1.5:0)+(cup?1:0)+(bigWon?1:0)+out*.6-(C.inj?5:0)+(Math.random()*4-2);
-  const rivals=BDO_RIVALS.map(([n,a1,b1])=>({n,s:a1+Math.random()*(b1-a1)+Math.random()*9}));
-  const all=[...rivals,{n:C.name,s:my,me:1}].sort((a,b)=>b.s-a.s);
-  const bdoRank=all.findIndex(x=>x.me)+1;
-  const pay=wage(C.club,ovr,st)*52/1000;
-  const brand=Math.max(0,(C.fame-30)/12);
-  return{rows,finish,apps,g,a,cs,cup,cl,clWon,avgR,bdo:all.slice(0,10),bdoRank,earn:pay+brand,st,ovr,inj:C.inj};
-}
-function playSeason(){
-  C.bigEv=BIG[ri(0,BIG.length-1)];
-  if(C.bigEv.stake==="cl"&&!(C.lastFinish?C.lastFinish<=4:TEAM_STR[C.club]>=82))C.bigEv=BIG[0];
-  C.phase="big";renderCareer();
-}
-function bigHTML(){const b=C.bigEv;
-  return`<div class="panel"><span class="lbl">Big game · Season ${C.season}</span><h3 style="margin-top:4px">${b.t}</h3><p class="muted" style="margin:0">${b.s} ${b.stake==="cup"?"Win and the FA Cup is yours.":b.stake==="cl"?"The result carries into your Champions League run.":"Three points could decide where you finish."}</p>
-  <div class="choice">${b.c.map((c,i)=>`<button type="button" data-big="${i}"><b>${c.l}</b><small>Leans on ${c.k.map(k=>SL_POS[C.pos][k]).join(" and ")}: ${Math.round(c.k.reduce((s,k)=>s+cStat(k),0)/c.k.length)} average</small></button>`).join("")}</div></div>`;}
-function resolveBig(i){
-  const c=C.bigEv.c[i];const avg=c.k.reduce((s,k)=>s+cStat(k),0)/c.k.length;
-  const p=clamp(.3+(avg-62)/55+(TEAM_STR[C.club]-80)/120,.1,.9);const won=Math.random()<p;
-  C.bigRes={won,choice:c.l,p};C.cur=simSeason(won,C.bigEv.stake);
-  const r=C.cur;
-  if(r.finish===1)C.tro.league++;if(r.cup)C.tro.cup++;if(r.clWon)C.tro.cl++;if(r.bdoRank===1)C.tro.bdo++;
-  C.money+=r.earn;C.tot.apps+=r.apps;C.tot.g+=r.g;C.tot.a+=r.a;C.tot.cs+=r.cs;
-  const fd=(r.finish===1?12:r.finish<=4?5:r.finish>=18?-6:0)+(r.clWon?14:0)+(r.cup?5:0)+(r.bdoRank===1?20:r.bdoRank<=3?8:r.bdoRank<=10?3:0)+(won?3:-1)+(C.media==="tour"?6:C.media==="brand"?12:0);
-  C.fame=clamp(C.fame+fd,0,100);
-  C.history.push({s:C.season,age:C.age,club:C.club,ovr:r.ovr,fin:r.finish,apps:r.apps,g:r.g,a:r.a,cs:r.cs,cl:r.clWon?"Winner":r.cl?(r.cl.filter(x=>x.won).length>=3?"Final":["R16","QF","SF","Final"][r.cl.length-1]):"–",cup:r.cup,bdo:r.bdoRank});
-  C.lastFinish=r.finish;C.phase="results";renderCareer();
-}
-function resultsHTML(){
-  const r=C.cur;const b=C.bigRes;
-  const ord=n=>n+(n%10===1&&n!==11?"st":n%10===2&&n!==12?"nd":n%10===3&&n!==13?"rd":"th");
-  const show=new Set([0,1,2,3,r.finish-2,r.finish-1,r.finish,17,18,19].filter(i=>i>=0&&i<20));
-  let last=-1,rowsH="";
-  r.rows.forEach((x,i)=>{if(!show.has(i))return;if(i>last+1)rowsH+=`<tr class="gap"><td colspan="4">···</td></tr>`;last=i;
-    rowsH+=`<tr class="${x.n===C.club?"me":""}"><td class="zone ${i<4?"z-cl":i>=17?"z-rel":""}"></td><td class="n">${i+1}</td><td>${esc(x.n)}</td><td class="n">${x.pts}</td></tr>`;});
-  const isDef=C.pos==="DEF";
-  return`
-  <div class="panel"><span class="lbl">Season ${C.season} · ${esc(C.club)}</span><h3 style="margin-top:4px">${ord(r.finish)} in the league${r.finish===1?" · Champions":""}</h3>
-    <p class="muted" style="margin:0 0 12px">${b.won?"Won":"Lost"} the ${C.bigEv.t.toLowerCase()} (${b.choice.toLowerCase()}, ${Math.round(b.p*100)}% chance).${r.inj?" A mid-season injury cost you a chunk of the year.":""}</p>
-    <div class="kv"><div><b>${r.apps}</b><span>Apps</span></div>${isDef?`<div><b>${r.cs}</b><span>Clean sheets</span></div>`:""}<div><b>${r.g}</b><span>Goals</span></div><div><b>${r.a}</b><span>Assists</span></div><div><b>${r.avgR.toFixed(2)}</b><span>Avg rating</span></div><div><b>${fmtM(r.earn)}</b><span>Earned</span></div></div>
-  </div>
-  <div class="panel"><h3>Premier League table</h3><div class="tablewrap"><table class="league"><thead><tr><th class="zone"></th><th class="n">#</th><th>Club</th><th class="n">Pts</th></tr></thead><tbody>${rowsH}</tbody></table></div></div>
-  <div class="panel"><h3>Champions League</h3>${r.cl?`<div class="ko">${r.cl.map((m,i)=>`<div style="animation-delay:${i*.25}s"><span class="rd">${m.rd}</span><span>vs ${esc(m.opp)}</span><span class="sc ${m.won?"w":"l"}">${m.sc}</span></div>`).join("")}</div>${r.clWon?`<p style="margin:10px 0 0;color:var(--gold);font-weight:700">Champions of Europe.</p>`:""}`:`<p class="muted" style="margin:0">Not in the competition this year. Finish in the top four to qualify.</p>`}
-    ${r.cup?`<p style="margin:10px 0 0" class="trophy">FA Cup winner</p>`:""}</div>
-  <div class="panel"><h3>Ballon d'Or <small>${r.bdoRank<=10?ord(r.bdoRank):"Outside the top 10"}</small></h3>
-    <div class="bdo">${r.bdo.map((x,i)=>`<div class="${x.me?"me":""}" style="animation-delay:${i*.06}s"><span class="p">${i+1}</span><span>${esc(x.n)}</span><span class="s">${x.s.toFixed(1)}</span></div>`).join("")}${r.bdoRank>10?`<div class="me"><span class="p">${r.bdoRank}</span><span>${esc(C.name)}</span><span class="s"></span></div>`:""}</div>
-  </div>
-  <div class="btn-row">${C.age>=36?`<button class="btn primary" id="b-end" type="button">Retire a legend</button>`:`<button class="btn primary" id="b-off" type="button">Go to the off-season</button>`}</div>`;
-}
-/* off-season */
-const TRAIN=[{id:"none",l:"Rest",d:"No cost, no gains.",p:0},{id:"elite",l:"Elite camp",d:"+2 to one attribute.",p:3},{id:"world",l:"World-class camp",d:"+3 to one, +1 to another.",p:8}];
-const MEDIA=[{id:"none",l:"Keep a low profile",d:"No change.",p:0},{id:"tour",l:"Media tour",d:"+6 fame next season.",p:1.5},{id:"brand",l:"Launch a brand",d:"+12 fame. Brand income grows with fame.",p:5}];
-function enterOff(){
-  // aging
-  const ch={};const age=C.age+1;
-  SK.forEach(k=>{let d=0;
-    if(age<=24)d=Math.random()<.55?ri(1,3):0;
-    else if(age<=28)d=Math.random()<.3?ri(-1,2):0;
-    else if(age<=31)d=(k==="spd"||k==="phy")?-ri(0,2):(k==="men"?ri(0,2):(Math.random()<.25?-1:0));
-    else d=(k==="spd"||k==="phy")?-ri(2,5):(k==="men"||k==="pas")?ri(-1,1):-ri(1,3);
-    if(d){const nv=clamp(C.base[k]+d,20,99);if(nv!==C.base[k]){ch[k]=[C.base[k],nv];C.base[k]=nv;}}});
-  if(C.cur.inj){const k=pick(["spd","phy"]);const nv=clamp(C.base[k]-2,20,99);ch[k]=[ch[k]?ch[k][0]:C.base[k],nv];C.base[k]=nv;}
-  C.age=age;C.changes=ch;C.train="none";C.trainK=[...SK].sort((a,b)=>W[C.pos][b]-W[C.pos][a])[0];C.rec=false;C.media="none";
-  const ovr=cOvr();const fee=Math.max(3,Math.round((ovr>=90?95:ovr>=85?65:ovr>=80?40:ovr>=75?22:9)*(C.age>28?1-(C.age-28)*.12:1)));
-  C.offers=makeOffers(C.club).map(o=>({...o,fee}));C.sel=C.club;
-  C.phase="off";renderCareer();
-}
-function offCost(){return(TRAIN.find(t=>t.id===C.train).p)+(C.rec?2:0)+MEDIA.find(m=>m.id===C.media).p;}
-function offHTML(){
-  const ch=C.changes;const keys=Object.keys(ch);
-  const ovr=cOvr(),st=status(C.club,ovr);
-  const stay={name:C.club,str:TEAM_STR[C.club],st,wage:wage(C.club,ovr,st)};
-  const cost=offCost();
-  return`
-  <div class="panel"><h3>Off-season <small>Now ${C.age}</small></h3>
-    ${keys.length?`<div class="statgrid">${keys.map(k=>{const[a,b]=ch[k];return`<div class="chg"><span>${SL_POS[C.pos][k]}</span><b class="${b>a?"up":"down"}">${a} → ${b}</b></div>`;}).join("")}</div>`:`<p class="muted" style="margin:0">No natural change over the summer.</p>`}
-    ${C.age>=30?`<p class="muted" style="margin:10px 0 0">Past 30, pace and power fade first. Passing and the eighth slot hold up longer.</p>`:""}
-  </div>
-  <div class="panel"><h3>Spend the summer <small>Bank ${fmtM(C.money)}</small></h3>
-    <span class="lbl">Training</span>
-    <div class="opts-row" style="margin:6px 0 10px">${TRAIN.map(t=>`<button type="button" data-train="${t.id}" aria-pressed="${C.train===t.id}" ${t.p>C.money&&C.train!==t.id?"disabled":""}><b>${t.l}</b><small>${t.d}</small><span class="price">${t.p?fmtM(t.p):"Free"}</span></button>`).join("")}</div>
-    ${C.train!=="none"?`<div class="field"><label class="lbl" for="train-k">Focus attribute</label><select id="train-k">${[...SK].sort((a,b)=>W[C.pos][b]-W[C.pos][a]).map(k=>`<option value="${k}" ${C.trainK===k?"selected":""}>${SL_POS[C.pos][k]} (${C.base[k]}, weight ${Math.round(W[C.pos][k]*100)}%)</option>`).join("")}</select></div>`:""}
-    <span class="lbl">Recovery</span>
-    <div class="opts-row" style="margin:6px 0 10px"><button type="button" data-rec="0" aria-pressed="${!C.rec}"><b>Standard physio</b><small>Injury risk stays as it is.</small><span class="price">Free</span></button><button type="button" data-rec="1" aria-pressed="${C.rec}"><b>Private medical team</b><small>Injury risk −6 points next season.</small><span class="price">£2M</span></button></div>
-    <span class="lbl">Profile</span>
-    <div class="opts-row" style="margin:6px 0 0">${MEDIA.map(m=>`<button type="button" data-media="${m.id}" aria-pressed="${C.media===m.id}"><b>${m.l}</b><small>${m.d}</small><span class="price">${m.p?fmtM(m.p):"Free"}</span></button>`).join("")}</div>
-    <p class="muted" style="margin:12px 0 0">Total: <b style="color:${cost>C.money?"var(--bad)":"var(--chalk)"}">${fmtM(cost)}</b> of ${fmtM(C.money)}${cost>C.money?". Not enough in the bank.":""}</p>
-  </div>
-  <div class="panel"><h3>Transfer window</h3><p class="muted" style="margin:0 0 12px">Your rating today is ${ovr}. Clubs value you at ${fmtM(C.offers[0]?.fee||0)}${C.age>28?", already discounted for age":""}.</p>
-    ${offersBlock(C.offers,stay)}</div>
-  <div class="btn-row"><button class="btn primary" id="b-next" type="button" ${cost>C.money?"disabled":""}>Start season ${C.season+1}${C.sel&&C.sel!==C.club?" at "+esc(C.sel):""}</button></div>`;
-}
-function applyOff(){
-  const cost=offCost();if(cost>C.money)return;C.money-=cost;
-  if(C.train==="elite")C.base[C.trainK]=Math.min(99,C.base[C.trainK]+2);
-  if(C.train==="world"){C.base[C.trainK]=Math.min(99,C.base[C.trainK]+3);const o=[...SK].filter(k=>k!==C.trainK).sort((a,b)=>W[C.pos][b]-W[C.pos][a])[0];C.base[o]=Math.min(99,C.base[o]+1);}
-  if(C.sel&&C.sel!==C.club)C.club=C.sel;
-  C.season++;C.phase="pre";renderCareer();window.scrollTo(0,0);
-}
-function legacy(){const t=C.tro;return Math.round(C.history.reduce((s,h)=>s+h.ovr,0)/Math.max(1,C.history.length)+t.league*12+t.cl*18+t.cup*5+t.bdo*30+C.tot.g*.3+C.tot.a*.2+C.tot.cs*.3+C.history.length*2);}
-function retire(){
-  C.phase="done";
-  const hof=store.get("hof",[]);const t=C.tro;
-  const tro=[[t.league,"PL"],[t.cl,"UCL"],[t.cup,"FA Cup"],[t.bdo,"Ballon d'Or"]].filter(x=>x[0]).map(x=>`${x[0]}× ${x[1]}`).join(", ");
-  hof.push({name:C.name,pos:C.pos,ovr:Math.max(...C.history.map(h=>h.ovr),C.draftOvr),seasons:C.history.length,trophies:tro,legacy:legacy(),flag:C.nat?C.nat.f:""});
-  hof.sort((a,b)=>b.legacy-a.legacy);store.set("hof",hof.slice(0,20));
-  renderCareer();window.scrollTo(0,0);
-}
-function doneHTML(){
-  const L=legacy();const peak=Math.max(...C.history.map(h=>h.ovr));
-  const verdict=L>=200?"One of the greatest the league has seen.":L>=150?"A true great. The highlight reels will last.":L>=110?"A fine career with real silverware.":L>=80?"A solid pro who gave everything.":"A career that never quite caught fire.";
-  return`<div class="panel"><span class="lbl">Retired at ${C.age}</span><h3 style="font-size:34px;margin-top:4px">${esc(C.name)}</h3><p class="muted" style="margin:0 0 14px">${verdict}</p>
-    <div class="kv"><div><b>${L}</b><span>Legacy</span></div><div><b>${peak}</b><span>Peak OVR</span></div><div><b>${C.history.length}</b><span>Seasons</span></div><div><b>${C.tot.apps}</b><span>Apps</span></div><div><b>${C.tot.g}</b><span>Goals</span></div><div><b>${C.tot.a}</b><span>Assists</span></div>${C.pos==="DEF"?`<div><b>${C.tot.cs}</b><span>Clean sheets</span></div>`:""}<div><b>${fmtM(C.money)}</b><span>Bank</span></div></div></div>
-  <div class="panel"><h3>Career</h3><div class="tablewrap"><table class="timeline"><thead><tr><th>Season</th><th>Age</th><th>Club</th><th>OVR</th><th>League</th><th>UCL</th><th>Apps</th><th>${C.pos==="DEF"?"CS":"G"}</th><th>A</th><th>Ballon d'Or</th></tr></thead><tbody>
-    ${C.history.map(h=>`<tr><td class="n">${h.s}</td><td class="n">${h.age}</td><td>${esc(h.club)}${h.cup?" · Cup":""}</td><td class="n">${h.ovr}</td><td class="n">${h.fin}</td><td>${h.cl}</td><td class="n">${h.apps}</td><td class="n">${C.pos==="DEF"?h.cs:h.g}</td><td class="n">${h.a}</td><td class="n">${h.bdo<=10?h.bdo:"–"}</td></tr>`).join("")}
-  </tbody></table></div></div>
-  <div class="btn-row"><button class="btn primary" id="b-home" type="button">Back to the Hall of Fame</button></div>`;
-}
-function bindCareer(){
-  const on=(id,f)=>{const e=$(id);if(e)e.onclick=f;};
-  document.querySelectorAll("[data-club]").forEach(b=>b.onclick=()=>{C.sel=b.dataset.club;renderCareer();});
-  on("#b-sign",()=>{if(!C.sel)return;C.club=C.sel;C.phase="pre";renderCareer();});
-  on("#b-play",playSeason);
-  document.querySelectorAll("[data-big]").forEach(b=>b.onclick=()=>{resolveBig(+b.dataset.big);window.scrollTo(0,0);});
-  on("#b-off",()=>{enterOff();window.scrollTo(0,0);});
-  on("#b-end",retire);on("#b-retire",retire);on("#b-home",goHome);
-  on("#b-next",applyOff);
-  document.querySelectorAll("[data-train]").forEach(b=>b.onclick=()=>{C.train=b.dataset.train;renderCareer();});
-  document.querySelectorAll("[data-rec]").forEach(b=>b.onclick=()=>{C.rec=b.dataset.rec==="1";renderCareer();});
-  document.querySelectorAll("[data-media]").forEach(b=>b.onclick=()=>{C.media=b.dataset.media;renderCareer();});
-  const tk=$("#train-k");if(tk)tk.onchange=e=>{C.trainK=e.target.value;};
-}
-
-goHome();
-
-</script>
+<footer><div class="wrap">
+  <span>© <span id="y">2026</span> StatsThief · Jeux faits maison</span>
+  <nav aria-label="Pied de page">
+    <a href="/about.html">À propos</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy.html">Confidentialité</a>
+    <a href="/terms.html">Conditions</a>
+  </nav>
+</div></footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>
