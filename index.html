@@ -1,222 +1,257 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>statsthief</title>
+<title>STATSTHIEF</title>
 <link rel="canonical" href="https://statsthief.win/">
-<meta name="description" content="Huit jeux faits à la main, à jouer dans le navigateur : Stat Thief, Gif T A, Néon Drift, Eaux Sombres, Président de Club, Paddock Manager, Le Chant du Pendu et Hash City.">
-<meta property="og:title" content="statsthief">
-<meta property="og:description" content="Huit jeux faits à la main, à jouer dans le navigateur.">
+<meta name="description" content="Drop 01: eight handmade browser games. Stat Thief, Gif T A, Néon Drift, Eaux Sombres, Président de Club, Paddock Manager, Le Chant du Pendu, Hash City. Free, no install.">
+<meta property="og:title" content="STATSTHIEF · Drop 01">
+<meta property="og:description" content="Eight handmade browser games. Free, no install.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://statsthief.win/">
-<meta property="og:image" content="https://statsthief.win/img/hash-city.webp">
-<meta name="theme-color" content="#0E0E0C">
+<meta property="og:image" content="https://statsthief.win/img/hero.webp">
+<meta name="theme-color" content="#0A0A0A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
 <style>
-/* Mise en page : catalogue d'un petit label. Une liste numérotée, aperçu au survol. Thème sombre unique, volontairement. */
+/* Layout: a streetwear webshop where the products are games. Announcement ticker, centred wordmark, full-bleed campaign shot, tight product grid with hover swap, info strip, oversized footer mark. Light ground on purpose, like a store. */
 :root{
-  --ground:#0E0E0C;
-  --raise:#161614;
-  --ink:#E9E5DA;
-  --soft:#A39E92;
-  --dim:#6B675E;
-  --line:rgba(233,229,218,.10);
-  --line-2:rgba(233,229,218,.22);
-  --mark:#D9B26A;
-  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
-  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
-  color-scheme:dark;
+  --paper:#FFFFFF;
+  --stone:#F1F0EE;
+  --ink:#0A0A0A;
+  --grey:#6F6F6F;
+  --hair:rgba(10,10,10,.12);
+  --red:#E10600;
+  --f:'Archivo','Helvetica Neue',Arial,sans-serif;
+  color-scheme:light;
 }
 *{box-sizing:border-box}
-html,body{min-height:100%}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-:focus-visible{outline:1px solid var(--mark);outline-offset:4px}
-::selection{background:var(--mark);color:var(--ground)}
-.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.cap{text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.px{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
-/* en-tête */
-header{padding-top:calc(28px + env(safe-area-inset-top,0px))}
-.bar{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:14px;border-bottom:1px solid var(--line);color:var(--soft)}
-.name{color:var(--ink);letter-spacing:.02em}
-.name::before{content:"";display:inline-block;width:6px;height:6px;background:var(--mark);margin-right:10px;vertical-align:1px}
-.intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding:56px 0 64px}
-.intro p{margin:0;font-family:var(--serif);font-size:30px;line-height:1.18;color:var(--ink);max-width:22ch;text-wrap:pretty}
-.intro p i{color:var(--soft)}
-.intro dl{margin:0;align-self:end;justify-self:end;display:grid;grid-template-columns:auto auto;gap:4px 24px;color:var(--soft)}
-.intro dt{color:var(--dim)}
-.intro dd{margin:0;text-align:right}
+/* ticker */
+.tick{background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;padding-top:env(safe-area-inset-top,0px)}
+.tick div{display:inline-flex;gap:28px;padding:8px 0;animation:run 38s linear infinite;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.tick span::after{content:"✦";margin-left:28px;color:var(--red)}
+@keyframes run{to{transform:translateX(-50%)}}
 
-/* catalogue */
-.head,.row{display:grid;grid-template-columns:48px minmax(0,1.4fr) minmax(0,1fr) minmax(0,.9fr) 24px;gap:16px;align-items:baseline}
-.head{color:var(--dim);padding:0 0 10px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.08em;font-size:11px}
-ol{list-style:none;margin:0;padding:0}
-.row{padding:18px 0 17px;border-bottom:1px solid var(--line);position:relative;transition:color .2s}
-.no{color:var(--dim);font-variant-numeric:tabular-nums}
-.t{font-family:var(--serif);font-size:30px;line-height:1.05;letter-spacing:-.005em}
-.t small{display:block;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--soft);letter-spacing:0;margin-top:8px;max-width:46ch}
-.g,.c{color:var(--soft)}
-.c{color:var(--dim)}
-.go{color:var(--dim);text-align:right;transition:transform .25s,color .2s}
-.thumb{display:none}
-.lang{color:var(--mark);margin-left:8px;font-family:var(--mono);font-size:11px;vertical-align:6px;letter-spacing:.06em}
+/* header */
+header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair)}
+.nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:58px}
+.nav .l,.nav .r{display:flex;gap:22px;align-items:center}
+.nav .r{justify-content:flex-end}
+.nav a.cap,.nav button.cap{font-size:12px}
+.nav a.cap:hover{text-decoration:underline;text-underline-offset:4px}
+.mark{font-weight:900;font-stretch:62%;font-size:30px;letter-spacing:-.01em;line-height:1;text-transform:uppercase}
+.mark sup{font-size:10px;font-weight:600;font-stretch:100%;letter-spacing:.04em;margin-left:2px;vertical-align:14px}
+.bag b{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:10px;margin-left:6px}
 
+/* campaign */
+.hero{position:relative;height:min(82vh,760px);min-height:420px;background:#cfd8cf url(img/hero.webp) center/cover no-repeat;color:#fff}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0) 45%)}
+.hero .in{position:absolute;left:0;right:0;bottom:0;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding-bottom:28px}
+.hero h1{margin:0;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.hero h1 b{display:block;font-weight:900;font-stretch:62%;font-size:44px;letter-spacing:-.005em;line-height:.95;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 26px;background:#fff;color:var(--ink);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:background .15s,color .15s}
+.btn:hover{background:var(--ink);color:#fff}
+.hero small{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:16px;z-index:1;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+
+/* shop bar */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:34px;padding-bottom:16px}
+.bar h2{margin:0;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.bar h2 span{color:var(--grey);font-weight:500}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{height:32px;padding:0 14px;border:1px solid var(--hair);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:border-color .15s,background .15s,color .15s}
+.filters button:hover{border-color:var(--ink)}
+.filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* products */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 10px;padding-bottom:20px}
+.item[hidden]{display:none}
+.item a{display:block}
+.ph{position:relative;aspect-ratio:4/5;background:var(--stone);overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .35s,transform .6s cubic-bezier(.2,.7,.2,1)}
+.ph .b{opacity:0;object-fit:contain;background:var(--stone);padding:0}
+.badges{position:absolute;left:8px;top:8px;display:flex;gap:4px;z-index:2}
+.badges i{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 6px;background:#fff;color:var(--ink)}
+.badges i.new{background:var(--red);color:#fff}
+.quick{position:absolute;left:8px;right:8px;bottom:8px;z-index:2;height:40px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transform:translateY(calc(100% + 10px));transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.info{display:flex;justify-content:space-between;gap:10px;padding-top:10px}
+.info h3{margin:0;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.info p{margin:2px 0 0;color:var(--grey)}
+.price{font-weight:600;white-space:nowrap}
+.price s{color:var(--grey);font-weight:400;margin-right:6px}
+.sizes{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.sizes span{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--hair);padding:2px 6px;color:var(--grey)}
 @media (hover:hover){
-  ol:hover .row{color:var(--dim)}
-  ol:hover .row .t small,ol:hover .row .g{color:var(--dim)}
-  ol .row:hover{color:var(--ink)}
-  ol .row:hover .t small{color:var(--soft)}
-  ol .row:hover .g{color:var(--soft)}
-  .row:hover .go{color:var(--mark);transform:translateX(4px)}
-  .row:hover .no{color:var(--mark)}
+  .item a:hover .ph .a{opacity:0;transform:scale(1.03)}
+  .item a:hover .ph .b{opacity:1}
+  .item a:hover .quick{transform:none}
+  .item a:hover h3{text-decoration:underline;text-underline-offset:3px}
 }
+.legend{color:var(--grey);font-size:11px;padding-bottom:56px}
 
-/* aperçu qui suit le curseur */
-#peek{position:fixed;left:0;top:0;width:320px;aspect-ratio:16/10;pointer-events:none;z-index:5;opacity:0;transform:translate3d(-999px,-999px,0);transition:opacity .2s;background:var(--raise);outline:1px solid var(--line-2);outline-offset:6px}
-#peek img{width:100%;height:100%;object-fit:cover;display:block}
-#peek.on{opacity:1}
+/* info strip */
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.strip div{padding:22px 16px 24px;border-right:1px solid var(--hair)}
+.strip div:last-child{border-right:0}
+.strip b{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.strip span{color:var(--grey)}
 
-.note{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--dim);padding:18px 0 0}
+/* footer */
+footer{padding-top:48px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.fcols{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px;padding-bottom:40px}
+.fcols h4{margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.fcols a{display:block;color:var(--grey);padding:2px 0}
+.fcols a:hover{color:var(--ink)}
+.fcols p{margin:0;color:var(--grey);max-width:40ch}
+.big{font-weight:900;font-stretch:62%;text-transform:uppercase;line-height:.78;letter-spacing:-.02em;font-size:calc((100vw - 2*max(16px,env(safe-area-inset-left,0px)))*.232);white-space:nowrap;margin:0 -0.02em;user-select:none}
+.legal{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:14px;color:var(--grey);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
 
-footer{margin-top:120px;padding:18px 0 calc(32px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);color:var(--dim)}
-footer .wrap{display:flex;gap:8px 20px;flex-wrap:wrap;justify-content:space-between}
-footer nav{display:flex;gap:20px;flex-wrap:wrap}
-footer a:hover{color:var(--ink)}
-
-@media (max-width:760px){
-  .intro{grid-template-columns:1fr;padding:40px 0 44px}
-  .intro p{font-size:26px}
-  .intro dl{justify-self:start}
-  .intro dd{text-align:left}
-  .head{display:none}
-  .row{grid-template-columns:96px minmax(0,1fr);gap:4px 14px;padding:16px 0;align-items:start}
-  .thumb{display:block;grid-row:1 / span 3;width:96px;aspect-ratio:16/10;object-fit:cover;outline:1px solid var(--line)}
-  .no{display:none}
-  .t{font-size:24px}
-  .t small{margin-top:6px}
-  .g,.c{font-size:12px}
-  .go{display:none}
-  #peek{display:none}
+@media (max-width:980px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.strip{grid-template-columns:repeat(2,minmax(0,1fr))}.strip div:nth-child(2){border-right:0}.strip div:nth-child(-n+2){border-bottom:1px solid var(--hair)}}
+@media (max-width:720px){
+  .nav{grid-template-columns:1fr auto;height:52px}
+  .nav .l{display:none}
+  .mark{font-size:26px}
+  .hero{height:72vh;background-position:62% center}
+  .hero .in{flex-direction:column;align-items:flex-start}
+  .hero h1 b{font-size:36px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 8px}
+  .sizes{display:none}
+  .fcols{grid-template-columns:1fr 1fr}
+  .fcols>div:first-child{grid-column:1 / -1}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 
-<header><div class="wrap">
-  <div class="bar"><a class="name" href="/">statsthief</a><span>catalogue · 2026</span></div>
-  <div class="intro">
-    <p>Petits jeux faits à la main, <i>à jouer dans le navigateur.</i></p>
-    <dl>
-      <dt>titres</dt><dd>08</dd>
-      <dt>prix</dt><dd>gratuit</dd>
-      <dt>installation</dt><dd>aucune</dd>
-    </dl>
-  </div>
+<div class="tick" aria-hidden="true"><div>
+  <span>Drop 01 out now</span><span>Free to play</span><span>No install</span><span>Plays in your browser</span><span>8 titles in stock</span><span>Saves on your device</span>
+  <span>Drop 01 out now</span><span>Free to play</span><span>No install</span><span>Plays in your browser</span><span>8 titles in stock</span><span>Saves on your device</span>
+</div></div>
+
+<header><div class="nav px">
+  <nav class="l" aria-label="Shop">
+    <a class="cap keep" href="#shop">Shop</a>
+    <a class="cap" href="#shop" data-jump="drive">Drive</a>
+    <a class="cap" href="#shop" data-jump="manage">Manage</a>
+    <a class="cap" href="#shop" data-jump="story">Story</a>
+  </nav>
+  <a class="mark" href="/" aria-label="Statsthief, home">Statsthief<sup>®</sup></a>
+  <div class="r"><a class="cap bag" href="#shop">Bag<b>8</b></a></div>
 </div></header>
 
-<main class="wrap">
-  <div class="head" aria-hidden="true"><span>N°</span><span>Titre</span><span>Genre</span><span>Commandes</span><span></span></div>
-  <ol id="list">
-    <li><a class="row" href="/stat-thief/" data-img="img/stat-thief.webp">
-      <img class="thumb" src="img/stat-thief.webp" alt="" loading="lazy">
-      <span class="no">001</span>
-      <span class="t">Stat Thief<span class="lang">EN</span><small>Un draft de Premier League : une stat volée par tour, puis toute une carrière.</small></span>
-      <span class="g">football, draft</span>
-      <span class="c">souris, tactile</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/gif-t-a/" data-img="img/gif-t-a.webp">
-      <img class="thumb" src="img/gif-t-a.webp" alt="" loading="lazy">
-      <span class="no">002</span>
-      <span class="t">Gif T A<small>Le plateau du Moulon à l'échelle 1:1, en voiture ou aux commandes du métro de la ligne 18.</small></span>
-      <span class="g">balade, conduite</span>
-      <span class="c">clavier, tactile</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/neon-drift/" data-img="img/neon-drift.webp">
-      <img class="thumb" src="img/neon-drift.webp" alt="" loading="lazy">
-      <span class="no">003</span>
-      <span class="t">Néon Drift<small>Une ville de nuit où l'on drifte, marche et prend n'importe quel véhicule.</small></span>
-      <span class="g">bac à sable</span>
-      <span class="c">clavier, tactile</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/eaux-sombres/" data-img="img/eaux-sombres.webp">
-      <img class="thumb" src="img/eaux-sombres.webp" alt="" loading="lazy">
-      <span class="no">004</span>
-      <span class="t">Eaux Sombres<small>Pêche en bateau rendue comme sur PS1. Du lagon jusqu'au fjord gelé et à la haute mer.</small></span>
-      <span class="g">pêche, rétro</span>
-      <span class="c">clavier, souris</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/president-de-club/" data-img="img/president-de-club.webp">
-      <img class="thumb" src="img/president-de-club.webp" alt="" loading="lazy">
-      <span class="no">005</span>
-      <span class="t">Président de Club<small>Un club de basket, du gymnase de quartier jusqu'à l'élite, avec son stade en 3D.</small></span>
-      <span class="g">gestion, basket</span>
-      <span class="c">souris, tactile</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/paddock-manager/" data-img="img/paddock-manager.webp">
-      <img class="thumb" src="img/paddock-manager.webp" alt="" loading="lazy">
-      <span class="no">006</span>
-      <span class="t">Paddock Manager<small>Une écurie à mener de la F3 au Grand Prix : pilotes, sponsors, stratégie de course.</small></span>
-      <span class="g">gestion, sport auto</span>
-      <span class="c">souris, tactile</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/chant-du-pendu/" data-img="img/chant-du-pendu.webp">
-      <img class="thumb" src="img/chant-du-pendu.webp" alt="" loading="lazy">
-      <span class="no">007</span>
-      <span class="t">Le Chant du Pendu<small>Arizona, 1899. Un frère disparu dans une mine qui chante la nuit. Quatre chapitres.</small></span>
-      <span class="g">western, première personne</span>
-      <span class="c">clavier, souris, son</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-    <li><a class="row" href="/hash-city/" data-img="img/hash-city.webp">
-      <img class="thumb" src="img/hash-city.webp" alt="" loading="lazy">
-      <span class="no">008</span>
-      <span class="t">Hash City<small>Une ville en 3D à faire grandir, avec un budget à tenir ou en mode libre.</small></span>
-      <span class="g">city builder</span>
-      <span class="c">souris, tactile</span>
-      <span class="go" aria-hidden="true">→</span>
-    </a></li>
-  </ol>
-  <div class="note"><span>Les parties sont gardées dans ton navigateur, sur cet appareil.</span><span>EN : en anglais</span></div>
+<main>
+  <section class="hero" aria-label="Drop 01">
+    <small>Hash City, ground level</small>
+    <div class="in px">
+      <h1>Drop 01 · Winter 2026<b>Eight titles.<br>Zero install.</b></h1>
+      <a class="btn" href="#shop">Shop the drop</a>
+    </div>
+  </section>
+
+  <section id="shop">
+    <div class="bar px">
+      <h2>All titles <span id="count">(8)</span></h2>
+      <div class="filters" role="group" aria-label="Filter by category">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="drive" aria-pressed="false">Drive</button>
+        <button type="button" data-f="manage" aria-pressed="false">Manage</button>
+        <button type="button" data-f="story" aria-pressed="false">Story</button>
+      </div>
+    </div>
+
+    <div class="grid px" id="grid">
+
+      <article class="item" data-cat="manage"><a href="/stat-thief/">
+        <div class="ph"><img class="a" src="img/p/stat-thief.webp" alt="Stat Thief home screen with a player card" width="880" height="1100"><img class="b" src="img/stat-thief.webp" alt="" loading="lazy"><div class="badges"><i>EN</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Stat Thief</h3><p>Football draft, career mode</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Mouse</span><span>Touch</span></div>
+      </a></article>
+
+      <article class="item" data-cat="drive"><a href="/gif-t-a/">
+        <div class="ph"><img class="a" src="img/p/gif-t-a.webp" alt="Gif T A title menu over the Moulon district in 3D" width="880" height="1100"><img class="b" src="img/gif-t-a.webp" alt="" loading="lazy"><div class="badges"><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Gif T A</h3><p>Open-world drive, Saclay 1:1</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Keyboard</span><span>Touch</span></div>
+      </a></article>
+
+      <article class="item" data-cat="drive"><a href="/neon-drift/">
+        <div class="ph"><img class="a" src="img/p/neon-drift.webp" alt="Néon Drift neon title over a night city" width="880" height="1100"><img class="b" src="img/neon-drift.webp" alt="" loading="lazy"><div class="badges"><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Néon Drift</h3><p>Urban sandbox, drift anything</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Keyboard</span><span>Touch</span></div>
+      </a></article>
+
+      <article class="item" data-cat="story"><a href="/eaux-sombres/">
+        <div class="ph"><img class="a" src="img/p/eaux-sombres.webp" alt="Fishing boat at the dock at dawn, PS1-style" width="880" height="1100"><img class="b" src="img/eaux-sombres.webp" alt="" loading="lazy"><div class="badges"><i class="new">New</i><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Eaux Sombres</h3><p>PS1-style boat fishing</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Keyboard</span><span>Mouse</span></div>
+      </a></article>
+
+      <article class="item" data-cat="manage"><a href="/president-de-club/">
+        <div class="ph"><img class="a" src="img/p/president-de-club.webp" alt="Président de Club office with treasury and squad" width="880" height="1100" loading="lazy"><img class="b" src="img/president-de-club.webp" alt="" loading="lazy"><div class="badges"><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Président de Club</h3><p>Basketball club manager</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Mouse</span><span>Touch</span></div>
+      </a></article>
+
+      <article class="item" data-cat="manage"><a href="/paddock-manager/">
+        <div class="ph"><img class="a" src="img/p/paddock-manager.webp" alt="Paddock Manager team headquarters screen" width="880" height="1100" loading="lazy"><img class="b" src="img/paddock-manager.webp" alt="" loading="lazy"><div class="badges"><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Paddock Manager</h3><p>Motorsport team manager</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Mouse</span><span>Touch</span></div>
+      </a></article>
+
+      <article class="item" data-cat="story"><a href="/chant-du-pendu/">
+        <div class="ph"><img class="a" src="img/p/chant-du-pendu.webp" alt="Le Chant du Pendu title over a western street at sunset" width="880" height="1100" loading="lazy"><img class="b" src="img/chant-du-pendu.webp" alt="" loading="lazy"><div class="badges"><i class="new">New</i><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Le Chant du Pendu</h3><p>First-person western, 1899</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Keyboard</span><span>Mouse</span><span>Sound on</span></div>
+      </a></article>
+
+      <article class="item" data-cat="manage"><a href="/hash-city/">
+        <div class="ph"><img class="a" src="img/p/hash-city.webp" alt="Hash City towers, river and metro from above" width="880" height="1100" loading="lazy"><img class="b" src="img/hash-city.webp" alt="" loading="lazy"><div class="badges"><i>FR</i></div><span class="quick">Play now</span></div>
+        <div class="info"><div><h3>Hash City</h3><p>3D city builder</p></div><span class="price">Free</span></div>
+        <div class="sizes"><span>Mouse</span><span>Touch</span></div>
+      </a></article>
+
+    </div>
+    <p class="legend px">EN: in English. FR: in French.</p>
+  </section>
+
+  <section class="strip" aria-label="Store info">
+    <div><b>Shipping</b><span>Instant, straight to your browser.</span></div>
+    <div><b>Price</b><span>Free. Every title, every time.</span></div>
+    <div><b>Sizes</b><span>Keyboard, mouse or touch. Listed per title.</span></div>
+    <div><b>Returns</b><span>Your saves stay on your device.</span></div>
+  </section>
 </main>
 
-<footer><div class="wrap">
-  <span>statsthief.win</span>
-  <nav aria-label="Pied de page">
-    <a href="/about.html">à propos</a>
-    <a href="/contact.html">contact</a>
-    <a href="/privacy.html">confidentialité</a>
-    <a href="/terms.html">conditions</a>
-  </nav>
-</div></footer>
+<footer class="px">
+  <div class="fcols">
+    <div><h4>Statsthief</h4><p>Small games, made by hand, released in drops. Everything here runs in the browser.</p></div>
+    <div><h4>Shop</h4><a href="#shop" data-jump="drive">Drive</a><a href="#shop" data-jump="manage">Manage</a><a href="#shop" data-jump="story">Story</a></div>
+    <div><h4>Info</h4><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+  </div>
+  <div class="big" aria-hidden="true">Statsthief</div>
+  <div class="legal"><span>© <span id="y">2026</span> Statsthief</span><span>Drop 01</span></div>
+</footer>
 
-<div id="peek" aria-hidden="true"><img alt=""></div>
 <script>
 (function(){
-  var peek=document.getElementById('peek'),img=peek.firstChild,list=document.getElementById('list');
-  if(!window.matchMedia||!matchMedia('(hover:hover) and (min-width:761px)').matches)return;
-  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var x=0,y=0,tx=0,ty=0,raf=0;
-  function tick(){x+=(tx-x)*(reduce?1:.18);y+=(ty-y)*(reduce?1:.18);
-    peek.style.transform='translate3d('+Math.round(x)+'px,'+Math.round(y)+'px,0)';
-    if(Math.abs(tx-x)>.5||Math.abs(ty-y)>.5)raf=requestAnimationFrame(tick);else raf=0;}
-  function place(e){var w=peek.offsetWidth,h=peek.offsetHeight;
-    tx=Math.min(e.clientX+28,innerWidth-w-16);ty=Math.max(16,Math.min(e.clientY-h/2,innerHeight-h-16));
-    if(!raf)raf=requestAnimationFrame(tick);}
-  list.querySelectorAll('.row').forEach(function(r){
-    r.addEventListener('mouseenter',function(e){img.src=r.dataset.img;if(!peek.classList.contains('on')){place(e);x=tx;y=ty;}peek.classList.add('on');});
-    r.addEventListener('mousemove',place);
-  });
-  list.addEventListener('mouseleave',function(){peek.classList.remove('on');});
+  var items=[].slice.call(document.querySelectorAll('.item')),btns=[].slice.call(document.querySelectorAll('.filters button')),count=document.getElementById('count');
+  function apply(f){
+    var n=0;items.forEach(function(it){var on=f==='all'||it.dataset.cat===f;it.hidden=!on;if(on)n++;});
+    btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===f?'true':'false');});
+    count.textContent='('+n+')';
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){apply(b.dataset.f);});});
+  document.querySelectorAll('[data-jump]').forEach(function(a){a.addEventListener('click',function(){apply(a.dataset.jump);});});
+  document.getElementById('y').textContent=new Date().getFullYear();
 })();
 </script>
 </body>
