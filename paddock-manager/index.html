@@ -1,0 +1,1200 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Paddock Manager</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700;900&display=swap">
+<style>
+/* Habillage de retransmission : fond carbone, bandeaux noirs, liseré aux couleurs de l'écurie, tour de classement. Thème sombre unique. */
+:root{
+  --bg:#0E0E13; --panel:#16161D; --panel2:#1D1D26; --line:#2A2A36; --fg:#F2F2F6; --dim:#9C9CAD; --faint:#6A6A7A;
+  --purple:#B04DFF; --green:#22C55E; --yellow:#F5C400; --red:#EF3B3B; --blue:#3B82F6;
+  --club-a:#1E3F8F; --club-b:#F2B807; --club-a-ink:#fff;
+  --f:'Titillium Web',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f);font-size:15px;line-height:1.4;
+  background-image:linear-gradient(45deg,rgba(255,255,255,.018) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.018) 75%),linear-gradient(45deg,rgba(255,255,255,.018) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.018) 75%);background-size:8px 8px;background-position:0 0,4px 4px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--club-b);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:900;letter-spacing:.01em;text-wrap:balance}
+h1{font-size:2rem;line-height:1;text-transform:uppercase;font-style:italic}
+h2{font-size:1.05rem;text-transform:uppercase;letter-spacing:.06em}
+.num{font-variant-numeric:tabular-nums}
+.note{color:var(--dim);font-size:.85rem}
+.shell{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+.side{background:#09090D;border-right:1px solid var(--line);padding-block:16px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:12px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.side .team{display:flex;align-items:center;gap:10px;padding:4px 6px 14px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.side .team b{font-weight:900;font-style:italic;text-transform:uppercase;line-height:1.05}
+.nav{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.82rem;padding:10px 10px;border-left:3px solid transparent;text-align:left;width:100%}
+.nav:hover{color:var(--fg);background:var(--panel)}
+.nav[aria-current="true"]{color:var(--fg);border-left-color:var(--club-a);background:linear-gradient(90deg,color-mix(in srgb,var(--club-a) 22%,transparent),transparent)}
+.nav .badge{margin-left:auto;background:var(--red);color:#fff;border-radius:3px;padding:0 6px;font-size:.72rem}
+.main{min-width:0;padding-block:0 60px}
+.top{display:flex;align-items:stretch;gap:0;background:#09090D;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:10;flex-wrap:wrap}
+.top .cell{padding:10px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+.top .cell span{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.top .cell b{font-size:1.05rem;font-weight:900}
+.top .go{margin-left:auto;border:0;background:var(--club-a);color:var(--club-a-ink);font-weight:900;text-transform:uppercase;letter-spacing:.06em;padding:0 22px;font-style:italic;clip-path:polygon(14px 0,100% 0,100% 100%,0 100%)}
+.top .go:hover{filter:brightness(1.15)}
+.content{padding-block:20px;padding-left:22px;padding-right:max(22px,env(safe-area-inset-right,0px))}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;overflow-x:auto;padding-block:6px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-right:0;border-bottom:1px solid var(--line)}
+  .side .team{display:none}.nav{white-space:nowrap;width:auto;border-left:0;border-bottom:3px solid transparent;padding:8px 10px}.nav[aria-current="true"]{border-bottom-color:var(--club-a)}
+  .content{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .top .cell{padding:8px 12px}.top .go{width:100%;padding:12px;clip-path:none}
+}
+.vhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px;border-left:6px solid var(--club-a);padding-left:12px}
+.vhead .sub{color:var(--dim);margin:4px 0 0}
+.cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.cols3{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1100px){.cols3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.cols{grid-template-columns:1fr}}
+@media (max-width:560px){.cols3{grid-template-columns:1fr}}
+.stack{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0;position:relative}
+.panel.acc{border-top:3px solid var(--club-a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+.btn{border:1px solid var(--line);background:var(--panel2);padding:8px 14px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.8rem;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn:hover:not(:disabled){border-color:var(--fg)}
+.btn.primary{background:var(--club-a);border-color:var(--club-a);color:var(--club-a-ink)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.15)}
+.btn.danger{color:var(--red)}
+.btn.sm{padding:5px 10px;font-size:.72rem}
+.btn.big{padding:12px 22px;font-size:.95rem;font-style:italic}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.on{border-color:var(--club-b);color:var(--club-b)}
+select,input[type=text],input:not([type]),textarea{background:var(--panel2);border:1px solid var(--line);padding:7px 10px;min-width:0}
+.field-full{width:100%}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:1px 8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+.pill.ok{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+.pill.warn{color:var(--yellow);border-color:color-mix(in srgb,var(--yellow) 40%,transparent)}
+.pill.bad{color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,transparent)}
+.pill.pu{color:var(--purple);border-color:color-mix(in srgb,var(--purple) 45%,transparent)}
+.pill.tr{color:#D8D8E8}
+.flag{display:inline-block;width:18px;height:12px;vertical-align:-1px;margin-right:6px;box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+.crest{display:inline-grid;place-items:center;background:var(--club-a);color:var(--club-a-ink);font-weight:900;font-style:italic;border-bottom:4px solid var(--club-b);flex:none;clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%)}
+.alert{border:1px solid color-mix(in srgb,var(--yellow) 45%,var(--line));background:color-mix(in srgb,var(--yellow) 7%,var(--panel));padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.alert.urgent{border-color:color-mix(in srgb,var(--red) 55%,var(--line));background:color-mix(in srgb,var(--red) 8%,var(--panel))}
+.alert h2{font-size:.95rem}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);text-align:left;padding:8px;background:#101016;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.me td{background:color-mix(in srgb,var(--club-a) 18%,transparent)}
+tr.promo td:first-child{box-shadow:inset 3px 0 var(--green)}
+th.r,td.r{text-align:right}
+.th-sort{border:0;background:none;color:inherit;font:inherit;text-transform:inherit;letter-spacing:inherit;padding:0;display:inline-flex;gap:4px}
+.th-sort.on{color:var(--fg)}
+.attrs{display:flex;flex-direction:column;gap:5px}
+.attr{display:grid;grid-template-columns:120px 1fr 32px;gap:8px;align-items:center;font-size:.82rem}
+.track{height:6px;background:var(--panel2);position:relative}
+.track i{position:absolute;left:0;top:0;bottom:0;background:var(--club-a)}
+.track b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+.attr .v{text-align:right;font-weight:700}
+.news{display:flex;flex-direction:column;max-height:360px;overflow:auto}
+.news div{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.news .wk{color:var(--faint);font-size:.75rem;min-width:84px;font-weight:700}
+.ticket{display:flex;flex-direction:column;gap:3px;font-size:.85rem}
+.ticket div{display:flex;justify-content:space-between;gap:10px}
+.ticket div span:first-child{color:var(--dim)}
+.ladder{display:flex;flex-direction:column;gap:6px}
+.rung{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);background:var(--panel2)}
+.rung .lv{font-weight:900;font-style:italic;color:var(--dim)}
+.rung.now{border-color:var(--club-a);background:color-mix(in srgb,var(--club-a) 18%,var(--panel2))}
+.rung.done{opacity:.6}
+.ovr{display:inline-block;min-width:32px;text-align:center;font-weight:900;padding:1px 6px;background:var(--panel2);border:1px solid var(--line)}
+.ovr.hi{color:var(--green)}.ovr.mid{color:var(--yellow)}.ovr.lo{color:var(--dim)}
+.gauge{height:8px;background:var(--panel2);position:relative;border:1px solid var(--line)}
+.gauge i{position:absolute;inset:0 auto 0 0}
+
+/* Tour de classement */
+.tower{background:#07070A;border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.tw-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#000;border-bottom:2px solid var(--club-a);font-weight:900;text-transform:uppercase;font-style:italic}
+.tw-row{display:grid;grid-template-columns:28px 5px 52px minmax(0,1fr) 22px 66px 30px;gap:6px;align-items:center;padding:4px 8px;border-bottom:1px solid #15151c;font-size:.86rem}
+.tw-row .p{font-weight:900;text-align:center;background:#fff;color:#000;font-size:.78rem;padding:1px 0}
+.tw-row .bar{height:16px}
+.tw-row .c{font-weight:900;letter-spacing:.04em}
+.tw-row .n{color:var(--dim);font-size:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tw-row .g{text-align:right;font-weight:700}
+.tw-row .st{color:var(--faint);font-size:.72rem;text-align:right}
+.tw-row.me{background:color-mix(in srgb,var(--club-a) 25%,#07070A)}
+.tw-row.dnf{opacity:.45}
+.tw-row.pit .g{color:var(--yellow)}
+.tyre{width:20px;height:20px;border-radius:50%;border:3px solid;display:inline-grid;vertical-align:middle;flex:none;place-items:center;font-size:.6rem;font-weight:900;background:#111}
+.live-grid{display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.live-grid{grid-template-columns:1fr}}
+.lapbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#000;border:1px solid var(--line);padding:10px 14px}
+.lapbar .lap{font-size:1.6rem;font-weight:900;font-style:italic}
+.flagbox{padding:2px 10px;font-weight:900;text-transform:uppercase;font-size:.8rem}
+.flagbox.green{background:var(--green);color:#000}.flagbox.sc{background:var(--yellow);color:#000}.flagbox.fin{background:repeating-conic-gradient(#fff 0 25%,#000 0 50%) 0 0/12px 12px;color:transparent;min-width:40px}
+.radio{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow:auto}
+.radio div{display:grid;grid-template-columns:34px 1fr;gap:8px;font-size:.88rem;padding:5px 8px;background:var(--panel2);border-left:3px solid var(--faint)}
+.radio .l{color:var(--faint);font-weight:700;font-size:.75rem}
+.radio .bad{border-left-color:var(--red)}.radio .good{border-left-color:var(--green)}.radio .warn{border-left-color:var(--yellow)}.radio .sc{border-left-color:var(--yellow)}.radio .wx{border-left-color:var(--blue)}.radio .pit{border-left-color:var(--club-b)}
+.ctl{border:1px solid var(--line);background:var(--panel);padding:12px;display:flex;flex-direction:column;gap:8px}
+.ctl .hd{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.wear{height:8px;background:var(--panel2);position:relative}
+.wear i{position:absolute;inset:0 auto 0 0}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line)}
+.seg button{border:0;border-right:1px solid var(--line);background:var(--panel2);padding:6px 10px;font-weight:700;font-size:.75rem;text-transform:uppercase}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--club-a);color:var(--club-a-ink)}
+.tyrebtn{border:1px solid var(--line);background:var(--panel2);padding:4px 8px;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.75rem}
+.tyrebtn.on{border-color:var(--club-b);box-shadow:0 0 0 1px var(--club-b) inset}
+
+/* Arbre */
+.tree{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1100px){.tree{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.tree{grid-template-columns:1fr}}
+.branch{display:flex;flex-direction:column;gap:8px}
+.branch h2{padding:8px 10px;background:#000;border-left:4px solid var(--club-a)}
+.node{border:1px solid var(--line);background:var(--panel);padding:10px;display:flex;flex-direction:column;gap:5px;position:relative}
+.node.lock{opacity:.5}
+.node.max{border-color:color-mix(in srgb,var(--green) 50%,var(--line))}
+.node.run{border-color:var(--club-b)}
+.node b{font-size:.92rem}
+.lvl{display:flex;gap:3px}
+.lvl i{width:16px;height:6px;background:var(--panel2);border:1px solid var(--line)}
+.lvl i.on{background:var(--green);border-color:var(--green)}
+.node .meta{font-size:.75rem;color:var(--dim)}
+.node .prog{height:5px;background:var(--panel2)}
+.node .prog i{display:block;height:100%;background:var(--club-b)}
+
+/* Modale */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-start;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 24px max(12px,env(safe-area-inset-left,0px));overflow:auto;z-index:40}
+#modal{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--club-a);width:min(760px,100%);padding:20px;display:flex;flex-direction:column;gap:12px}
+.big-title{font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;margin:0;line-height:1}
+.swatches{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sw{width:28px;height:28px;border:2px solid var(--line);padding:0}
+.sw[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 2px var(--bg),0 0 0 4px #fff}
+.sw-custom{width:36px;height:30px;border:1px solid var(--line);background:none;padding:0}
+.preview{display:flex;gap:14px;align-items:center;padding:12px;background:#000;border-left:6px solid var(--club-a)}
+.preview .bar{height:6px;background:linear-gradient(90deg,var(--club-a) 60%,var(--club-b) 60%)}
+#toasts{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;z-index:60;max-width:calc(100% - 32px)}
+.toast{background:#000;border:1px solid var(--line);border-left:4px solid var(--green);padding:10px 14px;font-weight:700}
+.toast.bad{border-left-color:var(--red)}
+textarea.code{width:100%;height:90px;font-family:monospace;font-size:.75rem}
+.offer{border:1px solid var(--line);background:var(--panel2);padding:12px;display:flex;flex-direction:column;gap:6px}
+.offer.sel{border-color:var(--green)}
+.offer .terms{display:flex;flex-direction:column;font-size:.85rem;color:var(--dim)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<div class="shell">
+  <nav class="side" id="nav" aria-label="Menu">
+    <div class="team"><span id="side-crest"></span><b id="side-team"></b></div>
+    <button class="nav" data-v="qg">QG</button>
+    <button class="nav" data-v="course">Course <span id="nb-race"></span></button>
+    <button class="nav" data-v="ecurie">Écurie <span id="nb-ec"></span></button>
+    <button class="nav" data-v="dev">Développement</button>
+    <button class="nav" data-v="pilotes">Pilotes <span id="nb-pil"></span></button>
+    <button class="nav" data-v="championnat">Championnat</button>
+    <button class="nav" data-v="business">Business <span id="nb-biz"></span></button>
+    <button class="nav" data-v="histoire">Histoire</button>
+    <button class="nav" data-v="saves">Sauvegardes</button>
+  </nav>
+  <div class="main">
+    <div class="top"><div class="cell"><span>Championnat</span><b id="t-ser"></b></div><div class="cell"><span>Saison</span><b id="t-season"></b></div><div class="cell"><span>Manche</span><b id="t-race"></b></div><div class="cell"><span>Trésorerie</span><b id="t-cash" class="num"></b></div><button class="go" id="play"></button></div>
+    <div class="content" id="view"></div>
+  </div>
+</div>
+<div id="overlay" hidden><div id="modal" role="dialog" aria-modal="true"></div></div>
+<div id="toasts" aria-live="polite"></div>
+<script>
+const NAT_B={
+ FR:{name:'France',bg:'linear-gradient(90deg,#0055A4 0 33.4%,#fff 0 66.6%,#EF4135 0)',h:0,
+   fn:['Lucas','Hugo','Nathan','Théo','Mathis','Enzo','Léo','Jules','Arthur','Tom','Gabin','Bastien','Florian','Kevin','Axel','Ousmane','Mamadou','Moussa','Ibrahima','Steeve','Wilfried','Yanis','Rayan','Killian','Timothée','Evan','Sacha','Adam'],
+   ln:['Martin','Bernard','Petit','Robert','Moreau','Lefebvre','Roux','Fournier','Girard','Bonnet','Dupont','Lambert','Fontaine','Chevalier','Blanc','Perrin','Morel','Gauthier','Renard','Colin','Diallo','Traoré','Camara','Fofana','Koné','Sylla','Mendy','Doucouré','Baptiste','Jean-Louis','Lemoine','Vidal']},
+ RS:{name:'Serbie',bg:'linear-gradient(180deg,#C6363C 0 33.4%,#0C4076 0 66.6%,#fff 0)',h:2,
+   fn:['Nikola','Marko','Stefan','Luka','Nemanja','Miloš','Vasilije','Aleksa','Filip','Uroš','Dušan','Bogdan','Vladimir','Ognjen'],ln:['Jovanović','Petrović','Nikolić','Marković','Đorđević','Stojanović','Ilić','Pavlović','Milošević','Kovačević','Savić','Lazić','Radović','Simić']},
+ ES:{name:'Espagne',bg:'linear-gradient(180deg,#AA151B 0 25%,#F1BF00 0 75%,#AA151B 0)',h:0,
+   fn:['Pablo','Sergio','Alejandro','Javier','Carlos','Marc','Álvaro','Diego','Jaime','Guillermo','Iván','Adrián','Raúl','Óscar'],ln:['García','Fernández','López','Martínez','Sánchez','Pérez','Gómez','Ruiz','Hernández','Navarro','Ortega','Moreno','Castro','Vidal']},
+ LT:{name:'Lituanie',bg:'linear-gradient(180deg,#FDB913 0 33.4%,#006A44 0 66.6%,#C1272D 0)',h:3,
+   fn:['Mantas','Lukas','Domantas','Jonas','Arnas','Tadas','Paulius','Rokas','Edgaras','Marius','Darius','Gytis','Ignas','Žygimantas'],ln:['Kazlauskas','Petrauskas','Jankauskas','Stankevičius','Vasiliauskas','Žukauskas','Butkus','Paulauskas','Urbonas','Kavaliauskas','Navickas','Rimkus','Grigonis','Balčiūnas']},
+ GR:{name:'Grèce',bg:'linear-gradient(#0D5EAF,#0D5EAF) 0 0/40% 56% no-repeat,repeating-linear-gradient(180deg,#0D5EAF 0 11.1%,#fff 0 22.2%)',h:1,
+   fn:['Giorgos','Nikos','Kostas','Dimitris','Giannis','Vasilis','Panagiotis','Thanasis','Christos','Stavros','Michalis','Antonis','Lefteris','Sotiris'],ln:['Papadopoulos','Pappas','Georgiou','Nikolaidis','Karagiannis','Vlachos','Antonopoulos','Dimitriou','Oikonomou','Makris','Christodoulou','Samaras','Lambrou','Kalaitzis']},
+ IT:{name:'Italie',bg:'linear-gradient(90deg,#009246 0 33.4%,#fff 0 66.6%,#CE2B37 0)',h:0,
+   fn:['Marco','Luca','Alessandro','Matteo','Lorenzo','Andrea','Simone','Davide','Riccardo','Federico','Nicolò','Gabriele','Tommaso','Pietro'],ln:['Rossi','Russo','Ferrari','Esposito','Bianchi','Romano','Colombo','Ricci','Marino','Greco','Bruno','Gallo','Conti','Mancini']},
+ SN:{name:'Sénégal',bg:'linear-gradient(90deg,#00853F 0 33.4%,#FDEF42 0 66.6%,#E31B23 0)',h:3,
+   fn:['Mamadou','Cheikh','Ibrahima','Abdoulaye','Moussa','Pape','Ousmane','Babacar','Serigne','Modou','Aliou','Youssou','Gorgui','Lamine'],ln:['Diop','Ndiaye','Fall','Sow','Gueye','Sarr','Diouf','Faye','Ba','Mbaye','Cissé','Seck','Thiam','Niang']},
+ ML:{name:'Mali',bg:'linear-gradient(90deg,#14B53A 0 33.4%,#FCD116 0 66.6%,#CE1126 0)',h:2,
+   fn:['Bakary','Seydou','Souleymane','Adama','Boubacar','Hamidou','Oumar','Sékou','Lassana','Drissa','Moussa','Modibo','Yacouba','Siaka'],ln:['Traoré','Keïta','Coulibaly','Diarra','Konaté','Touré','Sissoko','Doumbia','Camara','Sangaré','Dembélé','Maïga','Diakité','Kanouté']},
+ NG:{name:'Nigeria',bg:'linear-gradient(90deg,#008751 0 33.4%,#fff 0 66.6%,#008751 0)',h:2,
+   fn:['Chukwuemeka','Oluwaseun','Tunde','Emeka','Chinedu','Ikenna','Obinna','Femi','Adebayo','Uche','Kelechi','Babatunde','Segun','Nnamdi'],ln:['Okafor','Adeyemi','Okonkwo','Eze','Nwosu','Balogun','Okoro','Obi','Chukwu','Ogunleye','Ibekwe','Adewale','Nwachukwu','Oladipo']},
+ CM:{name:'Cameroun',bg:'linear-gradient(90deg,#007A5E 0 33.4%,#CE1126 0 66.6%,#FCD116 0)',h:2,
+   fn:['Pascal','Joël','Serge','Christian','Landry','Rodrigue','Franck','Hervé','Brice','Yannick','Arnaud','Didier','Cédric','Ulrich'],ln:['Mbah','Nkoulou','Ekotto','Fotso','Kamga','Tchakounté','Essomba','Ndongo','Atangana','Mbarga','Nana','Biyong','Eboa','Tchami']},
+ US:{name:'États-Unis',bg:'linear-gradient(#3C3B6E,#3C3B6E) 0 0/42% 54% no-repeat,repeating-linear-gradient(180deg,#B22234 0 7.7%,#fff 0 15.4%)',h:1,
+   fn:['Tyler','Jalen','Marcus','DeAndre','Brandon','Jordan','Isaiah','Darius','Malik','Trey','Cameron','Devin','Caleb','Terrence','Dwayne','Quentin'],ln:['Johnson','Williams','Brown','Jackson','Davis','Robinson','Harris','Walker','Thompson','Mitchell','Carter','Coleman','Hayes','Bryant','Washington','Greene']},
+ CA:{name:'Canada',bg:'radial-gradient(circle,#D52B1E 0 20%,transparent 21%),linear-gradient(90deg,#D52B1E 0 25%,#fff 0 75%,#D52B1E 0)',h:1,
+   fn:['Ethan','Liam','Noah','Owen','Jamal','Tristan','Kyle','Mathieu','Andrew','Dillon','Kevin','Olivier','Jérémie','Connor'],ln:['Campbell','MacDonald','Tremblay','Gagnon','Clarke','Wright','Anderson','Roy','Bouchard','Fraser','Stewart','Côté','Boucher','Reid']},
+ BR:{name:'Brésil',bg:'radial-gradient(circle,#002776 0 19%,transparent 20%),radial-gradient(ellipse 48% 40%,#FFDF00 0 98%,transparent 100%),#009C3B',h:0,
+   fn:['Lucas','Gabriel','Rafael','Bruno','Thiago','Vítor','Leandro','Anderson','Felipe','Rodrigo','Mateus','Caio','Guilherme','Marcelo'],ln:['Silva','Santos','Oliveira','Souza','Pereira','Costa','Almeida','Ferreira','Rodrigues','Lima','Carvalho','Gomes','Barbosa','Ribeiro']},
+ AR:{name:'Argentine',bg:'radial-gradient(circle,#F6B40E 0 13%,transparent 14%),linear-gradient(180deg,#74ACDF 0 33.4%,#fff 0 66.6%,#74ACDF 0)',h:0,
+   fn:['Facundo','Nicolás','Martín','Agustín','Juan','Tomás','Matías','Lautaro','Gonzalo','Federico','Santiago','Leandro','Patricio','Ezequiel'],ln:['González','Rodríguez','Fernández','López','Díaz','Pérez','Romero','Álvarez','Sosa','Benítez','Acosta','Medina','Herrera','Aguirre']},
+ AU:{name:'Australie',bg:'radial-gradient(circle at 72% 62%,#fff 0 7%,transparent 8%),radial-gradient(circle at 28% 74%,#fff 0 9%,transparent 10%),linear-gradient(#C8102E,#C8102E) 22% 0/8% 50% no-repeat,linear-gradient(#C8102E,#C8102E) 0 22%/50% 10% no-repeat,#012169',h:1,
+   fn:['Jack','Lachlan','Cooper','Mitchell','Josh','Liam','Riley','Hayden','Brodie','Kai','Tom','Angus','Declan','Fraser'],ln:['Smith','Jones','Williams','Brown','Wilson','Taylor','Anderson','Kelly','Murphy','Ryan','Walsh','Cooper','Hughes','Clarke']},
+};
+const NAT_X={
+ RU:{name:'Russie',bg:'linear-gradient(180deg,#fff 0 33.4%,#0039A6 0 66.6%,#D52B1E 0)',
+   fn:['Ivan','Dmitri','Sergueï','Alexeï','Nikita','Artem','Mikhaïl','Andreï','Pavel','Roman','Magomed','Ruslan','Shamil','Abdul','Islam','Zaur','Murad','Kamil'],ln:['Ivanov','Petrov','Smirnov','Volkov','Kuznetsov','Morozov','Sokolov','Orlov','Magomedov','Abdulaev','Gadzhiev','Aliev','Omarov','Ramazanov','Kurbanov','Umarov']},
+ GE:{name:'Géorgie',bg:'linear-gradient(#C8102E,#C8102E) 50% 50%/100% 18% no-repeat,linear-gradient(#C8102E,#C8102E) 50% 50%/16% 100% no-repeat,#fff',
+   fn:['Giorgi','Levan','Davit','Nika','Irakli','Zurab','Lasha','Merab','Otar','Tornike'],ln:['Beridze','Kapanadze','Gelashvili','Tsiklauri','Mamaladze','Lomidze','Kvaratskhelia','Japaridze','Abashidze','Gogia']},
+ PL:{name:'Pologne',bg:'linear-gradient(180deg,#fff 0 50%,#DC143C 0)',
+   fn:['Jakub','Kamil','Mateusz','Piotr','Tomasz','Michał','Łukasz','Krzysztof','Paweł','Marcin'],ln:['Nowak','Kowalski','Wiśniewski','Wójcik','Kamiński','Lewandowski','Zieliński','Szymański','Woźniak','Dąbrowski']},
+ GB:{name:'Royaume-Uni',bg:'linear-gradient(#C8102E,#C8102E) 50% 50%/100% 20% no-repeat,linear-gradient(#C8102E,#C8102E) 50% 50%/14% 100% no-repeat,linear-gradient(#fff,#fff) 50% 50%/100% 36% no-repeat,linear-gradient(#fff,#fff) 50% 50%/26% 100% no-repeat,#012169',
+   fn:['Jack','Harry','Tom','Callum','Liam','Ryan','Connor','Danny','Josh','Leon','Jamie','Owen'],ln:['Smith','Jones','Taylor','Brown','Evans','Walker','Wright','Robinson','Hughes','Edwards','Clarke','Turner']},
+ IE:{name:'Irlande',bg:'linear-gradient(90deg,#169B62 0 33.4%,#fff 0 66.6%,#FF883E 0)',
+   fn:['Conor','Seán','Cian','Darragh','Ciarán','Oisín','Eoin','Niall','Rory','Pádraig'],ln:['Murphy','Kelly','O\'Brien','Byrne','Ryan','Walsh','O\'Connor','Doyle','McCarthy','Gallagher']},
+ NL:{name:'Pays-Bas',bg:'linear-gradient(180deg,#AE1C28 0 33.4%,#fff 0 66.6%,#21468B 0)',
+   fn:['Daan','Sem','Thijs','Jesse','Bram','Ruben','Jasper','Stefan','Remy','Melvin','Ilias','Sergio'],ln:['de Jong','Jansen','de Vries','van Dijk','Bakker','Visser','Smit','Meijer','Mulder','Bos','Vos','Peters']},
+ JP:{name:'Japon',bg:'radial-gradient(circle,#BC002D 0 30%,transparent 31%),#fff',
+   fn:['Takeshi','Kenji','Ryo','Yuki','Kazuki','Hiroshi','Daisuke','Shota','Tatsuya','Kaito'],ln:['Sato','Suzuki','Takahashi','Tanaka','Watanabe','Ito','Yamamoto','Nakamura','Kobayashi','Kato']},
+ KR:{name:'Corée du Sud',bg:'radial-gradient(circle at 50% 43%,#CD2E3A 0 22%,transparent 23%),radial-gradient(circle at 50% 57%,#0047A0 0 22%,transparent 23%),#fff',
+   fn:['Min-jun','Ji-ho','Hyun-woo','Seung-ho','Dong-hyun','Jae-won','Tae-yang','Sung-min','Woo-jin','Young-ho'],ln:['Kim','Lee','Park','Choi','Jung','Kang','Cho','Yoon','Jang','Lim']},
+ CN:{name:'Chine',bg:'radial-gradient(circle at 24% 32%,#FFDE00 0 13%,transparent 14%),#DE2910',
+   fn:['Wei','Lei','Jun','Hao','Yang','Bo','Tao','Long','Feng','Peng'],ln:['Wang','Li','Zhang','Liu','Chen','Yang','Zhao','Huang','Zhou','Wu']},
+ MX:{name:'Mexique',bg:'radial-gradient(circle,#8C5A2B 0 11%,transparent 12%),linear-gradient(90deg,#006847 0 33.4%,#fff 0 66.6%,#CE1126 0)',
+   fn:['José','Luis','Carlos','Juan','Miguel','Alejandro','Jorge','Ricardo','Eduardo','Brandon','Erik','Yair'],ln:['Hernández','García','Martínez','López','González','Rodríguez','Pérez','Sánchez','Ramírez','Torres','Flores','Rivera']},
+};
+const NAT_F={
+ DE:{name:'Allemagne',bg:'linear-gradient(180deg,#000 0 33.4%,#DD0000 0 66.6%,#FFCE00 0)',fn:['Lukas','Felix','Jonas','Leon','Maximilian','Tim','Niklas','Paul','Moritz','Jan'],ln:['Müller','Schmidt','Schneider','Fischer','Weber','Becker','Hoffmann','Wagner','Koch','Richter']},
+ FI:{name:'Finlande',bg:'linear-gradient(#003580,#003580) 34% 0/14% 100% no-repeat,linear-gradient(#003580,#003580) 0 50%/100% 24% no-repeat,#fff',fn:['Mikko','Juha','Antti','Eetu','Joonas','Lauri','Aleksi','Oskari','Valtteri','Ville'],ln:['Korhonen','Virtanen','Mäkinen','Nieminen','Laine','Heikkinen','Koskinen','Järvinen','Lehtonen','Salminen']},
+ DK:{name:'Danemark',bg:'linear-gradient(#fff,#fff) 34% 0/12% 100% no-repeat,linear-gradient(#fff,#fff) 0 50%/100% 18% no-repeat,#C8102E',fn:['Mads','Frederik','Oliver','Mikkel','Rasmus','Jonas','Magnus','Emil','Christian','Anders'],ln:['Jensen','Nielsen','Hansen','Pedersen','Andersen','Christensen','Larsen','Sørensen','Rasmussen','Madsen']},
+ MC:{name:'Monaco',bg:'linear-gradient(180deg,#CE1126 0 50%,#fff 0)',fn:['Charles','Louis','Arthur','Hugo','Lorenzo','Matteo'],ln:['Rossi','Bianchi','Pastor','Grimaldi','Lanteri','Médecin']},
+};
+const NAT={...NAT_B,...NAT_X,...NAT_F};
+const DRV_NATS={FR:3,GB:3,NL:1.5,DE:2,ES:1.5,IT:2,FI:1,DK:.8,MC:.4,BR:1.2,MX:.8,AU:1,CA:.8,US:1.2,JP:1,CN:.6,PL:.5,AR:.6,IE:.4,BE:.6,CH:.4};
+NAT.BE=NAT.BE||{name:'Belgique',bg:'linear-gradient(90deg,#000 0 33.4%,#FDDA24 0 66.6%,#EF3340 0)',fn:['Thomas','Maxime','Louis','Arthur','Noah','Victor','Lucas','Mathis'],ln:['Peeters','Janssens','Maes','Jacobs','Dubois','Lambert','Dupont','Claes']};
+NAT.CH=NAT.CH||{name:'Suisse',bg:'linear-gradient(#fff,#fff) 50% 50%/56% 18% no-repeat,linear-gradient(#fff,#fff) 50% 50%/18% 56% no-repeat,#D52B1E',fn:['Luca','Noah','Nico','Jan','Marco','Fabio','Lars','Yannick'],ln:['Müller','Meier','Schmid','Keller','Weber','Huber','Brunner','Favre']};
+// ================= Règles =================
+const SER={
+  f3:{n:'F3',long:'Championnat F3',races:10,lvl:52,run:60000,prize:[900e3,700e3,550e3,420e3,330e3,260e3,200e3,160e3,120e3,90e3],entry:2e6,next:'f2',spons:350e3,staff:1,salBase:40e3,payBase:60e3,base:0,seat:450e3},
+  f2:{n:'F2',long:'Championnat F2',races:12,lvl:62,run:150000,prize:[4e6,3e6,2.4e6,1.9e6,1.5e6,1.2e6,1e6,800e3,650e3,500e3],entry:10e6,next:'gp',spons:1.4e6,staff:3,salBase:120e3,payBase:200e3,base:0,seat:1.2e6},
+  gp:{n:'Grand Prix',long:'Championnat du monde Grand Prix',races:18,lvl:72,run:1.8e6,prize:[120e6,100e6,86e6,74e6,64e6,56e6,49e6,43e6,37e6,31e6],entry:0,next:null,spons:22e6,staff:15,salBase:3e6,payBase:0,base:2e6}};
+const ORDER=['f3','f2','gp'];
+// type : 0 lent et sinueux, 1 polyvalent, 2 rapide · wear 1-3 · rain : probabilité · a/c/e : poids aéro/châssis/moteur · pit : secondes perdues · ovk : facilité de dépassement
+const TRACKS={
+  bah:{n:'Sakhir',pays:'Bahreïn',type:1,wear:3,rain:0,a:.4,c:.3,e:.3,pit:22,ovk:.8},
+  jed:{n:'Djeddah',pays:'Arabie saoudite',type:2,wear:1,rain:0,a:.3,c:.2,e:.5,pit:20,ovk:.6},
+  mel:{n:'Melbourne',pays:'Australie',type:1,wear:2,rain:.15,a:.35,c:.35,e:.3,pit:19,ovk:.5},
+  suz:{n:'Suzuka',pays:'Japon',type:0,wear:2,rain:.25,a:.5,c:.3,e:.2,pit:22,ovk:.4},
+  sha:{n:'Shanghai',pays:'Chine',type:1,wear:3,rain:.2,a:.4,c:.3,e:.3,pit:23,ovk:.7},
+  mia:{n:'Miami',pays:'États-Unis',type:1,wear:2,rain:.15,a:.35,c:.35,e:.3,pit:21,ovk:.6},
+  imo:{n:'Imola',pays:'Italie',type:1,wear:2,rain:.25,a:.35,c:.35,e:.3,pit:27,ovk:.3},
+  mon:{n:'Monaco',pays:'Monaco',type:0,wear:1,rain:.15,a:.3,c:.6,e:.1,pit:19,ovk:.08},
+  mtl:{n:'Montréal',pays:'Canada',type:2,wear:2,rain:.3,a:.25,c:.3,e:.45,pit:18,ovk:.7},
+  bar:{n:'Barcelone',pays:'Espagne',type:0,wear:3,rain:.1,a:.5,c:.3,e:.2,pit:21,ovk:.4},
+  rbr:{n:'Spielberg',pays:'Autriche',type:2,wear:2,rain:.25,a:.3,c:.25,e:.45,pit:20,ovk:.7},
+  sil:{n:'Silverstone',pays:'Royaume-Uni',type:0,wear:3,rain:.35,a:.55,c:.25,e:.2,pit:20,ovk:.6},
+  hun:{n:'Budapest',pays:'Hongrie',type:0,wear:2,rain:.15,a:.35,c:.5,e:.15,pit:20,ovk:.25},
+  spa:{n:'Spa',pays:'Belgique',type:1,wear:2,rain:.45,a:.35,c:.2,e:.45,pit:18,ovk:.8},
+  zan:{n:'Zandvoort',pays:'Pays-Bas',type:0,wear:2,rain:.3,a:.5,c:.35,e:.15,pit:21,ovk:.25},
+  mza:{n:'Monza',pays:'Italie',type:2,wear:1,rain:.15,a:.15,c:.15,e:.7,pit:24,ovk:.8},
+  sgp:{n:'Marina Bay',pays:'Singapour',type:0,wear:2,rain:.2,a:.3,c:.55,e:.15,pit:28,ovk:.3},
+  int:{n:'Interlagos',pays:'Brésil',type:1,wear:2,rain:.4,a:.35,c:.3,e:.35,pit:21,ovk:.8},
+  abu:{n:'Yas Marina',pays:'Émirats arabes unis',type:1,wear:1,rain:0,a:.35,c:.3,e:.35,pit:22,ovk:.5},
+  cot:{n:'Austin',pays:'États-Unis',type:1,wear:3,rain:.1,a:.4,c:.3,e:.3,pit:21,ovk:.7},
+  bak:{n:'Bakou',pays:'Azerbaïdjan',type:2,wear:1,rain:.05,a:.2,c:.3,e:.5,pit:20,ovk:.8},
+  lvg:{n:'Las Vegas',pays:'États-Unis',type:2,wear:1,rain:0,a:.2,c:.2,e:.6,pit:20,ovk:.8},
+  qat:{n:'Lusail',pays:'Qatar',type:1,wear:3,rain:0,a:.5,c:.3,e:.2,pit:25,ovk:.5},
+  mex:{n:'Mexico',pays:'Mexique',type:1,wear:1,rain:.1,a:.35,c:.3,e:.35,pit:22,ovk:.6},
+  por:{n:'Portimão',pays:'Portugal',type:1,wear:2,rain:.15,a:.4,c:.3,e:.3,pit:20,ovk:.5},
+  ist:{n:'Istanbul',pays:'Turquie',type:1,wear:2,rain:.2,a:.4,c:.3,e:.3,pit:21,ovk:.6},
+  sep:{n:'Sepang',pays:'Malaisie',type:1,wear:3,rain:.5,a:.4,c:.3,e:.3,pit:21,ovk:.7},
+  nur:{n:'Nürburgring',pays:'Allemagne',type:1,wear:2,rain:.4,a:.35,c:.35,e:.3,pit:20,ovk:.5},
+  mag:{n:'Magny-Cours',pays:'France',type:0,wear:2,rain:.2,a:.45,c:.35,e:.2,pit:20,ovk:.3},
+  pri:{n:'Le Castellet',pays:'France',type:1,wear:2,rain:.1,a:.4,c:.3,e:.3,pit:22,ovk:.6},
+  kya:{n:'Kyalami',pays:'Afrique du Sud',type:1,wear:2,rain:.15,a:.4,c:.3,e:.3,pit:21,ovk:.5},
+  est:{n:'Estoril',pays:'Portugal',type:0,wear:2,rain:.2,a:.45,c:.35,e:.2,pit:20,ovk:.4},
+  hoc:{n:'Hockenheim',pays:'Allemagne',type:2,wear:2,rain:.25,a:.3,c:.25,e:.45,pit:19,ovk:.7},
+  ind:{n:'Indianapolis',pays:'États-Unis',type:2,wear:1,rain:.1,a:.25,c:.25,e:.5,pit:19,ovk:.7},
+  sek:{n:'Sepang Nuit',pays:'Malaisie',type:1,wear:2,rain:.3,a:.4,c:.3,e:.3,pit:21,ovk:.6},
+  fuj:{n:'Fuji',pays:'Japon',type:2,wear:2,rain:.45,a:.3,c:.25,e:.45,pit:20,ovk:.7},
+};
+delete TRACKS.sek;
+const PTS=[25,18,15,12,10,8,6,4,2,1];
+const ENGINES=[{n:'Valtor',pow:90,cost:20e6,works:'Valtor Racing'},{n:'Kessler',pow:87,cost:14e6,works:'Kessler GP'},{n:'Aurion',pow:84,cost:9e6,works:null},{n:'Nordmark',pow:80,cost:5e6,works:null}];
+const TEAMS={f3:['Falcon Racing','Kestrel Motorsport','Orion Junior','Silverline','Comet Racing','Helix Motorsport','Nova Racing','Zenith Junior','Pioneer GP','Polaris Racing','Matador Racing'],
+  f2:['Delta Motorsport','Vortex Racing','Arrow Junior','Kestrel F2','Silverline Pro','Meteor Racing','Titan Motorsport','Corvus GP','Equinox Racing','Sterling Motorsport','Halcyon'],
+  gp:['Valtor Racing','Kessler GP','Aurion Motorsport','Blackwood Racing','Corsa Milano','Sakura Racing','Atlas GP','Meridian Motorsport','Apex Velocity','Nordmark Racing','Hartley Racing']};
+const ROLES={td:'Directeur technique',aero:'Chef de l\'aérodynamique',strat:'Stratège',pit:'Chef mécanicien'};
+const ROLED={td:'Réussite et vitesse du développement',aero:'Gains des pièces aéro',strat:'Conseils en course, prévisions météo',pit:'Vitesse des arrêts aux stands'};
+const SWATCHES=['#C62828','#111111','#E0611A','#F2B807','#1F8A4C','#0E7C7B','#1E3F8F','#2F6FE4','#5B2C83','#8E1B3A','#6B7280','#A0522D'];
+const COLORS=[['#C62828','#F2B807'],['#1E3F8F','#E0611A'],['#0E7C7B','#111111'],['#5B2C83','#F2B807'],['#111111','#C62828'],['#2F6FE4','#E8E8E8'],['#1F8A4C','#111111'],['#E0611A','#1E3F8F'],['#8E1B3A','#C9A227'],['#6B7280','#0E7C7B'],['#F2B807','#111111']];
+const ATTR=[['pace','Vitesse'],['cons','Régularité'],['wet','Pluie'],['tyre','Gestion des pneus'],['ovt','Dépassement'],['exp','Expérience']];
+const TRAITS={
+  agr:{n:'Agressif',d:'Dépasse mieux, mais use ses pneus et se crashe plus souvent.'},
+  reg:{n:'Régulier',d:'Tours très constants, rarement à la faute.'},
+  wet:{n:'Pluie',d:'Brille quand la piste est mouillée.'},
+  tyr:{n:'Gestionnaire',d:'Use ses pneus 15 % moins vite.'},
+  qua:{n:'Qualifieur',d:'Gagne du temps sur un tour lancé.'},
+  lead:{n:'Leader',d:'Veut être n°1. Supporte mal les consignes en faveur de son coéquipier.'},
+  frag:{n:'Mental fragile',d:'Son moral réagit fort aux bons et mauvais résultats.'},
+};
+const TRAITK=Object.keys(TRAITS);
+// Pneus : vitesse (s/tour), usure par tour (%), pluie
+const TYRES={
+  S:{n:'Tendre',sp:-.9,w:5.2,col:'#E8333A'},M:{n:'Médium',sp:0,w:3.3,col:'#F2C200'},H:{n:'Dur',sp:.6,w:2.1,col:'#EDEDED'},
+  I:{n:'Intermédiaire',sp:0,w:2.6,col:'#2DB34A',wet:1},W:{n:'Pluie',sp:0,w:2,col:'#2F7DE1',wet:2}};
+const LAPS=20;
+const MODES=[{n:'Économiser',sp:.45,w:.75,risk:.6},{n:'Gérer',sp:0,w:1,risk:1},{n:'Attaquer',sp:-.4,w:1.3,risk:1.6}];
+
+// ================= Arbre de développement (Grand Prix) =================
+// eff : gains par niveau · lv : niveaux max · req : prérequis (au moins niveau 1)
+const TREE={
+  aero:{n:'Aérodynamique',nodes:[
+    {id:'aw',n:'Aileron avant',d:'Plus d\'appui à l\'avant.',eff:{aero:1.6},lv:3,cost:3e6,t:2},
+    {id:'fl',n:'Fond plat',d:'Le cœur de l\'appui moderne.',eff:{aero:2.4},lv:3,cost:5e6,t:3,req:['aw']},
+    {id:'hd',n:'Package haute charge',d:'Énorme gain sur les circuits lents et sinueux.',eff:{slow:2.2},lv:2,cost:4e6,t:2,req:['fl']},
+    {id:'ld',n:'Aileron basse traînée',d:'Vitesse de pointe sur les circuits rapides.',eff:{fast:2.2},lv:2,cost:4e6,t:2,req:['fl']},
+    {id:'vc',n:'Concept ventilé',d:'Une révolution aérodynamique.',eff:{aero:4},lv:1,cost:12e6,t:5,req:['hd','ld'],any:1},
+  ]},
+  chassis:{n:'Châssis',nodes:[
+    {id:'sf',n:'Suspension avant',d:'Meilleure stabilité au freinage.',eff:{chassis:1.6},lv:3,cost:3e6,t:2},
+    {id:'wd',n:'Répartition des masses',d:'Voiture plus vive dans les virages.',eff:{chassis:2.2},lv:3,cost:4.5e6,t:3,req:['sf']},
+    {id:'th',n:'Gestion thermique des pneus',d:'Les pneus s\'usent moins vite.',eff:{tyre:.06},lv:2,cost:4e6,t:2,req:['sf']},
+    {id:'lw',n:'Châssis allégé',d:'Chaque kilo compte.',eff:{chassis:3},lv:2,cost:8e6,t:4,req:['wd']},
+    {id:'as',n:'Suspension hydraulique',d:'Plate-forme aéro parfaite.',eff:{chassis:2,aero:2},lv:1,cost:12e6,t:5,req:['lw','th']},
+  ]},
+  rel:{n:'Fiabilité',nodes:[
+    {id:'co',n:'Refroidissement',d:'Moins de casses moteur.',eff:{rel:3},lv:3,cost:2e6,t:2},
+    {id:'gb',n:'Boîte de vitesses renforcée',d:'Moins de casses de transmission.',eff:{rel:3.5},lv:2,cost:3e6,t:2,req:['co']},
+    {id:'el',n:'Électronique redondante',d:'Fini les pannes bêtes.',eff:{rel:4},lv:2,cost:4e6,t:3,req:['gb']},
+    {id:'pit',n:'Équipement des stands',d:'Arrêts plus rapides.',eff:{pit:.6},lv:3,cost:2.5e6,t:2},
+  ]},
+  pu:{n:'Groupe propulseur',nodes:[
+    {id:'ers',n:'Intégration de l\'hybride',d:'Mieux exploiter le moteur, quel qu\'il soit.',eff:{eng:1.2},lv:3,cost:4e6,t:3},
+    {id:'own',n:'Programme moteur maison',d:'Ton propre moteur, prêt en deux saisons. Tu gardes ton motoriste en attendant.',eff:{},lv:1,cost:30e6,t:36,req:['ers']},
+    {id:'own2',n:'Évolution du moteur maison',d:'Plus de puissance pour ton moteur.',eff:{own:2},lv:3,cost:10e6,t:4,req:['own']},
+  ]},
+};
+const TREEN={};Object.entries(TREE).forEach(([b,br])=>br.nodes.forEach(n=>{n.br=b;TREEN[n.id]=n;}));
+const RD_CAP=60e6;
+// ================= Outils =================
+const KEY='paddock-manager-v2';
+const meur=v=>{const a=Math.abs(v);return (v<0?'−':'')+(a>=1e6?(a/1e6).toFixed(a>=1e7?0:1).replace('.',',')+' M€':a>=1e3?Math.round(a/1e3)+' k€':Math.round(a)+' €');};
+const rnd=(a,b)=>a+Math.random()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1)),pick=a=>a[Math.floor(Math.random()*a.length)],clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const gauss=()=>(Math.random()+Math.random()+Math.random()-1.5)*2;
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function wpick(w){const e=Object.entries(w);let t=e.reduce((a,[,v])=>a+v,0)*Math.random();for(const[k,v]of e){t-=v;if(t<=0)return k;}return e[0][0];}
+const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
+const f1=v=>(Math.round(v*10)/10).toFixed(1).replace('.',',');
+let s=null,ui={view:'qg',sort:{},stand:'d',devSel:null},uid=Date.now()%100000;
+
+// ================= Pilotes =================
+const dOvr=d=>Math.round(d.a.pace*.35+d.a.cons*.2+d.a.tyre*.15+d.a.ovt*.12+d.a.wet*.08+d.a.exp*.1);
+const nm=d=>d.fn+' '+d.ln;
+const code=d=>(d.ln.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z]/g,'')+'XXX').slice(0,3).toUpperCase();
+const has=(d,t)=>d.tr&&d.tr.includes(t);
+function flag(n){const x=NAT[n]||NAT.FR;return `<span class="flag" style="background:${x.bg}" role="img" aria-label="${x.name}" title="${x.name}"></span>`;}
+function genTraits(){const n=Math.random()<.35?2:Math.random()<.85?1:0;return shuffle(TRAITK.slice()).slice(0,n);}
+function genDriver(o={}){
+  const nat=o.nat||wpick(DRV_NATS),N=NAT[nat]||NAT.FR,age=o.age??ri(17,34),L=o.lvl??(SER[o.ser||'f3'].lvl+rnd(-9,6));
+  const a={};ATTR.forEach(([k])=>a[k]=clamp(L+gauss()*5,20,98));a.exp=clamp(25+(age-16)*4+gauss()*5,10,98);
+  const tr=genTraits();if(tr.includes('wet'))a.wet=clamp(a.wet+8,20,98);if(tr.includes('tyr'))a.tyre=clamp(a.tyre+6,20,98);if(tr.includes('reg'))a.cons=clamp(a.cons+6,20,98);if(tr.includes('agr'))a.ovt=clamp(a.ovt+6,20,98);
+  const pot=Math.round(Math.max(L,L+(age<=19?ri(6,20):age<=22?ri(3,12):age<=25?ri(0,5):0)));
+  return {id:++uid,fn:pick(N.fn),ln:pick(N.ln),nat,age,a,pot,tr,mkt:clamp(Math.round(45+gauss()*18),5,98),contract:null,st:{starts:0,wins:0,pod:0,poles:0,pts:0,titles:0},morale:65};
+}
+function askFor(d,ser){
+  const S=SER[ser],o=dOvr(d),diff=o-S.lvl;
+  if(ser!=='gp'&&diff<4)return -Math.round(S.payBase*(4-diff+rnd(0,3))/1000)*1000;
+  return Math.round(S.salBase*Math.pow(1.13,diff)*(0.8+d.mkt/120)/1000)*1000;
+}
+const juniorAge=ser=>({f3:16,f2:17,gp:18})[ser];
+
+// ================= Staff =================
+const SNAMES=()=>pick(NAT.FR.fn.concat(NAT.GB.fn,NAT.IT.fn,NAT.DE.fn))+' '+pick(NAT.GB.ln.concat(NAT.IT.ln,NAT.DE.ln,NAT.FR.ln));
+const staffSal=(r,ser)=>Math.round(40000*SER[ser].staff*Math.pow(1.07,r-50)/1000)*1000;
+function staffMember(role,ser,lvl){const S=SER[ser];const elite=lvl==null&&Math.random()<.25;
+  const r=clamp(Math.round(lvl??(elite?S.lvl+rnd(10,22):S.lvl-10+rnd(-6,14))),25,97);
+  return {id:++uid,role,name:SNAMES(),r,pot:clamp(r+ri(0,10),r,98),sal:staffSal(r,ser),yrs:ri(1,3),elite:elite?1:0};}
+function genStaffPool(){Object.keys(ROLES).forEach(k=>{s.staffPool[k]=[0,1,2,3].map(()=>staffMember(k,s.ser));});}
+const staffCost=()=>Object.entries(s.staff).reduce((t,[k,x])=>t+(k==='aero'&&s.ser!=='gp'?0:x.sal),0);
+function staffWilling(c){if(!c.elite)return true;return s.lastPos<=5||s.ser==='gp'&&s.lastPos<=7;}
+
+// ================= Équipes =================
+function aiTeam(name,ser,i){
+  const S=SER[ser],c=COLORS[i%COLORS.length];const strength=ser==='gp'?clamp(88-i*2.2+rnd(-3,3),62,92):clamp(65+rnd(-15,15),40,85);
+  const t={name,colors:{a:c[0],b:c[1]},ops:strength,drivers:[genDriver({ser,lvl:S.lvl+(strength-65)/3+rnd(-5,5),age:ser==='gp'?ri(20,36):ri(17,22)}),genDriver({ser,lvl:S.lvl+(strength-65)/3-3+rnd(-5,5),age:ser==='gp'?ri(19,34):ri(17,22)})]};
+  if(ser==='gp'){t.car={aero:strength-rnd(0,6),chassis:strength-rnd(0,6),rel:clamp(strength+rnd(-5,5),60,95)};t.engine=ENGINES.findIndex(e=>e.works===name);if(t.engine<0)t.engine=ri(0,3);t.budget=clamp((strength-60)/30,0.3,1);}
+  return t;
+}
+function buildGrid(){const ser=s.ser,names=TEAMS[ser].filter(n=>n!==s.team);s.ai=names.slice(0,9).map((n,i)=>aiTeam(n,ser,i));s.aiSer=ser;}
+const G=()=>s.carG||(s.carG={aero:0,chassis:0,rel:0,slow:0,fast:0,tyre:0,pit:0,eng:0,own:0});
+function myEngine(){if(s.engine==='own'&&s.own&&s.own.ready)return s.own.pow+G().own;return ENGINES[s.engine==='own'?3:s.engine].pow;}
+function engineOf(t){if(t===s.me)return myEngine()+G().eng;return ENGINES[t.engine].pow+(ENGINES[t.engine].works===t.name?2:0);}
+function carPerf(t,trk){
+  const me=t===s.me;
+  if(s.ser!=='gp'){const ops=me?(s.staff.td.r*.6+s.staff.strat.r*.2+s.staff.pit.r*.2):t.ops;return 50+(ops-60)*0.08;}
+  const c=me?{aero:s.car.aero+G().aero,chassis:s.car.chassis+G().chassis}:t.car;
+  let p=c.aero*trk.a+c.chassis*trk.c+engineOf(t)*trk.e;
+  if(me){if(trk.type===0)p+=G().slow*.6;if(trk.type===2)p+=G().fast*.6;}
+  return p;
+}
+const relOf=t=>t===s.me?(s.ser==='gp'?Math.min(98,s.car.rel+G().rel):70+s.staff.td.r*.25):(s.ser==='gp'?t.car.rel:70+t.ops*.25);
+const opsOf=t=>t===s.me?null:(t.ops||65);
+
+// ================= Nouvelle partie =================
+function fresh(d){
+  s={v:2,team:d.name,short:d.short,colors:{a:d.a,b:d.b},ser:'f3',season:1,year:2027,race:0,cash:1.5e6,me:null,
+     drivers:[],academy:[],juniorPool:[],fa:[],staff:{},staffPool:{},car:{aero:70,chassis:70,rel:75},carG:null,tree:{},dev:[],rdSpent:0,engine:3,own:null,
+     sponsor:null,offers:[],plan:{setup:1,tyres:['M','M']},results:[],dStand:{},tStand:{},news:[],ledger:[],history:[],records:{},hof:[],gpSeasons:0,lastPos:8,over:false,lastRace:null,
+     rival:10,n1:null,meetCd:0,alerts:[],jr:{},cal:[]};
+  s.me={name:d.name};
+  Object.keys(ROLES).forEach(k=>{s.staff[k]=staffMember(k,'f3',45+rnd(-5,8));s.staff[k].yrs=2;});
+  s.drivers=[genDriver({ser:'f3',lvl:50+rnd(-3,3),age:ri(17,19)}),genDriver({ser:'f3',lvl:47+rnd(-3,3),age:ri(17,19)})];
+  s.drivers.forEach(x=>x.contract={yrs:ri(1,2),sal:askFor(x,'f3')});
+  buildGrid();genCal();genMarket();genOffers();genStaffPool();genJuniors();genJr();
+  news('Bienvenue chez '+s.team+'. Tu démarres en F3 avec deux jeunes pilotes. Objectif : top 3 des équipes pour monter en F2.');
+  news('En F3 et F2, toutes les voitures sont identiques : tes pilotes et ton staff font la différence.');
+}
+function genCal(){const keys=shuffle(Object.keys(TRACKS));s.cal=keys.slice(0,SER[s.ser].races);}
+function genMarket(){const ser=s.ser;s.fa=[];for(let i=0;i<14;i++)s.fa.push(genDriver({ser,age:ser==='gp'?ri(19,35):ri(17,23),lvl:SER[ser].lvl+rnd(-10,9)}));}
+function genJuniors(){s.juniorPool=[];for(let i=0;i<5;i++){const j=genDriver({age:ri(13,15),lvl:34+rnd(-4,6)});j.pot=clamp(Math.round(68+gauss()*9),52,97);j.potLo=clamp(j.pot-ri(4,12),40,99);j.potHi=Math.min(99,j.potLo+ri(12,18));if(j.potHi<j.pot)j.potHi=j.pot;j.fee=Math.round((20000+Math.pow(Math.max(0,(j.potLo+j.potHi)/2-60),2)*900)/1000)*1000;s.juniorPool.push(j);}}
+function genOffers(){
+  const S=SER[s.ser],m=1+(10-s.lastPos)*0.06,b=S.spons*m*rnd(.9,1.1),names=['Lumen Energy','Arkos Telecom','Vireo Watches','Kappa Bank','Solstice Air','Helion Tech','Marlow Drinks','Quanta Cloud','Brava Fashion','Northwind Logistics'];
+  const n=shuffle(names.slice());
+  s.offers=[{name:n[0],type:'fixe',fixed:Math.round(b),yrs:ri(1,3)},{name:n[1],type:'points',fixed:Math.round(b*.55),perPt:Math.round(b*.012),yrs:ri(1,2)},{name:n[2],type:'objectif',fixed:Math.round(b*.6),goal:Math.max(1,Math.min(8,s.lastPos-2)),bonus:Math.round(b*.9),yrs:1}];
+}
+function genJr(){['f3','f2'].forEach(k=>{s.jr[k]={rivals:Array.from({length:21},()=>{const d=genDriver({ser:k,age:ri(16,22)});return {n:nm(d),nat:d.nat,o:dOvr(d)+rnd(-3,4),pts:0};})};});s.academy.forEach(j=>{j.jst={pts:0,starts:0,wins:0,pod:0,last:null};});}
+function news(t){s.news.unshift({m:'S'+s.season+' · '+(s.race<SER[s.ser].races?'GP '+(s.race+1):'fin'),t});s.news=s.news.slice(0,80);}
+function led(l,a){s.ledger.unshift({m:s.year+' · '+SER[s.ser].n,l,a:Math.round(a)});s.ledger=s.ledger.slice(0,300);}
+function setRec(k,v,data){const r=s.records[k];if(!r||v>r.v){s.records[k]={v,...data,y:s.year};return true;}return false;}
+const curTrack=()=>TRACKS[s.cal[s.race]];
+const done=()=>s.race>=SER[s.ser].races;
+
+// ================= Développement =================
+function nodeLv(id){return s.tree[id]||0;}
+function nodeCost(n){return Math.round(n.cost*(1+.5*nodeLv(n.id))/1e5)*1e5;}
+function nodeTime(n){return n.id==='own'?n.t:Math.max(1,Math.round(n.t*(1.2-(s.staff.td.r-50)/150)));}
+function nodeOk(n){
+  if(nodeLv(n.id)>=n.lv)return 'Niveau maximum';
+  if(s.dev.some(p=>p.id===n.id))return 'En cours';
+  if(n.req){const ok=n.any?n.req.some(r=>nodeLv(r)>0):n.req.every(r=>nodeLv(r)>0);if(!ok)return 'Prérequis : '+n.req.map(r=>TREEN[r].n).join(n.any?' ou ':' et ');}
+  return null;
+}
+const devSlots=()=>s.staff.td.r>=80?3:2;
+function devChance(n){return clamp(.62+(s.staff.td.r-50)/120+(n.br==='aero'?(s.staff.aero.r-50)/250:0),.45,.96);}
+function startDev(id){
+  const n=TREEN[id],why=nodeOk(n);if(why)return toast(why,true);
+  if(s.dev.filter(p=>p.id!=='own').length>=devSlots()&&id!=='own')return toast('Tous tes bureaux d\'études sont occupés ('+devSlots()+' projets à la fois).',true);
+  const c=nodeCost(n);
+  if(s.rdSpent+c>RD_CAP)return toast('Plafond budgétaire atteint pour la saison ('+meur(RD_CAP)+').',true);
+  if(s.cash<c)return toast('Trésorerie insuffisante.',true);
+  s.cash-=c;s.rdSpent+=c;led('Développement · '+n.n,-c);
+  s.dev.push({id,left:nodeTime(n),tot:nodeTime(n),due:id==='own'?30e6:0});
+  news('Projet lancé : '+n.n+(n.lv>1?' (niveau '+(nodeLv(id)+1)+')':'')+'.');save();render();
+}
+function cancelDev(id){s.dev=s.dev.filter(p=>p.id!==id);news('Projet abandonné : '+TREEN[id].n+'.');save();render();}
+function devTick(){
+  if(s.ser!=='gp')return;
+  s.dev.forEach(p=>{p.left--;if(p.left>0)return;const n=TREEN[p.id];
+    if(p.id==='own'){s.tree.own=1;s.own={ready:true,pow:clamp(82+(s.staff.td.r-60)/5+rnd(0,4),80,92)};news('Ton moteur maison est prêt : '+Math.round(s.own.pow)+' de puissance. Tu peux le choisir dans l\'onglet Écurie avant un début de saison.');return;}
+    const ok=Math.random()<devChance(n),mult=(ok?1:.5)*(n.br==='aero'?1+(s.staff.aero.r-60)/200:1);
+    s.tree[p.id]=nodeLv(p.id)+1;
+    Object.entries(n.eff).forEach(([k,v])=>{G()[k]+=v*mult;});
+    news(ok?`Nouvelle pièce montée : ${n.n} (niveau ${s.tree[p.id]}).`:`${n.n} : la pièce déçoit en piste, gain réduit de moitié.`);});
+  s.dev=s.dev.filter(p=>p.left>0);
+}
+function aiDev(){if(s.ser!=='gp')return;s.ai.forEach(t=>{t.car.aero+=rnd(0,.25)*t.budget;t.car.chassis+=rnd(0,.25)*t.budget;t.car.rel=Math.min(97,t.car.rel+rnd(0,.15));});}
+
+// ================= Pilotes : progression, rivalité, académie =================
+function driversTick(){
+  [...s.drivers,...s.academy].forEach(d=>{const racing=s.drivers.includes(d)?1.6:d.place?1.5:1;ATTR.forEach(([k])=>{if(k==='exp'){d.a.exp=Math.min(98,d.a.exp+(racing>1?.35:.15));return;}
+    if(d.age<=25&&d.a[k]<d.pot)d.a[k]+=(d.pot-d.a[k])*.01*racing*rnd(.5,1.5);
+    if(d.age>=33)d.a[k]-=.04*(d.age-32);});});
+  s.academy.forEach(j=>{j.potLo=Math.min(j.pot,j.potLo+rnd(0,.4));j.potHi=Math.max(j.pot,j.potHi-rnd(0,.4));});
+}
+function juniorRaces(){
+  ['f3','f2'].forEach(k=>{const mine=s.academy.filter(j=>j.place===k);if(!mine.length)return;const J=s.jr[k];
+    const field=J.rivals.map(r=>({r,sc:r.o+gauss()*4})).concat(mine.map(j=>({j,sc:dOvr(j)+gauss()*4+(has(j,'reg')?1:0)})));
+    field.sort((a,b)=>b.sc-a.sc);
+    field.forEach((x,i)=>{const p=PTS[i]||0;if(x.r)x.r.pts+=p;else{const st=x.j.jst;st.pts+=p;st.starts++;if(i===0)st.wins++;if(i<3)st.pod++;st.last=i+1;}});
+  });
+}
+function jrRank(j){const J=s.jr[j.place];if(!J)return null;return J.rivals.filter(r=>r.pts>j.jst.pts).length+1;}
+function rivalryAfterRace(mine){
+  if(mine.length<2)return;const [a,b]=mine;
+  s.rival=Math.max(0,s.rival-2);
+  if(a.pos&&b.pos){const lo=a.pos>b.pos?a:b;s.rival+=has(lo.d,'lead')||has(lo.d,'frag')?3:2;}
+  if(s.n1){const other=s.drivers.find(d=>d.id!==s.n1);if(other&&has(other,'lead')){s.rival+=2;other.morale=clamp(other.morale-1.5,0,100);}}
+  s.rival=clamp(s.rival,0,100);
+  if(s.meetCd>0)s.meetCd--;
+  const leader=s.drivers.find(d=>has(d,'lead')&&s.n1!==d.id);
+  if(leader&&!s.n1&&Math.random()<.12)alert1({kind:'n1',id:leader.id,t:`${nm(leader)} réclame le statut de pilote n°1`,x:'Il veut la priorité sur la stratégie et les consignes d\'équipe.'});
+}
+function alert1(a){if(s.alerts.some(x=>x.kind===a.kind&&x.id===a.id))return;a.k=++uid;s.alerts.push(a);news(a.t+'.');}
+
+// ================= Contrats =================
+function contractCheck(){
+  const S=SER[s.ser],r=s.race;
+  if(r===Math.floor(S.races/2)||r===S.races-3){
+    const items=[];s.drivers.forEach(d=>{if(d.contract.yrs<=1)items.push({k:'d',id:d.id});});
+    Object.entries(s.staff).forEach(([k,m])=>{if(m.yrs<=1&&(k!=='aero'||s.ser==='gp'))items.push({k:'s',role:k});});
+    if(s.sponsor&&s.sponsor.yrs<=1)items.push({k:'sp'});
+    if(items.length){s.alerts=s.alerts.filter(a=>a.kind!=='contracts');alert1({kind:'contracts',items,t:`${items.length} contrat${items.length>1?'s':''} se termine${items.length>1?'nt':''} en fin de saison`,x:r===S.races-3?'Dernier rappel : plus que 3 courses pour prolonger.':'Prolonge dès maintenant ou prépare la suite.'});}
+  }
+  if(r===S.races-5){s.drivers.forEach(d=>{if(d.contract.yrs<=1&&dOvr(d)>=S.lvl+4&&Math.random()<.6){const t=pick(s.ai);d.courted=t.name;news(`${t.name} fait les yeux doux à ${nm(d)}. Sans prolongation, il partira en fin de saison.`);}});}
+  // académie : approche d'autres écuries
+  if(r===Math.floor(S.races/2))s.academy.forEach(j=>{if(j.place&&!j.locked&&jrRank(j)<=3&&Math.random()<.5){alert1({kind:'poach',id:j.id,t:`Une écurie veut te prendre ${nm(j)}`,x:`Il est ${jrRank(j)}e du championnat ${SER[j.place].n}. Un contrat longue durée (${meur(j.place==='f3'?150e3:400e3)}) le garde chez toi, sinon il partira en fin de saison.`});}});
+}
+function renewDriver(d,yrs){const a=askFor(d,s.ser)*(d.courted?1.15:1);d.contract={yrs,sal:Math.round(a/1000)*1000};d.courted=null;news(nm(d)+' prolonge de '+yrs+' saison'+(yrs>1?'s':'')+'.');}
+function renewStaff(k){const m=s.staff[k];m.sal=Math.round(staffSal(m.r,s.ser)*1.05/1000)*1000;m.yrs=3;news(m.name+' prolonge de 3 saisons.');}
+// ================= Week-end de course =================
+const WETPEN={S:[0,5,11],M:[0,5,11],H:[0,5,11],I:[2.2,0,3.5],W:[4,1.3,0]};
+const isWet=c=>c==='I'||c==='W';
+function weekend(){
+  if(s.wk&&s.wk.race===s.race&&s.wk.season===s.season)return s.wk;
+  const key=s.cal[s.race],trk=TRACKS[key],w=new Array(LAPS+1).fill(0);
+  if(Math.random()<trk.rain){const st=Math.random()<.4?0:ri(4,14),len=ri(4,12),it=Math.random()<.35?2:1;for(let l=st;l<=Math.min(LAPS,st+len);l++)w[l]=it;
+    if(it===2&&st+2<=LAPS){w[st]=1;}}
+  const st=s.staff.strat.r,err=Math.round((100-st)/25);
+  let fc;const firstRain=w.findIndex(x=>x>0);
+  if(firstRain<0)fc=Math.random()<(100-st)/250?'Risque d\'averses en cours de course, mais rien de sûr.':'Temps sec attendu tout le week-end.';
+  else if(firstRain===0)fc='Pluie dès le départ.'+(w.some((x,i)=>i>0&&x===0)?' Ça devrait sécher en cours de course.':'');
+  else{const est=clamp(firstRain+ri(-err,err),1,LAPS);fc=`Pluie attendue vers le tour ${est} sur ${LAPS}${err?' (à ± '+err+' tours près)':''}.`;}
+  s.wk={race:s.race,season:s.season,key,w,fc,grid:null,stage:'prep'};
+  return s.wk;
+}
+function setFit(setup,trk){const d=Math.abs(setup-trk.type);return d===0?1:d===1?0:-1.5;}
+function recommendPlan(){
+  const wk=weekend(),trk=TRACKS[wk.key],strat=s.staff.strat.r,ok=Math.random()<.5+strat/180;
+  const setup=ok?trk.type:ri(0,2);
+  const wet=wk.w[1];
+  let tyres,txt;
+  if(wet)tyres=[wet===2?'W':'I',wet===2?'W':'I'],txt=`Départ en ${TYRES[tyres[0]].n.toLowerCase()}s, puis on s'adapte à la météo.`;
+  else if(trk.wear===3)tyres=['M','M'],txt='Usure forte : médiums au départ, arrêt vers le tour 9, puis durs. Garde une marge pour un 2e arrêt.';
+  else if(trk.wear===1)tyres=['S','S'],txt='Usure faible : tendres au départ, arrêt vers le tour 9-10, puis durs jusqu\'au bout.';
+  else tyres=['M','S'],txt='Stratégie croisée : un pilote en médiums (arrêt vers le tour 11), l\'autre en tendres (arrêt vers le tour 8).';
+  return {setup,tyres,txt,ok};
+}
+function entrants(){return [{t:s.me,ds:s.drivers.slice(0,2)},...s.ai.map(t=>({t,ds:t.drivers}))];}
+function carBase(t,d,trk,setup){
+  const perf=carPerf(t,trk);
+  return perf+d.a.pace*.6+setFit(setup,trk)*.5+(d.morale-65)/40;
+}
+function runQuali(){
+  const wk=weekend(),trk=TRACKS[wk.key],wet=wk.w[0]||wk.w[1];
+  const cars=[];
+  entrants().forEach(({t,ds})=>{const me=t===s.me;ds.forEach((d,di)=>{
+    const setup=me?s.plan.setup:(Math.random()<.4+(t.ops||70)/200?trk.type:ri(0,2));
+    let q=carBase(t,d,trk,setup)+gauss()*1.1+(has(d,'qua')?.9:0);if(wet)q+=(d.a.wet-60)*.12+(has(d,'wet')?1:0)+gauss()*.8;
+    cars.push({team:t.name,d:d.id,me,di,setup,q});});});
+  cars.sort((a,b)=>b.q-a.q);
+  wk.grid=cars.map(c=>({team:c.team,d:c.d,me:c.me,di:c.di,setup:c.setup}));
+  const pole=cars[0];wk.stage='grid';
+  save();
+}
+function findDriver(id){for(const d of s.drivers)if(d.id===id)return d;for(const t of s.ai)for(const d of t.drivers)if(d.id===id)return d;return null;}
+const teamByName=n=>n===s.team?s.me:s.ai.find(t=>t.name===n);
+
+// ================= Course en direct =================
+function startRace(){
+  const wk=weekend(),trk=TRACKS[wk.key];if(!wk.grid)runQuali();
+  const cars=wk.grid.map((g,i)=>{const t=teamByName(g.team),d=findDriver(g.d),me=g.me;
+    let tyre;if(me)tyre=s.plan.tyres[g.di];else{const w=wk.w[1];tyre=w===2?'W':w===1?'I':Math.random()<.55?'M':Math.random()<.6?'S':'H';}
+    const col=me?s.colors.a:t.colors.a;
+    return {i,team:g.team,col,d:g.d,name:nm(d),code:code(d),nat:d.nat,me,di:g.di,grid:i+1,
+      base:carBase(t,d,trk,g.setup),ops:me?null:(t.ops||65),rel:relOf(t),
+      tyre,age:0,wear:0,stops:0,used:[tyre],mode:1,time:i*.35,last:null,best:null,dnf:null,box:null,auto:!me,pitL:false,msgs:{},pen:0};});
+  s.live={key:wk.key,lap:0,cars,sc:0,scUsed:false,radio:[],log:[],fl:null,done:false,w:wk.w};
+  wk.stage='race';
+  radio(null,`Feux éteints au ${trk.n} ! ${cars.find(c=>c.me&&c.di===0)?.name} part ${cars.find(c=>c.me&&c.di===0)?.grid}e, ${cars.find(c=>c.me&&c.di===1)?.name} ${cars.find(c=>c.me&&c.di===1)?.grid}e.`);
+}
+function radio(c,t,kind){const L=s.live;L.radio.unshift({lap:L.lap,who:c?c.code:null,col:c?c.col:null,t,kind});L.radio=L.radio.slice(0,40);}
+function wearRate(c,d,trk,w){
+  const T=TYRES[c.tyre];let r=T.w*(.6+.2*trk.wear)*MODES[c.mode].w*(1.25-d.a.tyre/250);
+  if(has(d,'tyr'))r*=.85;if(has(d,'agr'))r*=1.08;if(c.me)r*=1-G().tyre;
+  if(isWet(c.tyre)&&w===0)r*=2.4;
+  return r;
+}
+function aiPitDecision(c,L,trk){
+  const w=L.w[L.lap+1]??0,rem=LAPS-L.lap,react=c.me?.45+s.staff.strat.r/180:.55+c.ops/250;
+  if(rem<=1)return null;
+  const slick=!isWet(c.tyre);
+  if(w>0&&slick&&Math.random()<react)return w===2?'W':'I';
+  if(w===0&&!slick&&Math.random()<react)return rem<=8?'S':'M';
+  if(w===2&&c.tyre==='I'&&Math.random()<.35)return 'W';
+  if(w===1&&c.tyre==='W'&&Math.random()<.4)return 'I';
+  if(w>0)return null;
+  const dryUsed=new Set(c.used.filter(x=>!isWet(x)));
+  const pick2=()=>{let o=rem<=7?'S':rem<=12?'M':'H';if(dryUsed.size<2&&o===c.tyre)o=o==='S'?'M':o==='M'?'H':'M';return o;};
+  if(L.sc&&c.wear>=38&&rem>3)return pick2();
+  if(c.wear>=70+gauss()*4)return pick2();
+  if(dryUsed.size<2&&rem<=3&&!L.w.slice(1).some(x=>x>0))return pick2();
+  return null;
+}
+function lapStep(){
+  const L=s.live;if(!L||L.done)return;const trk=TRACKS[L.key];
+  L.lap++;const w=L.w[L.lap]||0,prevW=L.w[L.lap-1]||0;
+  if(w>0&&prevW===0)radio(null,'La pluie arrive sur le circuit !','wx');
+  if(w===0&&prevW>0)radio(null,'La pluie s\'arrête, la piste sèche.','wx');
+  const running=L.cars.filter(c=>!c.dnf).sort((a,b)=>a.time-b.time);
+  const sc=L.sc>0;
+  // décisions IA et auto
+  running.forEach(c=>{if(c.auto&&!c.box){const b=aiPitDecision(c,L,trk);if(b)c.box=b;}});
+  // tours
+  running.forEach(c=>{
+    const d=findDriver(c.d);c.pitL=false;
+    let lt=100-c.base*.1+TYRES[c.tyre].sp+Math.pow(c.wear/100,2)*2.8+(c.wear>80?(c.wear-80)*.12:0)+MODES[c.mode].sp;
+    lt+=WETPEN[c.tyre][w]+w*6;if(w>0)lt-=(d.a.wet-60)*.03+(has(d,'wet')?.4:0);
+    lt+=gauss()*.35*(1.4-d.a.cons/100)*(has(d,'reg')?.6:1);
+    if(sc)lt=112+rnd(0,.3);
+    c.wear+=wearRate(c,d,trk,w)*(sc?.4:1);c.age++;
+    if(c.wear>100&&Math.random()<.3){lt+=18;c.box=c.box||(w?'I':'M');if(c.me)radio(c,'Crevaison ! Les pneus étaient complètement morts.','bad');}
+    if(c.box){const loss=(trk.pit+rnd(1.8,3.6)-(c.me?(s.staff.pit.r-50)/30+G().pit:(c.ops-50)/40))*(sc?.55:1);lt+=loss;c.tyre=c.box;c.wear=0;c.age=0;c.stops++;c.used.push(c.box);c.pitL=true;
+      if(c.me)radio(c,`Arrêt en ${loss.toFixed(1).replace('.',',')} s, pneus ${TYRES[c.box].n.toLowerCase()}s.`,'pit');c.box=null;}
+    c.lt=lt;c.nt=c.time+lt;
+    // abandons
+    if(!sc){const M=MODES[c.mode].risk;
+      if(Math.random()<(100-c.rel)/100*.009*M){c.dnf='Casse mécanique';}
+      else{let cr=(.0011+(100-d.a.cons)/100*.003+w*.0025+(w>0&&!isWet(c.tyre)?.02:0)+(w===0&&c.tyre==='W'?.004:0))*M;if(has(d,'agr'))cr*=1.5;if(has(d,'reg'))cr*=.6;
+        if(Math.random()<cr){c.dnf=pick(['Accident','Sortie de piste','Tête-à-queue dans le mur']);if(Math.random()<.4&&!L.sc){L.sc=3;L.scUsed=true;}}}
+      if(c.dnf){radio(c.me?c:null,`${c.name} abandonne : ${c.dnf.toLowerCase()}.`,c.me?'bad':'');}}
+  });
+  if(L.sc===3&&!sc)radio(null,'Voiture de sécurité ! Le peloton se regroupe. Arrêt à moindre coût.','sc');
+  // dépassements
+  const order=running.filter(c=>!c.dnf);
+  for(let i=1;i<order.length;i++){const a=order[i-1],b=order[i];
+    if(b.nt<a.nt&&!a.pitL&&!b.pitL&&!sc){const db=findDriver(b.d);
+      const ch=clamp(.2+trk.ovk*.55+(db.a.ovt-60)/120+(has(db,'agr')?.12:0)+(a.lt-b.lt)*.25,.03,.95);
+      if(Math.random()>ch)b.nt=a.nt+.2+rnd(0,.3);
+      else if(b.me&&!a.me&&a.nt-b.nt<2)radio(b,`Dépassement sur ${a.name} !`,'good');}
+  }
+  // accrochage entre coéquipiers
+  const mine=order.filter(c=>c.me);
+  if(mine.length===2&&s.rival>50&&!sc){const [x,y]=mine;if(Math.abs(x.nt-y.nt)<.7&&Math.random()<.04*(s.rival-50)/50){x.nt+=8;y.nt+=8;radio(x,`Accrochage entre ${x.name} et ${y.name} ! La tension éclate en piste.`,'bad');s.rival=Math.min(100,s.rival+15);if(Math.random()<.3)(Math.random()<.5?x:y).dnf='Accrochage avec son coéquipier';}}
+  order.forEach(c=>{c.time=c.nt;if(!sc&&(!c.best||c.lt<c.best))c.best=c.lt;c.last=c.lt;});
+  // voiture de sécurité : regroupement
+  if(sc){const o=order.slice().sort((a,b)=>a.time-b.time);o.forEach((c,i)=>{if(i>0)c.time=Math.max(c.time,o[0].time+i*.55);c.time=Math.min(c.time,o[0].time+i*.6+(c.pitL?trk.pit*.3:0));});L.sc--;if(L.sc===0)radio(null,'La voiture de sécurité rentre. Relance !','sc');}
+  // tour le plus rapide
+  order.forEach(c=>{if(!sc&&c.lt&&(!L.fl||c.lt<L.fl.t))L.fl={t:c.lt,name:c.name,code:c.code,me:c.me};});
+  // radio des pilotes
+  mine.filter(c=>!c.dnf).forEach(c=>{const d=findDriver(c.d);
+    if(c.wear>=68&&!c.msgs.wear){c.msgs.wear=1;radio(c,'Les pneus sont finis, il faut rentrer.','warn');}
+    if(c.wear<20)c.msgs.wear=0;
+    const nx=L.w[L.lap+2]||0;if(nx>0&&w===0&&!isWet(c.tyre)&&!c.msgs.rain&&Math.random()<.4+s.staff.strat.r/200){c.msgs.rain=1;radio(c,'Le stratège annonce la pluie dans deux tours.','wx');}
+  });
+  if(mine.length===2&&!mine[0].dnf&&!mine[1].dnf){const o=mine.slice().sort((a,b)=>a.time-b.time),[a,b]=o;if(b.time-a.time<1&&b.lt<a.lt-.25&&!b.msgs.faster){b.msgs.faster=1;radio(b,`Je suis plus rapide que ${a.name.split(' ').pop()}, laissez-moi passer !`,'warn');}}
+  if(L.lap>=LAPS)finishRace();
+}
+function teamOrder(){
+  const L=s.live;const mine=L.cars.filter(c=>c.me&&!c.dnf).sort((a,b)=>a.time-b.time);if(mine.length<2)return;
+  const [a,b]=mine,da=findDriver(a.d);
+  let ign=clamp((s.rival-45)/70,0,.8)+(has(da,'lead')?.2:0)+(s.n1===a.d?.5:0);
+  if(Math.random()<ign){radio(a,`${a.name} ignore la consigne : « Je ne lève pas le pied ! »`,'bad');s.rival=Math.min(100,s.rival+8);return;}
+  a.time=b.time+.35;radio(a,`${a.name} laisse passer ${b.name}.`,'');s.rival=Math.min(100,s.rival+(s.n1===b.d?5:12));da.morale=clamp(da.morale-(has(da,'frag')?10:5),0,100);
+}
+function finishRace(){
+  const L=s.live;L.done=true;const trk=TRACKS[L.key];
+  const dry=!L.w.slice(1).some(x=>x>0);
+  if(dry)L.cars.forEach(c=>{if(!c.dnf&&new Set(c.used.filter(x=>!isWet(x))).size<2){c.time+=10;c.pen=10;}});
+  const fin=L.cars.filter(c=>!c.dnf).sort((a,b)=>a.time-b.time),dnf=L.cars.filter(c=>c.dnf);
+  fin.forEach((c,i)=>{c.pos=i+1;c.pts=PTS[i]||0;});dnf.forEach(c=>{c.pos=null;c.pts=0;});
+  applyResults(L,fin,dnf,dry);
+}
+function finishNow(){const L=s.live;L.cars.forEach(c=>{if(c.me)c.auto=true;});let g=0;while(!L.done&&g++<60)lapStep();}
+
+// ================= Résultats =================
+function applyResults(L,fin,dnf,dry){
+  const S=SER[s.ser],trk=TRACKS[L.key],order=[...fin,...dnf],events=[];
+  const wet=L.w.some(x=>x>0);if(wet)events.push('Course perturbée par la pluie.');if(L.scUsed)events.push('Voiture de sécurité en piste.');
+  order.forEach(c=>{const d=findDriver(c.d),id=c.d;s.dStand[id]=s.dStand[id]||{name:c.name,nat:c.nat,team:c.team,pts:0,wins:0,pod:0,me:c.me};const st=s.dStand[id];st.team=c.team;st.pts+=c.pts;if(c.pos===1)st.wins++;if(c.pos&&c.pos<=3)st.pod++;
+    s.tStand[c.team]=(s.tStand[c.team]||0)+c.pts;
+    if(c.me&&d){d.st.starts++;d.st.pts+=c.pts;if(c.pos===1)d.st.wins++;if(c.pos&&c.pos<=3)d.st.pod++;if(c.grid===1)d.st.poles++;
+      s.tot=s.tot||{starts:0,wins:0,pod:0,poles:0,pts:0};s.tot.pts+=c.pts;if(c.pos===1)s.tot.wins++;if(c.pos&&c.pos<=3)s.tot.pod++;if(c.grid===1)s.tot.poles++;}});
+  s.tot=s.tot||{starts:0,wins:0,pod:0,poles:0,pts:0};s.tot.starts++;
+  const mine=order.filter(c=>c.me);
+  mine.forEach(c=>{const d=findDriver(c.d);if(c.dnf)events.push(c.name+' abandonne : '+c.dnf.toLowerCase()+'.');else if(c.pos===1)events.push(c.name+' remporte le Grand Prix !');else if(c.pos<=3)events.push('Podium pour '+c.name+' ('+c.pos+'e).');
+    if(c.pen)events.push(c.name+' pénalisé de 10 s (deux types de pneus secs obligatoires).');
+    const dm=c.pos?(c.pos<=3?8:c.pos<=10?2:-3):-6;d.morale=clamp(d.morale+dm*(has(d,'frag')?2:1),0,100);});
+  rivalryAfterRace(mine.map(c=>({d:findDriver(c.d),pos:c.pos})));
+  const myPts=mine.reduce((t,c)=>t+c.pts,0);
+  const run=S.run,drv=s.drivers.slice(0,2).reduce((t,d)=>t+d.contract.sal,0)/S.races,stf=staffCost()/S.races;
+  const eng=s.ser==='gp'&&s.engine!=='own'?ENGINES[s.engine].cost/S.races:0;
+  const seats=s.academy.filter(j=>j.place).reduce((t,j)=>t+SER[j.place].seat,0)/S.races;
+  const sp=s.sponsor.fixed/S.races+(s.sponsor.perPt?s.sponsor.perPt*myPts:0),base=S.base;
+  s.cash+=sp+base-run-drv-stf-eng-seats;
+  led('Sponsor · '+s.sponsor.name,sp);if(base)led('Revenus commerciaux du championnat',base);led('Frais de course · '+trk.n,-run);led(drv>=0?'Salaires des pilotes':'Apport des pilotes payants',-drv);led('Salaires du staff',-stf);if(eng)led('Moteur '+ENGINES[s.engine].n,-eng);if(seats)led('Baquets de l\'académie',-seats);
+  devTick();driversTick();aiDev();juniorRaces();
+  const winner=fin[0];
+  s.lastRace={key:L.key,wet,sc:L.scUsed,events,fl:L.fl,res:order.map(c=>({n:c.name,nat:c.nat,t:c.team,col:c.col,me:c.me,pos:c.pos,grid:c.grid,dnf:c.dnf||null,pts:c.pts,stops:c.stops,gap:c.pos?c.time-fin[0].time:null})),pts:myPts};
+  s.results.push({key:L.key,mine:mine.map(c=>({n:c.name,pos:c.pos,grid:c.grid,dnf:c.dnf||null,pts:c.pts})),winner:winner?winner.name+' ('+winner.team+')':'—'});
+  news('GP de '+trk.n+' : victoire de '+(winner?winner.name+' ('+winner.team+')':'—')+'. '+mine.map(c=>c.name.split(' ').pop()+' '+(c.pos?c.pos+'e':'abandon')).join(', ')+(myPts?' · '+myPts+' pts':'')+'.');
+  s.race++;s.wk=null;
+  if(!done())contractCheck();
+  save();
+}
+// ================= Fin de saison =================
+function teamTable(){return Object.entries(s.tStand).map(([n,p])=>({n,p,me:n===s.team})).concat([s.team,...s.ai.map(t=>t.name)].filter(n=>!(n in s.tStand)).map(n=>({n,p:0,me:n===s.team}))).sort((a,b)=>b.p-a.p);}
+function driverTable(){return Object.entries(s.dStand).map(([id,x])=>({id,...x})).sort((a,b)=>b.pts-a.pts||b.wins-a.wins);}
+function endSeason(){
+  const S=SER[s.ser],tt=teamTable(),pos=tt.findIndex(x=>x.me)+1,dt=driverTable(),dchamp=dt[0],myBestD=dt.findIndex(x=>x.me)+1;
+  const prize=S.prize[pos-1]||S.prize[9];let bonus=0;
+  if(s.sponsor.type==='objectif'&&pos<=s.sponsor.goal)bonus=s.sponsor.bonus;
+  s.cash+=prize+bonus;led('Prix du championnat ('+pos+'e des équipes)',prize);if(bonus)led('Bonus objectif · '+s.sponsor.name,bonus);
+  const titleT=pos===1,titleD=dchamp&&dchamp.me;
+  if(titleD){const d=s.drivers.find(x=>String(x.id)===String(dchamp.id));if(d)d.st.titles++;}
+  s.history.push({season:s.season,year:s.year,ser:s.ser,pos,pts:tt[pos-1].p,dchamp:dchamp?dchamp.name:'—',dchampTeam:dchamp?dchamp.team:'',myBestD,titleT,titleD,wins:s.results.reduce((t,r)=>t+r.mine.filter(m=>m.pos===1).length,0)});
+  if(titleT)news('CHAMPIONS ! '+s.team+' remporte le championnat des équipes de '+S.n+' !');
+  if(titleD)news(dchamp.name+' est champion '+S.n+' des pilotes !');
+  setRec('bestPts_'+s.ser,tt[pos-1].p,{});
+  // académie : bilan des juniors en course
+  const jr=s.academy.filter(j=>j.place).map(j=>({n:nm(j),ser:SER[j.place].n,rk:jrRank(j),pts:j.jst.pts,wins:j.jst.wins}));
+  jr.forEach(x=>{if(x.rk===1)news(`${x.n}, ton junior, est champion ${x.ser} !`);});
+  const can=S.next&&pos<=3;
+  s.end={pos,prize,bonus,titleT,titleD,dchamp,can,cost:can?S.entry:0,jr};
+  if(s.cash<-3e6*(s.ser==='gp'?10:1))s.over=true;
+  save();
+}
+function newSeason(promote){
+  const old=s.ser;
+  if(promote){s.cash-=s.end.cost;led('Droit d\'entrée en '+SER[SER[old].next].n,-s.end.cost);s.ser=SER[old].next;s.lastPos=9;news('Grande nouvelle : '+s.team+' monte en '+SER[s.ser].long+' !');}
+  else s.lastPos=s.end.pos;
+  // pilotes
+  const leaving=[];
+  [...s.drivers,...s.academy].forEach(d=>{d.age++;});
+  s.drivers.forEach(d=>{d.contract.yrs--;if(d.contract.yrs<=0)leaving.push(d);});
+  leaving.forEach(d=>{s.drivers=s.drivers.filter(x=>x!==d);hofCheck(d);news(nm(d)+' quitte l\'écurie en fin de contrat'+(d.courted?' et signe chez '+d.courted:'')+'.');});
+  if(s.n1&&!s.drivers.some(d=>d.id===s.n1))s.n1=null;
+  s.rival=Math.max(0,s.rival-25);
+  // académie
+  s.alerts.filter(a=>a.kind==='poach').forEach(a=>{const j=s.academy.find(x=>x.id===a.id);if(j){s.academy=s.academy.filter(x=>x!==j);news(nm(j)+' quitte ton académie pour une autre écurie.');}});
+  s.academy=s.academy.filter(j=>{if(j.age>=22){news(nm(j)+' quitte l\'académie (limite d\'âge).');return false;}return true;});
+  s.academy.forEach(j=>{if(j.place==='f3'&&jrRank(j)<=3&&j.age>=17){j.place='f2';news(`${nm(j)} monte en F2 avec l'académie.`);}});
+  // staff
+  Object.entries(s.staff).forEach(([k,m])=>{if(m.r<m.pot)m.r=Math.min(m.pot,m.r+ri(0,2));m.yrs--;if(m.yrs<=0&&(k!=='aero'||s.ser==='gp'||old==='gp')){const rep=staffMember(k,s.ser,SER[s.ser].lvl-14+rnd(-4,4));rep.yrs=1;news(`${m.name} (${ROLES[k].toLowerCase()}) part en fin de contrat. ${rep.name} assure l'intérim.`);s.staff[k]=rep;}else if(m.yrs<=0)m.yrs=1;});
+  // sponsor
+  if(s.sponsor){s.sponsor.yrs--;if(s.sponsor.yrs<=0){news('Le contrat avec '+s.sponsor.name+' se termine.');s.sponsor=null;}}
+  // voiture
+  if(s.ser==='gp'){
+    if(promote){s.car={aero:68,chassis:68,rel:72};s.carG=null;s.tree={};s.dev=[];s.gpSeasons=0;}
+    else{s.gpSeasons++;const reg=s.gpSeasons%4===0;
+      if(reg){const keep={own:G().own,eng:G().eng};s.carG={aero:0,chassis:0,rel:0,slow:0,fast:0,tyre:0,pit:G().pit,eng:keep.eng,own:keep.own};
+        Object.keys(s.tree).forEach(id=>{if(TREEN[id].br!=='pu'&&id!=='pit')delete s.tree[id];});
+        s.car={aero:70+(s.staff.td.r-60)/5,chassis:70+(s.staff.td.r-60)/5,rel:75};s.ai.forEach(t=>{const b=t.budget;t.car={aero:68+b*9+rnd(-4,4),chassis:68+b*9+rnd(-4,4),rel:clamp(72+b*12+rnd(-5,5),60,95)};});
+        news('Nouveau règlement technique : l\'arbre de développement repart de zéro pour tout le monde (sauf le moteur) !');}
+      else s.ai.forEach(t=>{t.car.aero=t.car.aero*.9+70*.1+t.budget*2;t.car.chassis=t.car.chassis*.9+70*.1+t.budget*2;});
+      if((s.gpSeasons+1)%4===0)news('Annonce : un nouveau règlement entrera en vigueur dans un an.');}
+    s.rdSpent=0;
+    s.dev.forEach(p=>{if(p.id==='own'&&p.due){s.cash-=p.due;s.rdSpent+=p.due;led('Programme moteur maison (2e année)',-p.due);p.due=0;}});
+  }
+  if(promote){buildGrid();}
+  else{s.ai.forEach(t=>t.drivers.forEach(d=>{d.age++;if(d.age>=37||Math.random()<.18){const nd=genDriver({ser:s.ser,age:ri(19,24),lvl:SER[s.ser].lvl+(t.ops-65)/4+rnd(-3,6)});Object.assign(d,nd);}}));}
+  s.season++;s.year++;s.race=0;s.results=[];s.dStand={};s.tStand={};s.end=null;s.lastRace=null;s.wk=null;s.live=null;s.alerts=[];
+  genCal();genMarket();if(!s.sponsor)genOffers();genStaffPool();genJuniors();genJr();
+  if(s.drivers.length<2)news('Il te manque '+(2-s.drivers.length)+' pilote'+(s.drivers.length?'':'s')+' titulaire'+(s.drivers.length?'':'s')+' : recrute sur le marché (onglet Pilotes).');
+  news('Saison '+s.season+' ('+s.year+') en '+SER[s.ser].long+'. Calendrier : '+s.cal.length+' courses, tirées au sort.');
+  save();ui.view='qg';
+}
+function hofCheck(d){if(d.st.wins>=5||d.st.titles>=1){s.hof.push({name:nm(d),nat:d.nat,starts:d.st.starts,wins:d.st.wins,pod:d.st.pod,poles:d.st.poles,pts:d.st.pts,titles:d.st.titles,y:s.year});news(nm(d)+' entre au Hall of Fame de l\'écurie.');}}
+
+// ================= Sauvegarde =================
+function save(){if(!s)return;try{localStorage.setItem(KEY,JSON.stringify({s,uid}))}catch(e){}}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);s=o.s;uid=Math.max(uid,o.uid||0)+1;s.me={name:s.team};return true}}catch(e){}return false}
+const slotKey=i=>KEY+'-slot'+i;
+function readSlot(i){try{const r=localStorage.getItem(slotKey(i));return r?JSON.parse(r):null}catch(e){return null}}
+const summary=st=>st.team+' · '+SER[st.ser].n+' · saison '+st.season+' ('+st.year+') · GP '+Math.min(st.race+1,SER[st.ser].races);
+const exportText=()=>JSON.stringify({app:'paddock-manager',version:2,exportedAt:new Date().toISOString(),state:s,uid});
+function parseSave(t){let o;try{o=JSON.parse(t)}catch(e){throw new Error('Ce texte n\'est pas une sauvegarde valide (JSON illisible).')}const st=o&&o.state?o.state:o;if(!st||!st.team||!st.ser||!Array.isArray(st.drivers))throw new Error('Ce fichier ne ressemble pas à une sauvegarde de Paddock Manager.');if(st.v!==2)throw new Error('Cette sauvegarde vient de l\'ancienne version du jeu et n\'est plus compatible.');return {st,uid:o.uid||0};}
+// ================= Couleurs =================
+function lum(hex){const n=parseInt(String(hex).slice(1),16);return [n>>16&255,n>>8&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((t,v,i)=>t+v*[.2126,.7152,.0722][i],0);}
+const inkFor=h=>lum(h)>0.2?'#14110E':'#FFFFFF';
+function applyColors(){const c=s.colors,r=document.documentElement.style;r.setProperty('--club-a',lum(c.a)<.02?'#3A3A48':c.a);r.setProperty('--club-b',c.b);r.setProperty('--club-a-ink',inkFor(lum(c.a)<.02?'#3A3A48':c.a));}
+function crest(size,txt,c){const st=c?`--club-a:${c.a};--club-b:${c.b};--club-a-ink:${inkFor(c.a)};`:'';txt=txt??s.short;return `<span class="crest" style="${st}width:${size}px;height:${size}px;font-size:${Math.round(size*(txt.length>3?.28:.36))}px" aria-hidden="true">${esc(txt)}</span>`;}
+const tyreIc=(c,sz=20)=>`<span class="tyre" style="border-color:${TYRES[c].col};width:${sz}px;height:${sz}px" title="${TYRES[c].n}">${c}</span>`;
+const traitPills=d=>(d.tr||[]).map(t=>`<span class="pill tr" title="${esc(TRAITS[t].d)}">${TRAITS[t].n}</span>`).join(' ');
+const trkProfile=trk=>['Lent et sinueux','Polyvalent','Rapide'][trk.type];
+
+// ================= Tri =================
+const GET={nm:d=>(d.ln+' '+d.fn).toLowerCase(),age:d=>d.age,ovr:d=>dOvr(d),pace:d=>d.a.pace,wet:d=>d.a.wet,mkt:d=>d.mkt,ask:d=>askFor(d,s.ser),nat:d=>d.nat,pot:d=>(d.potLo+d.potHi)/2};
+const DESC=new Set(['ovr','pace','wet','mkt','pot']);
+function th(tbl,k,label,right){const st=ui.sort[tbl],on=st&&st.k===k;return `<th class="${right?'r':''}"><button class="th-sort${on?' on':''}" data-tbl="${tbl}" data-sort="${k}">${label}<i>${on?(st.dir==='asc'?'▲':'▼'):''}</i></button></th>`;}
+function sorted(list,tbl,fb){const st=ui.sort[tbl];if(!st)return list.sort(fb);const g=GET[st.k],m=st.dir==='asc'?1:-1;return list.sort((a,b)=>{const x=g(a),y=g(b);return (x<y?-1:x>y?1:0)*m||fb(a,b);});}
+
+// ================= Rendu =================
+function render(){
+  if(!s)return;applyColors();const S=SER[s.ser];
+  $('side-crest').innerHTML=crest(40);$('side-team').textContent=s.team;
+  $('t-cash').textContent=meur(s.cash);$('t-cash').style.color=s.cash<0?'var(--red)':'';
+  $('t-ser').textContent=S.n;$('t-season').textContent=s.year+' · S'+s.season;
+  $('t-race').textContent=done()?'Terminée':(s.race+1)+' / '+S.races;
+  const L=s.live;
+  $('play').textContent=done()?'Bilan de saison ›':L&&!L.done?'Retour en course ›':'GP '+curTrack().n+' ›';
+  $('nb-biz').innerHTML=s.sponsor?'':'<span class="badge">!</span>';
+  $('nb-pil').innerHTML=s.drivers.length<2?'<span class="badge">!</span>':'';
+  $('nb-ec').innerHTML=s.alerts.length?`<span class="badge">${s.alerts.length}</span>`:'';
+  $('nb-race').innerHTML=L&&!L.done?'<span class="badge">LIVE</span>':'';
+  document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===ui.view));
+  ({qg:vQG,course:vRace,ecurie:vTeam,dev:vDev,pilotes:vDrivers,championnat:vStand,business:vBiz,histoire:vHist,saves:vSaves})[ui.view]();
+}
+function standMini(){const tt=teamTable().slice(0,10);return `<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Équipe</th><th class="r">Pts</th></tr></thead><tbody>${tt.map((x,i)=>`<tr class="${x.me?'me':''} ${i<3&&SER[s.ser].next?'promo':''}"><td class="num">${i+1}</td><td>${esc(x.n)}</td><td class="r num">${x.p}</td></tr>`).join('')}</tbody></table></div>`;}
+function alertsHtml(){
+  return s.alerts.map(a=>{
+    if(a.kind==='contracts')return `<div class="alert urgent"><h2>${esc(a.t)}</h2><p style="margin:0">${esc(a.x)}</p><div class="stack" style="gap:6px">${a.items.map(it=>{
+      if(it.k==='d'){const d=s.drivers.find(x=>x.id===it.id);if(!d||d.contract.yrs>1)return '';const ask=askFor(d,s.ser)*(d.courted?1.15:1);return `<div class="inline sp"><span>${flag(d.nat)}<b>${esc(nm(d))}</b> · pilote${d.courted?` · <span class="pill warn">Courtisé par ${esc(d.courted)}</span>`:''}</span><button class="btn sm primary" data-act="renew-d" data-id="${d.id}">Prolonger 2 saisons · ${ask>=0?meur(ask)+'/an':'apport '+meur(-ask)}</button></div>`;}
+      if(it.k==='s'){const m=s.staff[it.role];if(m.yrs>1)return '';return `<div class="inline sp"><span><b>${esc(m.name)}</b> · ${ROLES[it.role].toLowerCase()} (${m.r})</span><button class="btn sm primary" data-act="renew-s" data-k="${it.role}">Prolonger 3 saisons · ${meur(staffSal(m.r,s.ser)*1.05)}/an</button></div>`;}
+      if(it.k==='sp'&&s.sponsor&&s.sponsor.yrs<=1)return `<div class="inline sp"><span><b>${esc(s.sponsor.name)}</b> · sponsor titre</span><button class="btn sm primary" data-act="renew-sp">Prolonger 2 saisons aux mêmes conditions</button></div>`;
+      return '';}).join('')||'<span class="note">Tout est réglé.</span>'}</div><button class="btn sm" data-act="dismiss" data-k="${a.k}" style="align-self:flex-start">Fermer l'alerte</button></div>`;
+    if(a.kind==='n1'){const d=s.drivers.find(x=>x.id===a.id);if(!d)return '';const o=s.drivers.find(x=>x.id!==a.id);return `<div class="alert"><h2>${esc(a.t)}</h2><p style="margin:0">${esc(a.x)} ${o?'Si tu acceptes, '+esc(nm(o))+' le vivra mal.':''}</p><div class="inline"><button class="btn sm primary" data-act="n1-yes" data-id="${d.id}" data-k="${a.k}">Lui donner le statut de n°1</button><button class="btn sm" data-act="n1-no" data-id="${d.id}" data-k="${a.k}">Refuser : égalité</button></div></div>`;}
+    if(a.kind==='poach'){const j=s.academy.find(x=>x.id===a.id);if(!j)return '';const fee=j.place==='f3'?150e3:400e3;return `<div class="alert"><h2>${esc(a.t)}</h2><p style="margin:0">${esc(a.x)}</p><div class="inline"><button class="btn sm primary" data-act="lock-j" data-id="${j.id}" data-k="${a.k}" ${s.cash<fee?'disabled':''}>Le garder · ${meur(fee)}</button><button class="btn sm" data-act="dismiss" data-k="${a.k}">Le laisser partir</button></div></div>`;}
+    return '';}).join('');
+}
+function vQG(){
+  const S=SER[s.ser],trk=done()?null:curTrack();
+  $('view').innerHTML=`
+  <div class="vhead"><div class="inline" style="gap:14px">${crest(56)}<div><h1>${esc(s.team)}</h1><p class="sub">${S.long} · saison ${s.season} (${s.year}) · ${s.drivers.map(d=>flag(d.nat)+esc(d.ln)).join(' · ')||'aucun pilote'}</p></div></div><button class="btn" data-act="customize">Personnaliser</button></div>
+  <div class="cols"><div class="stack">
+    ${!s.sponsor?'<div class="alert urgent"><h2>Choisis ton sponsor titre</h2><p style="margin:0">Impossible de prendre le départ sans sponsor.</p><div class="inline"><button class="btn sm" data-v="business">Voir les offres</button></div></div>':''}
+    ${alertsHtml()}
+    <div class="panel acc"><div class="inline sp"><h2>${trk?'Prochaine manche : '+trk.n:'Saison terminée'}</h2>${trk?'<button class="btn sm primary" data-v="course">Préparer le week-end</button>':''}</div>
+      ${trk?`<div class="ticket"><div><span>Pays</span><span>${esc(trk.pays)}</span></div><div><span>Profil</span><span>${trkProfile(trk)}</span></div><div><span>Usure des pneus</span><span>${['','Faible','Moyenne','Forte'][trk.wear]}</span></div><div><span>Dépasser</span><span>${trk.ovk>=.65?'Facile':trk.ovk>=.4?'Possible':'Très difficile'}</span></div><div><span>Météo (stratège)</span><span>${esc(weekend().fc)}</span></div></div>`:'<button class="btn primary" data-act="end">Voir le bilan de la saison</button>'}</div>
+    ${s.lastRace?`<div class="panel"><div class="inline sp"><h2>Dernier GP : ${TRACKS[s.lastRace.key].n}</h2><button class="btn sm" data-act="show-race">Résultats complets</button></div>
+      ${s.lastRace.res.filter(r=>r.me).map(r=>`<div class="inline sp"><span>${flag(r.nat)}<b>${esc(r.n)}</b> <span class="note">parti ${r.grid}e</span></span><b>${r.pos?r.pos+'e':'Abandon'}</b><span class="note">${r.dnf?esc(r.dnf):r.pts+' pt'+(r.pts>1?'s':'')}</span></div>`).join('')}</div>`:''}
+    ${s.academy.some(j=>j.place)?`<div class="panel"><h2>Académie en course</h2>${s.academy.filter(j=>j.place).map(j=>`<div class="inline sp"><span>${flag(j.nat)}<b>${esc(nm(j))}</b> · ${SER[j.place].n}</span><span class="note">Dernière course : ${j.jst.last?j.jst.last+'e':'—'} · ${j.jst.pts} pts · ${j.jst.starts?jrRank(j)+'e au championnat':''}</span></div>`).join('')}</div>`:''}
+    <div class="panel"><h2>Actualités</h2><div class="news">${s.news.map(n=>`<div><span class="wk">${n.m}</span><span>${esc(n.t)}</span></div>`).join('')}</div></div>
+  </div><div class="stack">
+    <div class="panel"><h2>L'échelle</h2><div class="ladder">${ORDER.map((k,i)=>`<div class="rung ${k===s.ser?'now':ORDER.indexOf(s.ser)>i?'done':''}"><span class="lv">${i+1}</span><span>${SER[k].long}</span><span class="note">${k===s.ser?'Tu es ici':ORDER.indexOf(s.ser)>i?'Atteint':'entrée '+meur(SER[ORDER[i-1]].entry)}</span></div>`).join('')}</div>
+      <p class="note" style="margin:0">Pour monter : finir dans le top 3 des équipes et payer le droit d'entrée.</p></div>
+    <div class="panel"><h2>Championnat des équipes</h2>${standMini()}</div>
+    ${s.drivers.length===2?`<div class="panel"><h2>Climat entre tes pilotes</h2>${rivalHtml()}</div>`:''}
+  </div></div>`;
+}
+function rivalHtml(){
+  const r=Math.round(s.rival),col=r>=70?'var(--red)':r>=45?'var(--yellow)':'var(--green)';
+  return `<div class="gauge"><i style="width:${r}%;background:${col}"></i></div><div class="inline sp"><span class="note">Tension ${r} / 100 · ${r>=70?'Explosif : ils peuvent s\'accrocher et ignorer les consignes':r>=45?'Tendu':'Serein'}</span><span class="note">Statut : ${s.n1?'n°1 '+esc(nm(s.drivers.find(d=>d.id===s.n1)||{fn:'',ln:''})):'égalité'}</span></div>`;
+}
+
+// ================= Écurie =================
+function carBars(){const e=engineOf(s.me);const rows=[['Aérodynamique',s.car.aero+G().aero,'aero'],['Châssis',s.car.chassis+G().chassis,'chassis'],['Moteur',e,'e'],['Fiabilité',relOf(s.me),'rel']];
+  const best=k=>Math.max(...s.ai.map(t=>k==='e'?engineOf(t):t.car[k]));
+  return `<div class="attrs">${rows.map(([n,v,k])=>{const b=best(k);return `<div class="attr"><span>${n}</span><div class="track" title="Meilleure équipe : ${Math.round(b)}"><i style="width:${clamp(v,0,100)}%"></i><b style="left:${clamp(b,0,100)}%"></b></div><span class="v">${Math.round(v)}</span></div>`;}).join('')}</div><p class="note" style="margin:0">Le trait blanc marque la meilleure valeur du plateau.${G().slow||G().fast?` Bonus circuits lents +${f1(G().slow)}, rapides +${f1(G().fast)}.`:''}</p>`;}
+function driverCard(d,i){
+  const exp=d.contract.yrs<=1,wants=s.ser!=='gp'&&dOvr(d)>SER[s.ser].lvl+9;
+  return `<div class="panel acc"><div class="inline sp"><b style="font-size:1.1rem">${flag(d.nat)}${esc(nm(d))}</b><span class="ovr hi">${dOvr(d)}</span></div>
+    <div class="note">${NAT[d.nat].name} · ${d.age} ans · potentiel ~${Math.round(d.pot/3)*3} · moral ${Math.round(d.morale)}${s.n1===d.id?' · <b>Pilote n°1</b>':''}</div>
+    <div class="inline">${traitPills(d)||'<span class="note">Pas de trait marqué</span>'}</div>
+    <div class="attrs">${ATTR.map(([k,n])=>`<div class="attr"><span>${n}</span><div class="track"><i style="width:${d.a[k]}%"></i></div><span class="v">${Math.round(d.a[k])}</span></div>`).join('')}</div>
+    <div class="ticket"><div><span>Contrat</span><span>${d.contract.yrs} saison${d.contract.yrs>1?'s':''} · ${d.contract.sal>=0?meur(d.contract.sal)+'/an':'apporte '+meur(-d.contract.sal)+'/an'}</span></div><div><span>Avec l'écurie</span><span>${d.st.starts} GP · ${d.st.wins} V · ${d.st.pod} podiums · ${d.st.pts} pts</span></div></div>
+    <div class="inline">${exp?(wants?'<span class="pill warn">Veut monter de catégorie</span>':`<button class="btn sm primary" data-act="renew-d" data-id="${d.id}">Prolonger 2 saisons</button>`):''}${d.courted?`<span class="pill warn">Courtisé par ${esc(d.courted)}</span>`:''}<button class="btn sm danger" data-act="release" data-i="${i}">Libérer</button></div></div>`;
+}
+function vTeam(){
+  const gp=s.ser==='gp';
+  $('view').innerHTML=`
+  <div class="vhead"><div><h1>Écurie</h1><p class="sub">Pilotes, staff${gp?' et moteur':''}.</p></div></div>
+  ${alertsHtml()}
+  <div class="cards">${s.drivers.map(driverCard).join('')}${s.drivers.length<2?'<div class="panel"><p style="margin:0">Baquet libre. Recrute un pilote dans l\'onglet Pilotes ou titularise un junior.</p><button class="btn sm" data-v="pilotes" style="align-self:flex-start">Aller au marché</button></div>':''}</div>
+  ${s.drivers.length===2?`<div class="panel" style="margin-top:12px"><h2>Relation entre les pilotes</h2>${rivalHtml()}
+    <div class="inline"><span class="note">Statut :</span><div class="seg"><button class="${!s.n1?'on':''}" data-act="status" data-id="0">Égalité</button>${s.drivers.map(d=>`<button class="${s.n1===d.id?'on':''}" data-act="status" data-id="${d.id}">N°1 : ${esc(d.ln)}</button>`).join('')}</div>
+    <button class="btn sm" data-act="meeting" ${s.meetCd>0?'disabled':''}>Réunion d'équipe${s.meetCd>0?' (dans '+s.meetCd+' courses)':''}</button></div>
+    <p class="note" style="margin:0">La tension monte quand un pilote finit derrière l'autre, quand tu donnes des consignes, et si un Leader n'a pas le statut de n°1. Une réunion la fait baisser.</p></div>`:''}
+  <h2 style="margin:18px 0 10px">Staff</h2><div class="cards">${Object.entries(ROLES).filter(([k])=>gp||k!=='aero').map(([k,n])=>{const m=s.staff[k];return `<div class="panel"><div class="note" style="text-transform:uppercase;font-weight:700;letter-spacing:.08em">${n}</div><div class="inline sp"><b>${esc(m.name)}</b><span class="ovr ${m.r>=80?'hi':m.r>=60?'mid':'lo'}">${m.r}</span></div><div class="note">${meur(m.sal)} par saison · contrat ${m.yrs} an${m.yrs>1?'s':''} · progression possible jusqu'à ${m.pot}</div><div class="note">${ROLED[k]}</div>
+    ${m.yrs<=1?`<button class="btn sm primary" data-act="renew-s" data-k="${k}" style="align-self:flex-start">Prolonger 3 saisons</button>`:''}
+    <details><summary class="note">Candidats (${s.staffPool[k].length})</summary><div class="stack" style="gap:6px;margin-top:6px">${s.staffPool[k].map(c=>{const ok=staffWilling(c);return `<div class="inline sp"><span><b>${esc(c.name)}</b> <span class="note">${c.r}/100 · ${meur(c.sal)}/an</span>${c.elite?' <span class="pill pu">Pointure</span>':''}</span><button class="btn sm" data-act="hire" data-k="${k}" data-id="${c.id}" ${ok?'':'disabled title="Ne viendra que dans une écurie du top 5"'}>${ok?'Embaucher':'Top 5 exigé'}</button></div>`;}).join('')}</div></details></div>`;}).join('')}</div>
+  <p class="note">Les candidats changent à chaque saison et aux courses 6 et 12. Les pointures (jusqu'à 97) ne rejoignent qu'une écurie bien classée. Ton staff progresse chaque hiver jusqu'à son potentiel.</p>
+  ${gp?`<div class="cols" style="margin-top:12px"><div class="panel"><h2>Voiture ${s.year}</h2>${carBars()}<button class="btn sm" data-v="dev" style="align-self:flex-start">Ouvrir le développement</button></div>
+    <div class="panel"><h2>Moteur</h2>
+      <div class="stack" style="gap:6px">${ENGINES.map((e,i)=>`<div class="inline sp"><span><b>${e.n}</b> <span class="note">puissance ${e.pow}${e.works?' · écurie d\'usine '+e.works:''}</span></span><span class="inline"><span class="num">${meur(e.cost)}/an</span>${i===s.engine?'<span class="pill ok">Actuel</span>':`<button class="btn sm" data-act="engine" data-i="${i}" ${s.race>0?'disabled title="Changement possible avant le 1er GP"':''}>Choisir</button>`}</span></div>`).join('')}
+      ${s.own&&s.own.ready?`<div class="inline sp"><span><b>Moteur maison</b> <span class="note">puissance ${Math.round(s.own.pow+G().own)}</span></span><span class="inline"><span class="num">0 €/an</span>${s.engine==='own'?'<span class="pill ok">Actuel</span>':`<button class="btn sm" data-act="engine" data-i="own" ${s.race>0?'disabled':''}>Choisir</button>`}</span></div>`:''}</div>
+      <p class="note" style="margin:0">${s.dev.some(p=>p.id==='own')?'Programme moteur maison en cours (onglet Développement). Tu gardes ton motoriste en attendant.':s.own?'':'Le programme moteur maison se lance depuis l\'onglet Développement.'} Changement de moteur possible avant la première course de chaque saison.</p></div></div>`:''}`;
+}
+
+// ================= Développement =================
+function vDev(){
+  if(s.ser!=='gp'){$('view').innerHTML=`<div class="vhead"><div><h1>Développement</h1><p class="sub">Réservé au Grand Prix.</p></div></div><div class="panel"><p style="margin:0">En F3 et F2, toutes les voitures sont identiques. L'arbre de développement s'ouvre quand tu montes en Grand Prix. En attendant, ton directeur technique et ton staff améliorent la préparation des voitures.</p></div>`;return;}
+  const capPct=s.rdSpent/RD_CAP*100;
+  $('view').innerHTML=`<div class="vhead"><div><h1>Développement</h1><p class="sub">Conçois des pièces, débloque les branches, choisis tes priorités sous le plafond budgétaire.</p></div></div>
+  <div class="cols" style="margin-bottom:14px"><div class="panel"><div class="inline sp"><h2>Plafond budgétaire ${s.year}</h2><b class="num">${meur(s.rdSpent)} / ${meur(RD_CAP)}</b></div><div class="gauge"><i style="width:${capPct}%;background:${capPct>90?'var(--red)':'var(--club-a)'}"></i></div>
+    <p class="note" style="margin:0">Bureaux d'études : ${s.dev.filter(p=>p.id!=='own').length} / ${devSlots()} projets (3 si ton directeur technique dépasse 80). Une pièce réussit à ${Math.round(devChance({br:'chassis'})*100)} % (aéro ${Math.round(devChance({br:'aero'})*100)} %) ; ratée, elle n'apporte que la moitié du gain. Tous les 4 ans, un nouveau règlement remet l'arbre à zéro, sauf le moteur.</p></div>
+    <div class="panel"><h2>Voiture</h2>${carBars()}</div></div>
+  <div class="tree">${Object.entries(TREE).map(([b,br])=>`<div class="branch"><h2>${br.n}</h2>${br.nodes.map(n=>{const lv=nodeLv(n.id),why=nodeOk(n),run=s.dev.find(p=>p.id===n.id),max=lv>=n.lv;
+    const eff=Object.entries(n.eff).map(([k,v])=>({aero:`+${v} aéro`,chassis:`+${v} châssis`,rel:`+${v} fiabilité`,slow:`+${v} sur circuits lents`,fast:`+${v} sur circuits rapides`,tyre:`−${Math.round(v*100)} % d'usure`,pit:`−${v} s aux stands`,eng:`+${v} moteur`,own:`+${v} moteur maison`}[k])).join(', ');
+    return `<div class="node ${max?'max':run?'run':why&&!run?'lock':''}"><div class="inline sp"><b>${n.n}</b><span class="lvl">${Array.from({length:n.lv},(_,i)=>`<i class="${i<lv?'on':''}"></i>`).join('')}</span></div>
+      <span class="note">${n.d}</span>${eff?`<span class="meta">${eff} par niveau</span>`:''}
+      ${run?`<div class="prog"><i style="width:${(1-run.left/run.tot)*100}%"></i></div><div class="inline sp"><span class="meta">Encore ${run.left} course${run.left>1?'s':''}</span><button class="btn sm danger" data-act="dev-cancel" data-k="${n.id}">Abandonner</button></div>`
+      :max?'<span class="pill ok" style="align-self:flex-start">Terminé</span>'
+      :`<span class="meta">${meur(nodeCost(n))} · ${nodeTime(n)} course${nodeTime(n)>1?'s':''}${n.id==='own'?' · +30 M€ la saison suivante':''}</span>${why?`<span class="meta" style="color:var(--yellow)">${esc(why)}</span>`:`<button class="btn sm primary" data-act="dev" data-k="${n.id}" style="align-self:flex-start">Lancer${lv?' le niveau '+(lv+1):''}</button>`}`}</div>`;}).join('')}</div>`).join('')}</div>`;
+}
+// ================= Course =================
+const WXN=['Sec','Pluie légère','Forte pluie'];
+function vRace(){
+  if(s.live&&!s.live.done)return vLive();
+  if(s.live&&s.live.done)return vAfter();
+  if(done()){$('view').innerHTML=`<div class="panel"><h2>Saison terminée</h2><button class="btn primary" data-act="end">Voir le bilan</button></div>`;return;}
+  const wk=weekend(),trk=TRACKS[wk.key];
+  if(!s.reco||s.reco.k!==s.season+'-'+s.race){s.reco={k:s.season+'-'+s.race,...recommendPlan()};}
+  const rc=s.reco,wet=wk.w[1];
+  const head=`<div class="vhead"><div><h1>GP de ${trk.n}</h1><p class="sub">Manche ${s.race+1} sur ${SER[s.ser].races} · ${esc(trk.pays)} · ${trkProfile(trk)} · usure ${['','faible','moyenne','forte'][trk.wear]} · arrêt au stand ≈ ${trk.pit} s</p></div></div>`;
+  if(wk.stage==='grid'){
+    $('view').innerHTML=head+`<div class="live-grid"><div class="tower"><div class="tw-head"><span>Grille de départ</span><span class="note">${WXN[wk.w[0]||wk.w[1]]}</span></div>${wk.grid.map((g,i)=>{const t=teamByName(g.team),d=findDriver(g.d);return `<div class="tw-row ${g.me?'me':''}"><span class="p">${i+1}</span><span class="bar" style="background:${g.me?s.colors.a:t.colors.a}"></span><span class="c">${code(d)}</span><span class="n">${flag(d.nat)}${esc(nm(d))}</span><span></span><span class="g note">${esc(g.team)}</span><span></span></div>`;}).join('')}</div>
+      <div class="stack"><div class="panel acc"><h2>Pneus de départ</h2>${s.drivers.slice(0,2).map((d,i)=>`<div class="inline sp"><span>${flag(d.nat)}<b>${esc(nm(d))}</b> · ${wk.grid.findIndex(g=>g.d===d.id)+1}e</span><span class="inline">${Object.keys(TYRES).map(c=>`<button class="tyrebtn ${s.plan.tyres[i]===c?'on':''}" data-act="ptyre" data-i="${i}" data-k="${c}">${tyreIc(c,18)}</button>`).join('')}</span></div>`).join('')}
+        <p class="note" style="margin:0">Course sur ${LAPS} tours. Sur piste sèche, il faut utiliser deux types de pneus secs, sinon 10 s de pénalité.</p>
+        <button class="btn primary big" data-act="start-race">Extinction des feux ›</button></div>
+        <div class="panel"><h2>Météo</h2><p style="margin:0">${esc(wk.fc)}</p></div></div></div>`;
+    return;
+  }
+  $('view').innerHTML=head+`<div class="cols"><div class="stack">
+    <div class="panel acc"><h2>Réglages et stratégie</h2>
+      <label for="pl-setup"><b>Réglage aéro</b></label><select class="field-full" id="pl-setup">${['Appui fort','Équilibré','Vitesse de pointe'].map((x,i)=>`<option value="${i}" ${s.plan.setup===i?'selected':''}>${x}</option>`).join('')}</select>
+      ${s.drivers.slice(0,2).map((d,i)=>`<div class="inline sp"><span>${flag(d.nat)}<b>${esc(nm(d))}</b> · pneus de départ</span><span class="inline">${Object.keys(TYRES).map(c=>`<button class="tyrebtn ${s.plan.tyres[i]===c?'on':''}" data-act="ptyre" data-i="${i}" data-k="${c}">${tyreIc(c,18)}</button>`).join('')}</span></div>`).join('')}
+      <div class="ticket">${Object.entries(TYRES).map(([k,t])=>`<div><span>${tyreIc(k,16)} ${t.n}</span><span>${t.wet?(t.wet===1?'Pluie légère':'Forte pluie'):(t.sp<0?'Rapide, s\'use vite':t.sp>0?'Lent, très durable':'Compromis')}</span></div>`).join('')}</div>
+      <button class="btn primary big" data-act="quali">Qualifications ›</button></div>
+  </div><div class="stack">
+    <div class="panel"><h2>L'avis du stratège</h2><p style="margin:0">${esc(s.staff.strat.name)} (${s.staff.strat.r}/100) conseille le réglage <b>${['appui fort','équilibré','vitesse de pointe'][rc.setup]}</b>. ${esc(rc.txt)}</p>
+      <p style="margin:0"><b>Météo :</b> ${esc(wk.fc)}</p>
+      <p class="note" style="margin:0">Un meilleur stratège se trompe moins souvent, sur les réglages comme sur la météo.</p>
+      <button class="btn sm" data-act="apply-reco" style="align-self:flex-start">Appliquer ses conseils</button></div>
+    <div class="panel"><h2>Tes pilotes</h2><div class="tbl-wrap"><table><thead><tr><th>Pilote</th><th class="r">Niv.</th><th class="r">Vitesse</th><th class="r">Pluie</th><th class="r">Pneus</th><th class="r">Moral</th></tr></thead><tbody>${s.drivers.map(d=>`<tr><td>${flag(d.nat)}${esc(nm(d))}</td><td class="r">${dOvr(d)}</td><td class="r">${Math.round(d.a.pace)}</td><td class="r">${Math.round(d.a.wet)}</td><td class="r">${Math.round(d.a.tyre)}</td><td class="r">${Math.round(d.morale)}</td></tr>`).join('')}</tbody></table></div></div>
+    ${s.ser==='gp'?`<div class="panel"><h2>Ta voiture</h2>${carBars()}</div>`:''}
+  </div></div>`;
+}
+function towerHtml(L){
+  const run=L.cars.filter(c=>!c.dnf).sort((a,b)=>a.time-b.time),out=L.cars.filter(c=>c.dnf),lead=run[0];
+  const rows=run.map((c,i)=>{const gap=i===0?'Leader':c.pitL?'Stand':'+'+(c.time-run[i-1].time).toFixed(1).replace('.',',');
+    return `<div class="tw-row ${c.me?'me':''} ${c.pitL?'pit':''}"><span class="p">${i+1}</span><span class="bar" style="background:${c.col}"></span><span class="c">${c.code}</span><span class="n">${esc(c.team)}</span>${tyreIc(c.tyre)}<span class="g num">${gap}</span><span class="st">${c.stops?c.stops+' ar.':''}</span></div>`;}).join('');
+  return rows+out.map(c=>`<div class="tw-row dnf ${c.me?'me':''}"><span class="p">—</span><span class="bar" style="background:${c.col}"></span><span class="c">${c.code}</span><span class="n">${esc(c.dnf)}</span><span></span><span class="g">Abandon</span><span></span></div>`).join('');
+}
+function vLive(){
+  const L=s.live,trk=TRACKS[L.key],w=L.w[Math.max(1,L.lap)]||0,mine=L.cars.filter(c=>c.me).sort((a,b)=>a.di-b.di);
+  const run=L.cars.filter(c=>!c.dnf).sort((a,b)=>a.time-b.time);
+  const sp=ui.speed||0;
+  const ctl=c=>{const d=findDriver(c.d),pos=run.indexOf(c)+1,wc=c.wear>=70?'var(--red)':c.wear>=45?'var(--yellow)':'var(--green)';
+    if(c.dnf)return `<div class="ctl"><div class="hd"><b>${flag(c.nat)}${esc(c.name)}</b><span class="pill bad">Abandon</span></div><span class="note">${esc(c.dnf)}</span></div>`;
+    return `<div class="ctl" style="border-left:4px solid ${c.col}"><div class="hd"><b>${flag(c.nat)}${esc(c.name)}</b><span style="font-weight:900;font-size:1.3rem;font-style:italic">P${pos}</span></div>
+    <div class="inline sp"><span class="inline">${tyreIc(c.tyre,22)}<span class="note">${TYRES[c.tyre].n} · ${c.age} tour${c.age>1?'s':''}</span></span><span class="note">Dernier tour ${c.last?c.last.toFixed(2).replace('.',','):'—'}</span></div>
+    <div><div class="inline sp note"><span>Usure</span><span>${Math.round(c.wear)} %</span></div><div class="wear"><i style="width:${clamp(c.wear,0,100)}%;background:${wc}"></i></div></div>
+    <div class="inline"><span class="note">Rythme</span><div class="seg">${MODES.map((m,i)=>`<button class="${c.mode===i?'on':''}" data-act="mode" data-i="${c.di}" data-k="${i}">${m.n}</button>`).join('')}</div></div>
+    <div class="inline"><span class="note">${c.box?'Rentre au prochain passage :':'Arrêt au stand :'}</span>${Object.keys(TYRES).map(k=>`<button class="tyrebtn ${c.box===k?'on':''}" data-act="box" data-i="${c.di}" data-k="${k}" title="Rentrer pour des ${TYRES[k].n.toLowerCase()}s">${tyreIc(k,18)}</button>`).join('')}</div>
+    <label class="inline note"><input type="checkbox" data-act="auto" data-i="${c.di}" ${c.auto?'checked':''}> Laisser le stratège décider des arrêts</label></div>`;};
+  const canOrder=mine.filter(c=>!c.dnf).length===2&&Math.abs(run.indexOf(mine[0])-run.indexOf(mine[1]))===1;
+  $('view').innerHTML=`<div class="vhead"><div><h1>GP de ${trk.n}</h1><p class="sub">${esc(trk.pays)} · course en direct</p></div></div>
+  <div class="lapbar"><span class="lap num">Tour ${Math.min(L.lap+1,LAPS)} / ${LAPS}</span><span class="flagbox ${L.sc?'sc':'green'}">${L.sc?'Voiture de sécurité':'Drapeau vert'}</span><span class="pill" style="color:${w?'var(--blue)':'inherit'}">${WXN[w]}</span>
+    ${L.fl?`<span class="pill pu">Meilleur tour ${esc(L.fl.code)} ${L.fl.t.toFixed(2).replace('.',',')}</span>`:''}
+    <span class="seg" style="margin-left:auto">${[[0,'Pause'],[1,'×1'],[4,'×4']].map(([v,l])=>`<button class="${sp===v?'on':''}" data-act="speed" data-k="${v}">${l}</button>`).join('')}<button data-act="step">+1 tour</button><button data-act="finish">Terminer</button></span></div>
+  <div class="live-grid" style="margin-top:12px"><div class="tower"><div class="tw-head"><span>Classement</span><span class="note">Écart</span></div>${towerHtml(L)}</div>
+  <div class="stack">${mine.map(ctl).join('')}
+    <div class="inline"><button class="btn" data-act="order" ${canOrder?'':'disabled'}>Consigne : échanger les positions</button><span class="note">Tension ${Math.round(s.rival)} / 100</span></div>
+    <div class="panel"><h2>Radio</h2><div class="radio">${L.radio.map(m=>`<div class="${m.kind||''}"><span class="l">T${m.lap}</span><span>${m.who?`<b style="color:${m.col}">${m.who}</b> `:''}${esc(m.t)}</span></div>`).join('')}</div></div>
+  </div></div>`;
+}
+function vAfter(){
+  const r=s.lastRace;if(!r){s.live=null;return vRace();}const trk=TRACKS[r.key];
+  $('view').innerHTML=`<div class="vhead"><div><h1>Arrivée · ${trk.n}</h1><p class="sub">${r.wet?'Course sous la pluie · ':''}${r.sc?'Voiture de sécurité · ':''}${esc(s.team)} marque ${r.pts} point${r.pts>1?'s':''}</p></div><button class="btn primary big" data-act="after-ok">${done()?'Bilan de saison ›':'Continuer ›'}</button></div>
+  ${r.events.length?`<div class="alert" style="margin-bottom:12px">${r.events.map(e=>`<div>${esc(e)}</div>`).join('')}</div>`:''}
+  ${resultTable(r)}`;
+}
+function resultTable(r){return `<div class="tbl-wrap"><table><thead><tr><th>Pos.</th><th>Pilote</th><th>Équipe</th><th class="r">Grille</th><th class="r">Arrêts</th><th class="r">Écart</th><th class="r">Pts</th></tr></thead><tbody>
+  ${r.res.map(x=>`<tr class="${x.me?'me':''}"><td class="num">${x.pos||'Ab.'}</td><td>${flag(x.nat)}${esc(x.n)}${r.fl&&r.fl.name===x.n?' <span class="pill pu">Meilleur tour</span>':''}</td><td><span style="display:inline-block;width:4px;height:12px;background:${x.col};margin-right:6px"></span>${esc(x.t)}</td><td class="r">${x.grid}</td><td class="r">${x.stops}</td><td class="r">${x.dnf?`<span class="note">${esc(x.dnf)}</span>`:x.pos===1?'—':'+'+x.gap.toFixed(1).replace('.',',')+' s'}</td><td class="r">${x.pts||''}</td></tr>`).join('')}</tbody></table></div>`;}
+
+// ================= Pilotes =================
+function vDrivers(){
+  const S=SER[s.ser],fa=sorted(s.fa.slice(),'fa',(a,b)=>dOvr(b)-dOvr(a)),attract=S.lvl+6+(6-s.lastPos)*1.5;
+  $('view').innerHTML=`
+  <div class="vhead"><div><h1>Pilotes</h1><p class="sub">Marché, académie et talents du karting. ${s.ser!=='gp'?'En F3 et F2, les pilotes moins rapides apportent de l\'argent.':''}</p></div></div>
+  <div class="panel"><h2>Pilotes libres</h2><div class="tbl-wrap"><table style="min-width:980px"><thead><tr>${th('fa','nm','Pilote')}${th('fa','age','Âge',1)}${th('fa','ovr','Niveau',1)}${th('fa','pace','Vitesse',1)}${th('fa','wet','Pluie',1)}<th>Traits</th>${th('fa','ask','Contrat / an',1)}<th>Intérêt</th><th>Durée</th><th></th></tr></thead><tbody>
+    ${fa.map(d=>{const a=askFor(d,s.ser),ok=dOvr(d)<=attract;return `<tr><td>${flag(d.nat)}<b>${esc(nm(d))}</b></td><td class="r">${d.age}</td><td class="r">${dOvr(d)}</td><td class="r">${Math.round(d.a.pace)}</td><td class="r">${Math.round(d.a.wet)}</td><td>${traitPills(d)}</td>
+      <td class="r" style="color:${a<0?'var(--green)':''}">${a<0?'apporte '+meur(-a):meur(a)}</td><td>${ok?'<span class="pill ok">Intéressé</span>':'<span class="pill bad">Vise mieux</span>'}</td>
+      <td><select id="dy-${d.id}" aria-label="Durée"><option>1</option><option selected>2</option><option>3</option></select></td><td class="r"><button class="btn sm ${ok?'primary':''}" data-act="sign" data-id="${d.id}" ${ok&&s.drivers.length<2?'':'disabled'}>Signer</button></td></tr>`;}).join('')}</tbody></table></div>
+    <p class="note" style="margin:0">${s.drivers.length>=2?'Tes deux baquets sont occupés : libère un pilote pour en signer un autre. ':''}Survole un trait pour voir son effet.</p></div>
+  <div class="panel" style="margin-top:12px"><h2>Académie</h2>
+    ${s.academy.length?`<div class="tbl-wrap"><table style="min-width:900px"><thead><tr><th>Junior</th><th class="r">Âge</th><th class="r">Niveau</th><th>Potentiel</th><th>Traits</th><th>En course</th><th></th></tr></thead><tbody>${s.academy.map(j=>`<tr><td>${flag(j.nat)}<b>${esc(nm(j))}</b></td><td class="r">${j.age}</td><td class="r">${dOvr(j)}</td><td>${Math.round(j.potLo)}–${Math.round(j.potHi)}</td><td>${traitPills(j)}</td>
+      <td>${j.place?`<b>${SER[j.place].n}</b> <span class="note">${j.jst.pts} pts · ${j.jst.starts?jrRank(j)+'e':'—'} · ${j.jst.wins} V</span>${j.locked?' <span class="pill ok">Sous contrat long</span>':''}`:'<span class="note">Simulateur seulement</span>'}</td>
+      <td class="r" style="white-space:nowrap">${!j.place&&j.age>=16?`<button class="btn sm" data-act="place" data-id="${j.id}" data-k="f3">Placer en F3 · ${meur(SER.f3.seat)}/an</button> `:''}${j.place==='f3'&&j.age>=17?`<button class="btn sm" data-act="place" data-id="${j.id}" data-k="f2">Monter en F2 · ${meur(SER.f2.seat)}/an</button> `:''}${j.place?`<button class="btn sm" data-act="place" data-id="${j.id}" data-k="">Retirer</button> `:''}
+      <button class="btn sm primary" data-act="promote-j" data-id="${j.id}" ${j.age<juniorAge(s.ser)||s.drivers.length>=2?'disabled':''} title="Âge minimum ${juniorAge(s.ser)} ans en ${SER[s.ser].n}">Titulariser</button> <button class="btn sm danger" data-act="drop-j" data-id="${j.id}">Libérer</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="note" style="margin:0">Aucun junior. Recrute des talents du karting ci-dessous.</p>'}
+    <p class="note" style="margin:0">Un junior placé dans une écurie partenaire dispute un vrai championnat à chaque course, même quand tu es en Grand Prix, et progresse 50 % plus vite. Ses résultats apparaissent au QG. S'il brille, d'autres écuries viendront le chercher. Maximum 4 juniors.</p></div>
+  <div class="panel" style="margin-top:12px"><h2>Talents du karting</h2><div class="tbl-wrap"><table><thead><tr><th>Pilote</th><th class="r">Âge</th><th class="r">Niveau</th><th>Potentiel</th><th>Traits</th><th class="r">Coût</th><th></th></tr></thead><tbody>
+    ${s.juniorPool.map(j=>`<tr><td>${flag(j.nat)}<b>${esc(nm(j))}</b></td><td class="r">${j.age}</td><td class="r">${dOvr(j)}</td><td>${Math.round(j.potLo)}–${Math.round(j.potHi)}</td><td>${traitPills(j)}</td><td class="r">${meur(j.fee)}</td><td class="r"><button class="btn sm" data-act="sign-j" data-id="${j.id}" ${s.academy.length>=4?'disabled':''}>Recruter</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+
+// ================= Championnat =================
+function vStand(){
+  const dt=driverTable(),tt=teamTable(),tab=ui.stand;
+  const btn=(k,l)=>`<button class="${tab===k?'on':''}" data-st="${k}">${l}</button>`;
+  let body='';
+  if(tab==='d')body=`<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Pilote</th><th>Équipe</th><th class="r">Victoires</th><th class="r">Podiums</th><th class="r">Points</th></tr></thead><tbody>${dt.map((x,i)=>`<tr class="${x.me?'me':''}"><td>${i+1}</td><td>${flag(x.nat)}${esc(x.name)}</td><td>${esc(x.team)}</td><td class="r">${x.wins}</td><td class="r">${x.pod}</td><td class="r"><b>${x.pts}</b></td></tr>`).join('')||'<tr><td colspan="6" class="note">Aucune course disputée.</td></tr>'}</tbody></table></div>`;
+  else if(tab==='t')body=`<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Équipe</th><th class="r">Points</th><th class="r">Prix de fin de saison</th></tr></thead><tbody>${tt.map((x,i)=>`<tr class="${x.me?'me':''} ${i<3&&SER[s.ser].next?'promo':''}"><td>${i+1}</td><td>${esc(x.n)}</td><td class="r"><b>${x.p}</b></td><td class="r">${meur(SER[s.ser].prize[i]||0)}</td></tr>`).join('')}</tbody></table></div>`;
+  else if(tab==='c')body=`<div class="tbl-wrap"><table><thead><tr><th>GP</th><th>Circuit</th><th>Profil</th><th>Vainqueur</th><th>Tes pilotes</th></tr></thead><tbody>${s.cal.map((k,i)=>{const r=s.results[i],t=TRACKS[k];return `<tr class="${i===s.race?'me':''}"><td>${i+1}</td><td><b>${t.n}</b> <span class="note">${esc(t.pays)}</span></td><td class="note">${trkProfile(t)}</td><td>${r?esc(r.winner):'<span class="note">à venir</span>'}</td><td>${r?r.mine.map(m=>esc(m.n.split(' ').pop())+' '+(m.pos?m.pos+'e':'ab.')).join(' · '):''}</td></tr>`;}).join('')}</tbody></table></div><p class="note">Le calendrier est tiré au sort chaque saison parmi ${Object.keys(TRACKS).length} circuits.</p>`;
+  else body=['f3','f2'].map(k=>{const J=s.jr[k];if(!J)return '';const rows=J.rivals.map(r=>({n:r.n,nat:r.nat,pts:r.pts,me:false})).concat(s.academy.filter(j=>j.place===k).map(j=>({n:nm(j),nat:j.nat,pts:j.jst.pts,me:true}))).sort((a,b)=>b.pts-a.pts);
+    return `<div class="panel"><h2>${SER[k].long} (académie)</h2>${s.academy.some(j=>j.place===k)?`<div class="tbl-wrap"><table><tbody>${rows.slice(0,12).map((x,i)=>`<tr class="${x.me?'me':''}"><td>${i+1}</td><td>${flag(x.nat)}${esc(x.n)}</td><td class="r">${x.pts}</td></tr>`).join('')}</tbody></table></div>`:'<p class="note" style="margin:0">Aucun de tes juniors n\'y court.</p>'}</div>`;}).join('');
+  $('view').innerHTML=`<div class="vhead"><div><h1>${SER[s.ser].long}</h1><p class="sub">Saison ${s.season} · ${s.year} · ${s.race} course${s.race>1?'s':''} sur ${SER[s.ser].races}</p></div><div class="seg">${btn('d','Pilotes')}${btn('t','Équipes')}${btn('c','Calendrier')}${btn('a','Académie')}</div></div>${body}`;
+}
+
+// ================= Business =================
+function vBiz(){
+  const S=SER[s.ser],drv=s.drivers.reduce((t,d)=>t+d.contract.sal,0),stf=staffCost(),eng=s.ser==='gp'&&s.engine!=='own'?ENGINES[s.engine].cost:0,seats=s.academy.filter(j=>j.place).reduce((t,j)=>t+SER[j.place].seat,0);
+  const off=o=>`<div class="offer ${s.sponsor&&s.sponsor.name===o.name?'sel':''}"><b>${esc(o.name)}</b><span class="pill" style="align-self:flex-start">${o.type==='fixe'?'Contrat fixe':o.type==='points'?'Prime aux points':'Objectif de classement'} · ${o.yrs} saison${o.yrs>1?'s':''}</span>
+    <div class="terms"><span>${meur(o.fixed)} par saison</span>${o.perPt?`<span>+ ${meur(o.perPt)} par point marqué</span>`:''}${o.goal?`<span>+ ${meur(o.bonus)} si top ${o.goal} des équipes</span>`:''}</div>
+    ${s.sponsor?'':`<button class="btn primary sm" data-act="sponsor" data-name="${esc(o.name)}">Signer</button>`}</div>`;
+  $('view').innerHTML=`
+  <div class="vhead"><div><h1>Business</h1><p class="sub">Sponsors et budget de la saison.</p></div></div>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+    <div class="panel"><span class="note">Trésorerie</span><b style="font-size:1.5rem;color:${s.cash<0?'var(--red)':''}">${meur(s.cash)}</b></div>
+    <div class="panel"><span class="note">Frais de course</span><b style="font-size:1.5rem">${meur(S.run*S.races)}</b><span class="note">${meur(S.run)} par GP</span></div>
+    <div class="panel"><span class="note">Pilotes</span><b style="font-size:1.5rem;color:${drv<0?'var(--green)':''}">${drv<0?'+'+meur(-drv):meur(drv)}</b></div>
+    <div class="panel"><span class="note">Staff${eng?' + moteur':''}${seats?' + académie':''}</span><b style="font-size:1.5rem">${meur(stf+eng+seats)}</b><span class="note">par saison</span></div></div>
+  <div class="panel" style="margin-top:12px"><h2>Sponsor titre</h2>${s.sponsor?`<p style="margin:0"><b>${esc(s.sponsor.name)}</b> · encore ${s.sponsor.yrs} saison${s.sponsor.yrs>1?'s':''} (celle-ci comprise).</p>`:'<p class="pill warn" style="align-self:flex-start">À choisir avant le premier Grand Prix</p>'}<div class="cards">${s.sponsor?off(s.sponsor):s.offers.map(off).join('')}</div></div>
+  <div class="panel" style="margin-top:12px"><h2>Mouvements</h2><div class="news">${s.ledger.slice(0,100).map(e=>`<div><span class="wk">${e.m}</span><span style="flex:1">${esc(e.l)}</span><span class="num" style="color:${e.a>=0?'var(--green)':'var(--red)'}">${e.a>=0?'+':''}${meur(e.a)}</span></div>`).join('')||'<span class="note">Aucun mouvement.</span>'}</div></div>`;
+}
+
+// ================= Histoire =================
+function vHist(){
+  const t=s.tot||{starts:0,wins:0,pod:0,poles:0,pts:0},titlesT=s.history.filter(h=>h.titleT).length,titlesD=s.history.filter(h=>h.titleD).length;
+  const k=(l,v)=>`<div class="panel"><span class="note">${l}</span><b style="font-size:1.6rem">${v}</b></div>`;
+  $('view').innerHTML=`
+  <div class="vhead"><div><h1>Histoire</h1><p class="sub">Palmarès de ${esc(s.team)}.</p></div></div>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">${k('Départs',t.starts)}${k('Victoires',t.wins)}${k('Podiums',t.pod)}${k('Poles',t.poles)}${k('Titres équipes',titlesT)}${k('Titres pilotes',titlesD)}</div>
+  <div class="panel" style="margin-top:12px"><h2>Saison par saison</h2>${s.history.length?`<div class="tbl-wrap"><table><thead><tr><th>Année</th><th>Championnat</th><th class="r">Classement</th><th class="r">Points</th><th class="r">Victoires</th><th>Champion pilotes</th></tr></thead><tbody>${s.history.slice().reverse().map(h=>`<tr><td>${h.year}</td><td>${SER[h.ser].long}</td><td class="r">${h.pos}e ${h.titleT?'<span class="pill ok">Titre</span>':''}</td><td class="r">${h.pts}</td><td class="r">${h.wins}</td><td>${esc(h.dchamp)} <span class="note">${esc(h.dchampTeam)}</span></td></tr>`).join('')}</tbody></table></div>`:'<p class="note" style="margin:0">Termine ta première saison pour la voir ici.</p>'}</div>
+  <h2 style="margin:16px 0 10px">Hall of Fame</h2>${s.hof.length?`<div class="cards">${s.hof.map(h=>`<div class="panel"><b>${flag(h.nat)}${esc(h.name)}</b><div class="ticket"><div><span>Grands Prix</span><span>${h.starts}</span></div><div><span>Victoires · podiums</span><span>${h.wins} · ${h.pod}</span></div><div><span>Poles</span><span>${h.poles}</span></div><div><span>Titres</span><span>${h.titles}</span></div></div><div class="note">Parti en ${h.y}</div></div>`).join('')}</div>`:'<div class="panel"><p style="margin:0">Un pilote entre au Hall of Fame en quittant l\'écurie après 5 victoires ou un titre.</p></div>'}`;
+}
+function vSaves(){
+  const slots=[1,2,3].map(i=>({i,d:readSlot(i)}));
+  $('view').innerHTML=`
+  <div class="vhead"><div><h1>Sauvegardes</h1><p class="sub">La partie s'enregistre automatiquement dans ce navigateur.</p></div></div>
+  <div class="cards">${slots.map(({i,d})=>`<div class="panel"><h2>Emplacement ${i}</h2>${d?`<div><b>${esc(d.sum)}</b></div><div class="note">Enregistré le ${new Date(d.at).toLocaleString('fr-FR')}</div>`:'<div class="note">Vide</div>'}
+    <div class="inline"><button class="btn sm primary" data-act="slot-save" data-i="${i}">${d?'Écraser':'Sauvegarder ici'}</button>${d?`<button class="btn sm" data-act="slot-load" data-i="${i}">Charger</button><button class="btn sm danger" data-act="slot-del" data-i="${i}">Effacer</button>`:''}</div></div>`).join('')}</div>
+  <div class="cols" style="margin-top:12px"><div class="panel"><h2>Exporter</h2><p class="note" style="margin:0">Partie en cours : ${esc(summary(s))}</p>
+      <div class="inline">${dl?'<button class="btn primary" data-act="export-file">Télécharger le fichier .json</button>':''}<button class="btn ${dl?'':'primary'}" data-act="export-copy">Copier le code de sauvegarde</button></div>
+      <textarea class="code" id="exp-code" readonly aria-label="Code de sauvegarde">${esc(exportText())}</textarea></div>
+    <div class="panel"><h2>Importer</h2><p class="note" style="margin:0">Charge un fichier .json exporté ou colle un code.</p>
+      <label class="btn" style="align-self:flex-start" for="imp-file">Choisir un fichier .json</label><input type="file" id="imp-file" accept=".json,application/json,text/plain" hidden>
+      <textarea class="code" id="imp-text" placeholder="Ou colle ton code de sauvegarde ici" aria-label="Code à importer"></textarea><button class="btn" data-act="import-text" style="align-self:flex-start">Importer le code</button></div></div>
+  <div class="panel" style="margin-top:12px"><h2>Nouvelle partie</h2><button class="btn danger" id="reset" style="align-self:flex-start">Tout effacer et recommencer</button></div>`;
+}
+// ================= Fenêtres =================
+let pendingImport=null,dl=null,draft=null,timer=null;
+(function initDl(n){if(window.claude&&window.claude.use){window.claude.use('downloads').then(d=>{dl=d;if(s&&ui.view==='saves')render();}).catch(()=>{});}else if(n<20)setTimeout(()=>initDl(n+1),250);})(0);
+function modal(h){$('modal').innerHTML=h;$('overlay').hidden=false;}
+function closeModal(){$('overlay').hidden=true;}
+function toast(m,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.textContent=m;$('toasts').appendChild(t);setTimeout(()=>t.remove(),3000);}
+function armed(b,label){if(b.dataset.armed){delete b.dataset.armed;return true;}const old=b.textContent;b.dataset.armed='1';b.textContent=label;setTimeout(()=>{if(b.isConnected&&b.dataset.armed){delete b.dataset.armed;b.textContent=old;}},4000);return false;}
+function showRace(){const r=s.lastRace;if(!r)return;const trk=TRACKS[r.key];
+  modal(`<p class="note" style="margin:0">${SER[s.ser].long}${r.wet?' · pluie':''}${r.sc?' · voiture de sécurité':''}</p><p class="big-title">GP de ${trk.n}</p>${r.events.length?`<div class="alert">${r.events.map(e=>`<div>${esc(e)}</div>`).join('')}</div>`:''}${resultTable(r)}<button class="btn primary" data-act="close-modal">Fermer</button>`);}
+function showEnd(){
+  const e=s.end,S=SER[s.ser],tt=teamTable();
+  modal(`<p class="note" style="margin:0">Saison ${s.season} · ${s.year} · ${S.long}</p>
+    <p class="big-title">${e.titleT?'Champions !':e.pos<=3?'Sur le podium !':'Bilan de saison'}</p>
+    <p style="margin:0">${esc(s.team)} termine <b>${e.pos}e</b> du championnat des équipes avec ${tt[e.pos-1].p} points. Champion pilotes : ${e.dchamp?flag(e.dchamp.nat)+esc(e.dchamp.name)+' ('+esc(e.dchamp.team)+')':'—'}.</p>
+    ${e.jr&&e.jr.length?`<div class="ticket">${e.jr.map(j=>`<div><span>Académie · ${esc(j.n)} (${j.ser})</span><span>${j.rk}e · ${j.pts} pts · ${j.wins} V</span></div>`).join('')}</div>`:''}
+    <div class="ticket"><div><span>Prix du championnat</span><span>+${meur(e.prize)}</span></div>${e.bonus?`<div><span>Bonus sponsor</span><span>+${meur(e.bonus)}</span></div>`:''}<div style="font-weight:700"><span>Trésorerie</span><span>${meur(s.cash)}</span></div></div>
+    ${s.over?'<p class="pill bad" style="align-self:flex-start">Faillite : les dettes sont trop lourdes.</p><button class="btn primary" data-act="new-game">Recommencer</button>':
+    e.can?`<div class="alert"><h2>Montée possible en ${SER[S.next].n}</h2><p style="margin:0">Top 3 des équipes : tu peux acheter une place en ${SER[S.next].long} pour <b>${meur(e.cost)}</b>. Tu as ${meur(s.cash)}.</p>
+      <div class="inline"><button class="btn primary" data-act="promote" ${s.cash>=e.cost?'':'disabled'}>Monter en ${SER[S.next].n} (${meur(e.cost)})</button><button class="btn" data-act="stay">Rester en ${S.n}</button></div></div>`:
+    `<p class="note" style="margin:0">${S.next?'Il faut finir dans le top 3 des équipes pour pouvoir monter.':'Objectif : le titre mondial.'}</p><button class="btn primary big" data-act="stay">Saison suivante</button>`}`);
+}
+function setupModal(first){
+  draft=draft||{name:s?s.team:'Halberd Racing',short:s?s.short:'HAL',a:s?s.colors.a:'#1E3F8F',b:s?s.colors.b:'#F2B807',first};
+  const sw=k=>SWATCHES.map(c=>`<button class="sw" style="background:${c}" data-sw="${k}" data-c="${c}" aria-pressed="${draft[k]===c}" aria-label="Couleur ${c}"></button>`).join('')+`<input type="color" class="sw-custom" id="custom-${k}" value="${draft[k]}" aria-label="Autre couleur">`;
+  modal(`<p class="big-title">${draft.first?'Fonde ton écurie':'Identité de l\'écurie'}</p>
+    ${draft.first?'<p style="margin:0">Tu démarres en F3 avec 1,5 M€, deux jeunes pilotes et un petit staff. Objectif : gravir la F3, la F2, puis gagner le championnat du monde.</p>':''}
+    <div class="inline" style="align-items:flex-start"><div style="flex:1;min-width:180px"><label for="o-name"><b>Nom de l'écurie</b></label><input class="field-full" id="o-name" maxlength="32" value="${esc(draft.name)}"></div><div style="width:110px"><label for="o-short"><b>Sigle</b></label><input class="field-full" id="o-short" maxlength="4" value="${esc(draft.short)}"></div></div>
+    <div><b>Couleur principale</b><div class="swatches" style="margin-top:6px">${sw('a')}</div></div>
+    <div><b>Couleur secondaire</b><div class="swatches" style="margin-top:6px">${sw('b')}</div></div>
+    <div class="preview" style="--club-a:${draft.a};--club-b:${draft.b};--club-a-ink:${inkFor(draft.a)}">${crest(54,draft.short,{a:draft.a,b:draft.b})}<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px"><b style="font-size:1.4rem;font-weight:900;font-style:italic;text-transform:uppercase">${esc(draft.name)}</b><span class="bar"></span></div></div>
+    <button class="btn primary big" data-act="setup-save">${draft.first?'Créer l\'écurie':'Enregistrer'}</button>`);
+}
+function readSetup(){if(draft&&$('o-name')){draft.name=$('o-name').value;draft.short=$('o-short').value;}}
+function readPlan(){if($('pl-setup'))s.plan.setup=Number($('pl-setup').value);}
+function signDriver(d,yrs){d.contract={yrs,sal:askFor(d,s.ser)};s.drivers.push(d);if(d.contract.sal<0)news(nm(d)+' rejoint l\'écurie et apporte '+meur(-d.contract.sal)+' par saison.');else news(nm(d)+' signe pour '+yrs+' saison'+(yrs>1?'s':'')+'.');}
+function refreshStaffPool(){if(s.race===6||s.race===12)genStaffPool();}
+
+// ================= Course en direct : chrono =================
+function setSpeed(v){ui.speed=v;if(timer){clearInterval(timer);timer=null;}if(v>0&&s.live&&!s.live.done){timer=setInterval(()=>{if(!s.live||s.live.done){clearInterval(timer);timer=null;return;}lapStep();afterLap();},Math.round(4500/v));}}
+function afterLap(){if(s.live.done){setSpeed(0);refreshStaffPool();}save();if(ui.view==='course')render();else{$('nb-race').innerHTML=s.live.done?'':'<span class="badge">LIVE</span>';}}
+function playBtn(){
+  if(s.over)return showEnd();
+  if(s.live&&s.live.done){s.live=null;}
+  if(done()){ui.view='qg';render();return s.end?showEnd():(endSeason(),showEnd());}
+  if(ui.view!=='course'){ui.view='course';return render();}
+  const wk=weekend();
+  if(s.live)return;
+  if(!s.sponsor){toast('Choisis d\'abord un sponsor titre (onglet Business).',true);ui.view='business';return render();}
+  if(s.drivers.length<2){toast('Il te faut deux pilotes titulaires.',true);ui.view='pilotes';return render();}
+  readPlan();
+  if(wk.stage==='prep'){runQuali();return render();}
+  startRace();setSpeed(1);render();
+}
+
+// ================= Actions =================
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.sw&&draft){readSetup();draft[d.sw]=d.c;return setupModal();}
+  if(!s&&d.act!=='setup-save')return;
+  if(d.v){readPlan();if(d.v!=='course'&&ui.speed)setSpeed(0);ui.view=d.v;render();window.scrollTo(0,0);return;}
+  if(d.sort){const st=ui.sort[d.tbl];ui.sort[d.tbl]=st&&st.k===d.sort?{k:d.sort,dir:st.dir==='asc'?'desc':'asc'}:{k:d.sort,dir:DESC.has(d.sort)?'desc':'asc'};return render();}
+  if(d.st){ui.stand=d.st;return render();}
+  if(b.id==='play')return playBtn();
+  if(b.id==='reset'){if(armed(b,'Confirmer : tout effacer ?')){setSpeed(0);s=null;try{localStorage.removeItem(KEY)}catch(err){}draft=null;setupModal(true);}return;}
+  const id=Number(d.id),i=Number(d.i);
+  const L=s&&s.live,myCar=di=>L&&L.cars.find(c=>c.me&&c.di===di);
+  switch(d.act){
+    case 'setup-save':{readSetup();const n=draft.name.trim(),sh=draft.short.trim().toUpperCase();if(!n||!sh)return toast('Donne un nom et un sigle.',true);
+      if(draft.first)fresh({name:n,short:sh,a:draft.a,b:draft.b});else{const old=s.team;s.team=n;s.short=sh;s.colors={a:draft.a,b:draft.b};if(s.tStand[old]!=null){s.tStand[n]=s.tStand[old];delete s.tStand[old];}}
+      draft=null;closeModal();save();ui.view='qg';return render();}
+    case 'customize':return setupModal(false);
+    case 'close-modal':{pendingImport=null;draft=null;closeModal();return render();}
+    case 'quali':{readPlan();if(!s.sponsor){toast('Choisis d\'abord un sponsor titre.',true);ui.view='business';return render();}if(s.drivers.length<2){toast('Il te faut deux pilotes.',true);ui.view='pilotes';return render();}runQuali();return render();}
+    case 'start-race':{startRace();setSpeed(1);return render();}
+    case 'ptyre':{s.plan.tyres[i]=d.k;save();return render();}
+    case 'apply-reco':{s.plan.setup=s.reco.setup;s.plan.tyres=s.reco.tyres.slice();save();return render();}
+    case 'speed':return (setSpeed(Number(d.k)),render());
+    case 'step':{setSpeed(0);lapStep();afterLap();return;}
+    case 'finish':{setSpeed(0);finishNow();afterLap();refreshStaffPool();return render();}
+    case 'mode':{const c=myCar(i);if(c){c.mode=Number(d.k);}return render();}
+    case 'box':{const c=myCar(i);if(c){c.box=c.box===d.k?null:d.k;c.auto=false;}return render();}
+    case 'order':{teamOrder();return render();}
+    case 'after-ok':{s.live=null;save();if(done()){ui.view='qg';render();endSeason();return showEnd();}ui.view='qg';return render();}
+    case 'show-race':return showRace();
+    case 'end':{closeModal();if(!s.end)endSeason();return showEnd();}
+    case 'promote':{newSeason(true);closeModal();return render();}
+    case 'stay':{newSeason(false);closeModal();return render();}
+    case 'new-game':{s=null;try{localStorage.removeItem(KEY)}catch(err){}closeModal();draft=null;return setupModal(true);}
+    case 'sponsor':{const o=s.offers.find(x=>x.name===d.name);if(!o)return;s.sponsor={...o};news('Sponsor titre signé : '+o.name+' pour '+o.yrs+' saison'+(o.yrs>1?'s':'')+'.');save();return render();}
+    case 'renew-d':{const dr=s.drivers.find(x=>x.id===id);if(!dr)return;renewDriver(dr,2);save();toast(nm(dr)+' prolonge.');return render();}
+    case 'renew-s':{renewStaff(d.k);save();return render();}
+    case 'renew-sp':{s.sponsor.yrs+=2;news(s.sponsor.name+' prolonge de 2 saisons.');save();return render();}
+    case 'dismiss':{s.alerts=s.alerts.filter(a=>String(a.k)!==d.k);save();return render();}
+    case 'n1-yes':{const dr=s.drivers.find(x=>x.id===id),o=s.drivers.find(x=>x.id!==id);s.n1=id;dr.morale=clamp(dr.morale+12,0,100);if(o){o.morale=clamp(o.morale-(has(o,'lead')?15:8),0,100);s.rival=Math.min(100,s.rival+10);}s.alerts=s.alerts.filter(a=>String(a.k)!==d.k);news(nm(dr)+' devient le pilote n°1 de l\'écurie.');save();return render();}
+    case 'n1-no':{const dr=s.drivers.find(x=>x.id===id);dr.morale=clamp(dr.morale-10,0,100);s.rival=Math.min(100,s.rival+6);s.alerts=s.alerts.filter(a=>String(a.k)!==d.k);save();return render();}
+    case 'status':{const nid=id||null;if(s.n1===nid)return;s.n1=nid;const dr=s.drivers.find(x=>x.id===nid),o=s.drivers.find(x=>x.id!==nid);if(dr){dr.morale=clamp(dr.morale+8,0,100);if(o){o.morale=clamp(o.morale-(has(o,'lead')?15:8),0,100);s.rival=Math.min(100,s.rival+10);}}else{s.drivers.forEach(x=>{if(has(x,'lead'))x.morale=clamp(x.morale-6,0,100);});}save();return render();}
+    case 'meeting':{s.rival=Math.max(0,s.rival-18);s.meetCd=3;news('Réunion d\'équipe : les pilotes crèvent l\'abcès.');toast('La tension retombe.');save();return render();}
+    case 'lock-j':{const j=s.academy.find(x=>x.id===id),fee=j.place==='f3'?150e3:400e3;if(s.cash<fee)return;s.cash-=fee;led('Contrat longue durée · '+nm(j),-fee);j.locked=1;s.alerts=s.alerts.filter(a=>String(a.k)!==d.k);news(nm(j)+' signe un contrat longue durée avec l\'académie.');save();return render();}
+    case 'place':{const j=s.academy.find(x=>x.id===id);if(!j)return;j.place=d.k||null;j.jst={pts:0,starts:0,wins:0,pod:0,last:null};news(d.k?nm(j)+' court désormais en '+SER[d.k].n+' pour l\'académie.':nm(j)+' revient au simulateur.');save();return render();}
+    case 'release':{const dr=s.drivers[i];const comp=Math.max(0,dr.contract.sal)*0.5;if(!armed(b,comp?'Confirmer ('+meur(comp)+')':'Confirmer'))return;s.cash-=comp;if(comp)led('Indemnité '+nm(dr),-comp);s.drivers.splice(i,1);if(s.n1===dr.id)s.n1=null;hofCheck(dr);news(nm(dr)+' quitte l\'écurie.');save();return render();}
+    case 'sign':{const dr=s.fa.find(x=>x.id===id);if(!dr||s.drivers.length>=2)return;const yrs=Number($('dy-'+id).value);s.fa=s.fa.filter(x=>x!==dr);signDriver(dr,yrs);toast(nm(dr)+' a signé');save();return render();}
+    case 'sign-j':{const j=s.juniorPool.find(x=>x.id===id);if(!j||s.academy.length>=4)return;if(s.cash<j.fee)return toast('Trésorerie insuffisante.',true);s.cash-=j.fee;led('Recrutement junior '+nm(j),-j.fee);s.juniorPool=s.juniorPool.filter(x=>x!==j);j.jst={pts:0,starts:0,wins:0,pod:0,last:null};s.academy.push(j);news(nm(j)+' ('+j.age+' ans) rejoint l\'académie.');save();return render();}
+    case 'drop-j':{if(!armed(b,'Confirmer'))return;s.academy=s.academy.filter(x=>x.id!==id);save();return render();}
+    case 'promote-j':{const j=s.academy.find(x=>x.id===id);if(!j||s.drivers.length>=2||j.age<juniorAge(s.ser))return;s.academy=s.academy.filter(x=>x!==j);j.place=null;j.contract={yrs:3,sal:Math.max(0,askFor(j,s.ser))};s.drivers.push(j);news('Le junior '+nm(j)+' est titularisé !');save();return render();}
+    case 'hire':{const k=d.k,c=s.staffPool[k].find(x=>x.id===id);if(!c||!staffWilling(c))return;const old=s.staff[k];c.yrs=Math.max(c.yrs,2);s.staff[k]=c;s.staffPool[k]=s.staffPool[k].filter(x=>x!==c);s.staffPool[k].push(old);news(c.name+' devient '+ROLES[k].toLowerCase()+'.');save();return render();}
+    case 'engine':{if(s.race>0)return;s.engine=d.i==='own'?'own':i;news('Moteur choisi : '+(d.i==='own'?'moteur maison':ENGINES[i].n)+'.');save();return render();}
+    case 'dev':return startDev(d.k);
+    case 'dev-cancel':{if(!armed(b,'Confirmer (non remboursé)'))return;return cancelDev(d.k);}
+    case 'slot-save':{try{localStorage.setItem(slotKey(d.i),JSON.stringify({at:new Date().toISOString(),sum:summary(s),state:s,uid}));toast('Partie sauvegardée dans l\'emplacement '+d.i);}catch(err){toast('Impossible d\'écrire dans ce navigateur. Utilise l\'export.',true);}return render();}
+    case 'slot-load':{const sl=readSlot(d.i);if(!sl)return;if(!armed(b,'Remplacer la partie en cours ?'))return;setSpeed(0);s=sl.state;s.me={name:s.team};uid=Math.max(uid,sl.uid||0)+1;save();ui.view='qg';render();toast('Partie chargée');return;}
+    case 'slot-del':{if(!armed(b,'Confirmer'))return;try{localStorage.removeItem(slotKey(d.i))}catch(err){}return render();}
+    case 'export-file':{if(!dl)return;const slug=s.team.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/gi,'-').toLowerCase();dl.save({filename:slug+'-'+s.year+'.json',data:exportText()}).then(()=>toast('Fichier enregistré')).catch(err=>{if(err&&err.code==='declined')return;toast('Téléchargement indisponible ici. Utilise « Copier le code ».',true);});return;}
+    case 'export-copy':{const ta=$('exp-code'),fb=()=>{ta.focus();ta.select();toast('Code sélectionné : copie-le avec Ctrl+C.');};try{navigator.clipboard.writeText(exportText()).then(()=>toast('Code de sauvegarde copié')).catch(fb);}catch(err){fb();}return;}
+    case 'import-text':{const t=$('imp-text').value.trim();if(!t)return toast('Colle d\'abord un code de sauvegarde.',true);return askImport(t);}
+    case 'import-confirm':{if(!pendingImport)return;setSpeed(0);s=pendingImport.st;s.me={name:s.team};uid=Math.max(uid,pendingImport.uid)+1;pendingImport=null;save();closeModal();ui.view='qg';render();toast('Partie chargée');return;}
+  }
+});
+function askImport(t){try{pendingImport=parseSave(t);}catch(err){return toast(err.message,true);}
+  modal(`<p class="big-title">Charger cette partie ?</p><p style="margin:0"><b>${esc(summary(pendingImport.st))}</b></p><p class="note" style="margin:0">La partie en cours sera remplacée.</p><div class="inline"><button class="btn primary" data-act="import-confirm">Charger</button><button class="btn" data-act="close-modal">Annuler</button></div>`);}
+document.addEventListener('change',e=>{const t=e.target;
+  if(draft&&(t.id==='custom-a'||t.id==='custom-b')){readSetup();draft[t.id.slice(-1)]=t.value;return setupModal();}
+  if(!s)return;
+  if(t.dataset&&t.dataset.act==='auto'){const c=s.live&&s.live.cars.find(x=>x.me&&x.di===Number(t.dataset.i));if(c){c.auto=t.checked;if(c.auto)c.box=null;}return render();}
+  if(t.id==='pl-setup'){readPlan();save();return;}
+  if(t.id==='imp-file'){const f=t.files&&t.files[0];if(!f)return;const r=new FileReader();r.onload=()=>askImport(String(r.result));r.readAsText(f);t.value='';}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('overlay').hidden&&s&&!s.over&&!draft&&!s.end)closeModal();});
+if(load()){if(s.live&&!s.live.done)ui.view='course';render();if(s.end)showEnd();}else setupModal(true);
+</script>
+
+</body></html>

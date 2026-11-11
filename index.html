@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>StatsThief : les jeux</title>
 <link rel="canonical" href="https://statsthief.win/">
-<meta name="description" content="Tous mes jeux gratuits, jouables directement dans le navigateur : Néon Drift, Gif T A, Stat Thief et l'univers Néon City.">
+<meta name="description" content="Huit jeux gratuits, jouables directement dans le navigateur : Stat Thief, Gif T A, Néon Drift, Eaux Sombres, Président de Club, Paddock Manager, Le Chant du Pendu et Hash City.">
 <meta property="og:title" content="StatsThief : les jeux">
-<meta property="og:description" content="Jeux gratuits dans le navigateur : conduite en 3D, plateau du Moulon à l'échelle 1:1, draft de football et l'univers Néon City.">
+<meta property="og:description" content="Huit jeux gratuits dans le navigateur : conduite, pêche, western, gestion de club, d'écurie et de ville.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://statsthief.win/">
-<meta property="og:image" content="https://statsthief.win/img/neon-drift.webp">
+<meta property="og:image" content="https://statsthief.win/img/hash-city.webp">
 <meta name="theme-color" content="#07060F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
 <style>
-/* Mise en page : une salle d'arcade de nuit. Un seul thème sombre, volontairement, comme les jeux. */
+/* Mise en page : une salle d'arcade de nuit. Un seul thème sombre, volontairement, comme la plupart des jeux. */
 :root{
   --ground:#07060F;
   --panel:#110F1E;
@@ -26,9 +26,9 @@
   --text:#EEEAF8;
   --muted:#A49FBE;
   --dim:#6E6990;
-  --pink:#FF3D9A;      /* accent principal : Néon City */
-  --cyan:#3FE0E8;      /* accent secondaire */
-  --gold:#FFCF3F;      /* Stat Thief */
+  --pink:#FF3D9A;
+  --cyan:#3FE0E8;
+  --gold:#FFCF3F;
   --f-head:'Chakra Petch',system-ui,sans-serif;
   --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-tag:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
@@ -42,7 +42,7 @@ body{margin:0;background:var(--ground);color:var(--text);font-family:var(--f-bod
   background-attachment:fixed}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
-.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
 /* barre du haut */
 .top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:rgba(7,6,15,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -58,39 +58,33 @@ a{color:inherit}
 .hero{padding:56px 0 28px}
 .hero h1{font-family:var(--f-head);font-weight:700;font-size:clamp(40px,7.5vw,84px);line-height:.98;letter-spacing:-.01em;margin:0 0 18px;text-wrap:balance}
 .hero h1 em{font-style:normal;color:var(--pink);text-shadow:0 0 28px rgba(255,61,154,.45)}
-.hero p{color:var(--muted);font-size:18px;max-width:56ch;margin:0}
+.hero p{color:var(--muted);font-size:18px;max-width:58ch;margin:0}
 .count{display:inline-flex;gap:8px;align-items:center;margin-bottom:18px;font-family:var(--f-tag);font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
 .count::before{content:"";width:22px;height:2px;background:currentColor}
 
-/* sections */
 section{padding:30px 0 10px}
 .sec-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 18px}
 .sec-h h2{font-family:var(--f-head);font-weight:600;font-size:24px;letter-spacing:.04em;text-transform:uppercase;margin:0}
-.sec-h p{margin:0;color:var(--dim);font-size:15px}
 
 /* cartes */
-.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
-.grid.big{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
 .card{position:relative;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;transition:border-color .18s,transform .18s,background .18s}
 .card:hover{border-color:var(--line-2);background:var(--panel-2);transform:translateY(-3px)}
 .card:hover .shot img{transform:scale(1.04)}
 .shot{aspect-ratio:16/10;overflow:hidden;background:#0c0a18;border-bottom:1px solid var(--line)}
 .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:7px;flex:1}
 .tag{font-family:var(--f-tag);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc,var(--pink))}
-.card h3{font-family:var(--f-head);font-weight:700;font-size:24px;line-height:1.1;margin:0}
+.card h3{font-family:var(--f-head);font-weight:700;font-size:22px;line-height:1.1;margin:0}
 .card p{margin:0;color:var(--muted);font-size:15px}
-.meta{margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.meta{margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .pill{font-family:var(--f-tag);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
 .play{margin-left:auto;font-family:var(--f-tag);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc,var(--pink))}
 .play::after{content:" →"}
 .card.gold{--acc:var(--gold)}
 .card.cyan{--acc:var(--cyan)}
 
-/* cartes univers, plus compactes */
-.grid.small{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
-.grid.small .card h3{font-size:20px}
-.grid.small .body{padding:14px 16px 16px}
+.note{margin:22px 0 0;color:var(--dim);font-size:14px;max-width:70ch}
 
 footer{margin-top:60px;border-top:1px solid var(--line);padding:26px 0 calc(40px + env(safe-area-inset-bottom,0px));color:var(--dim);font-size:14px}
 footer .wrap{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center}
@@ -101,7 +95,6 @@ footer a:hover{color:var(--text)}
 @media (max-width:560px){
   .hero{padding:36px 0 18px}
   .hero p{font-size:16px}
-  .top nav{gap:14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -112,99 +105,102 @@ footer a:hover{color:var(--text)}
   <a class="brand" href="/"><i aria-hidden="true"></i>Stats<b>Thief</b></a>
   <nav aria-label="Principal">
     <a href="#jeux">Jeux</a>
-    <a href="#neon-city">Néon City</a>
   </nav>
 </div></header>
 
 <main>
   <div class="wrap hero">
-    <div class="count">7 jeux · gratuits · dans le navigateur</div>
+    <div class="count">8 jeux · gratuits · dans le navigateur</div>
     <h1>Mes jeux, <em>tous au même endroit.</em></h1>
-    <p>De la conduite en 3D sur le plateau du Moulon, une ville néon à explorer, et un jeu de draft de football. Rien à installer : clique et joue.</p>
+    <p>Conduite, pêche, western, gestion de club, d'écurie et de ville. Rien à installer : clique et joue.</p>
   </div>
 
   <section id="jeux"><div class="wrap">
     <div class="sec-h"><h2>Les jeux</h2></div>
-    <div class="grid big">
-
-      <a class="card" href="/neon-drift/">
-        <div class="shot"><img src="img/neon-drift.webp" width="640" height="400" alt="Écran titre de Néon Drift au-dessus de la ville de nuit"></div>
-        <div class="body">
-          <span class="tag">Conduite · bac à sable 3D</span>
-          <h3>Néon Drift</h3>
-          <p>Prépare ta voiture au garage, puis roule, drifte et saute dans la ville autour de l'arena, ou sur le plateau du Moulon reconstruit depuis OpenStreetMap.</p>
-          <div class="meta"><span class="pill">Clavier</span><span class="pill">Jour / nuit</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card cyan" href="/gif-t-a/">
-        <div class="shot"><img src="img/gif-t-a.webp" width="640" height="400" alt="Menu de Gif T A devant le quartier du Moulon en 3D" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Balade · voiture et métro</span>
-          <h3>Gif T A</h3>
-          <p>Le quartier du Moulon, rue par rue, à l'échelle 1:1. Trois voitures, la ligne 18 du métro à conduire, la météo, l'heure du jour et les feux tricolores.</p>
-          <div class="meta"><span class="pill">Clavier</span><span class="pill">Tactile</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
+    <div class="grid">
 
       <a class="card gold" href="/stat-thief/">
-        <div class="shot"><img src="img/stat-thief.webp" width="640" height="400" alt="Accueil de Stat Thief avec une carte de joueur" loading="lazy"></div>
+        <div class="shot"><img src="img/stat-thief.webp" width="640" height="400" alt="Accueil de Stat Thief avec une carte de joueur"></div>
         <div class="body">
           <span class="tag">Football · draft</span>
           <h3>Stat Thief</h3>
-          <p>Vole une statistique par tour à des joueurs de Premier League, construis une légende en dix tours, puis joue toute sa carrière. Un nouveau draft chaque jour.</p>
+          <p>Un draft de Premier League : vole une stat par tour pour construire ta légende, puis joue toute sa carrière.</p>
           <div class="meta"><span class="pill">En anglais</span><span class="pill">Souris / tactile</span><span class="play">Jouer</span></div>
         </div>
       </a>
 
+      <a class="card cyan" href="/gif-t-a/">
+        <div class="shot"><img src="img/gif-t-a.webp" width="640" height="400" alt="Menu de Gif T A devant le quartier du Moulon en 3D"></div>
+        <div class="body">
+          <span class="tag">Balade · voiture et métro</span>
+          <h3>Gif T A</h3>
+          <p>Le plateau du Moulon rue par rue, à l'échelle 1:1 : trois voitures, le métro de la ligne 18 à conduire et la météo.</p>
+          <div class="meta"><span class="pill">Clavier</span><span class="pill">Tactile</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/neon-drift/">
+        <div class="shot"><img src="img/neon-drift.webp" width="640" height="400" alt="Écran titre de Néon Drift au-dessus de la ville de nuit"></div>
+        <div class="body">
+          <span class="tag">Bac à sable urbain</span>
+          <h3>Néon Drift</h3>
+          <p>Drifte, marche et prends n'importe quel véhicule dans la ville autour de l'arena ou sur le plateau du Moulon.</p>
+          <div class="meta"><span class="pill">Clavier</span><span class="pill">Tactile</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card cyan" href="/eaux-sombres/">
+        <div class="shot"><img src="img/eaux-sombres.webp" width="640" height="400" alt="Bateau de pêche amarré au port à l'aube, rendu façon PS1" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Pêche · style PS1</span>
+          <h3>Eaux Sombres</h3>
+          <p>Pêche en bateau : revends tes prises, améliore ton matériel et pars vers le fjord gelé ou la haute mer.</p>
+          <div class="meta"><span class="pill">Clavier + souris</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/president-de-club/">
+        <div class="shot"><img src="img/president-de-club.webp" width="640" height="400" alt="Bureau du président avec la trésorerie et l'effectif du club" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Gestion · basket</span>
+          <h3>Président de Club</h3>
+          <p>Mène ton club du gymnase de quartier jusqu'à l'élite : effectif, finances, infrastructures et un stade en 3D.</p>
+          <div class="meta"><span class="pill">Souris / tactile</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card gold" href="/paddock-manager/">
+        <div class="shot"><img src="img/paddock-manager.webp" width="640" height="400" alt="Quartier général d'une écurie avec la prochaine manche" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Gestion · sport auto</span>
+          <h3>Paddock Manager</h3>
+          <p>Dirige une écurie de F1, de la F3 jusqu'au Grand Prix : pilotes, sponsors, développement et stratégie en course.</p>
+          <div class="meta"><span class="pill">Souris / tactile</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/chant-du-pendu/">
+        <div class="shot"><img src="img/chant-du-pendu.webp" width="640" height="400" alt="Écran titre du Chant du Pendu sur une rue de western au coucher du soleil" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">Western · première personne</span>
+          <h3>Le Chant du Pendu</h3>
+          <p>Arizona, 1899 : retrouve ton frère disparu dans la mine du Pendu. Quatre chapitres, des dialogues et un journal.</p>
+          <div class="meta"><span class="pill">Clavier + souris</span><span class="pill">Avec le son</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
+      <a class="card cyan" href="/hash-city/">
+        <div class="shot"><img src="img/hash-city.webp" width="640" height="400" alt="Vue aérienne de Hash City avec ses tours, son fleuve et son métro" loading="lazy"></div>
+        <div class="body">
+          <span class="tag">City builder 3D</span>
+          <h3>Hash City</h3>
+          <p>Construis ta ville en 3D, en mode maire avec budget et objectifs, ou en mode libre, sans contraintes.</p>
+          <div class="meta"><span class="pill">Souris / tactile</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
+        </div>
+      </a>
+
     </div>
-  </div></section>
-
-  <section id="neon-city"><div class="wrap">
-    <div class="sec-h"><h2>L'univers Néon City</h2><p>Les coulisses de Néon Drift, à explorer à part.</p></div>
-    <div class="grid small">
-
-      <a class="card" href="/la-planque/">
-        <div class="shot"><img src="img/la-planque.webp" width="640" height="400" alt="Spectre devant l'entrepôt de la Planque, de nuit" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Exploration</span>
-          <h3>La Planque</h3>
-          <p>Un entrepôt anodin, un monte-charge, une base secrète et une supercar à prendre en main.</p>
-          <div class="meta"><span class="pill">Clavier</span><span class="play">Entrer</span></div>
-        </div>
-      </a>
-
-      <a class="card cyan" href="/le-repaire/">
-        <div class="shot"><img src="img/le-repaire.webp" width="640" height="400" alt="La voiture LAME L-01 sur sa plateforme dans le Repaire" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Visite 3D</span>
-          <h3>Le Repaire</h3>
-          <p>La base de Spectre au niveau -3, sous le parking de l'Arena, et sa voiture de poursuite LAME L-01.</p>
-          <div class="meta"><span class="pill">Souris / tactile</span><span class="play">Entrer</span></div>
-        </div>
-      </a>
-
-      <a class="card cyan" href="/spectre/">
-        <div class="shot"><img src="img/spectre.webp" width="640" height="400" alt="Spectre accroupi sur un socle lumineux en studio" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Showroom</span>
-          <h3>Spectre</h3>
-          <p>Le justicier de Néon Drift en studio : poses, angles de caméra et couleurs de néon.</p>
-          <div class="meta"><span class="pill">Souris / tactile</span><span class="play">Voir</span></div>
-        </div>
-      </a>
-
-      <a class="card" href="/labo-perso/">
-        <div class="shot"><img src="img/labo-perso.webp" width="640" height="400" alt="Personnage en costume dans l'atelier Labo Perso" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Atelier personnage</span>
-          <h3>Labo Perso</h3>
-          <p>Règle ton personnage avant d'entrer en ville : style, tenue, silhouette et animations.</p>
-          <div class="meta"><span class="pill">Clavier + souris</span><span class="play">Ouvrir</span></div>
-        </div>
-      </a>
-
-    </div>
+    <p class="note">Les parties sont sauvegardées dans ton navigateur : elles restent sur cet appareil.</p>
   </div></section>
 </main>
 
