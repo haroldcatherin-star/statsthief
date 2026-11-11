@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eaux Sombres</title>
+<style>
+  /* Jeu plein écran, univers unique sombre (rendu PS1) : pas de thème clair volontairement. */
+  :root { --bg: #000000; --ink: #e8e0c8; --gold: #ffd060; --panel: #05070d; color-scheme: dark; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); overflow: hidden; cursor: default; }
+  canvas { position: fixed; left: 0; top: 0; display: block; image-rendering: crisp-edges; image-rendering: pixelated; }
+  #game { width: 100vw; height: 100vh; }
+  #ui { pointer-events: none; }
+  #boot {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    text-align: center; color: var(--ink); background: var(--panel);
+    font: 16px ui-monospace, "Cascadia Mono", Consolas, monospace; line-height: 1.5; z-index: 10;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  #boot code { color: var(--gold); }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="game"></canvas>
+<canvas id="ui"></canvas>
+<div id="boot">CHARGEMENT…<br>Cliquez une fois dans le jeu pour activer le son.</div>
+<script>
+  window.addEventListener('error', function (e) {
+    var el = document.getElementById('boot');
+    if (el) { el.style.display = 'flex'; el.textContent = 'Erreur : ' + e.message; }
+  });
+</script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
