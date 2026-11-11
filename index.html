@@ -3,216 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>StatsThief : les jeux</title>
+<title>statsthief</title>
 <link rel="canonical" href="https://statsthief.win/">
-<meta name="description" content="Huit jeux gratuits, jouables directement dans le navigateur : Stat Thief, Gif T A, Néon Drift, Eaux Sombres, Président de Club, Paddock Manager, Le Chant du Pendu et Hash City.">
-<meta property="og:title" content="StatsThief : les jeux">
-<meta property="og:description" content="Huit jeux gratuits dans le navigateur : conduite, pêche, western, gestion de club, d'écurie et de ville.">
+<meta name="description" content="Huit jeux faits à la main, à jouer dans le navigateur : Stat Thief, Gif T A, Néon Drift, Eaux Sombres, Président de Club, Paddock Manager, Le Chant du Pendu et Hash City.">
+<meta property="og:title" content="statsthief">
+<meta property="og:description" content="Huit jeux faits à la main, à jouer dans le navigateur.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://statsthief.win/">
 <meta property="og:image" content="https://statsthief.win/img/hash-city.webp">
-<meta name="theme-color" content="#07060F">
+<meta name="theme-color" content="#0E0E0C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Mise en page : une salle d'arcade de nuit. Un seul thème sombre, volontairement, comme la plupart des jeux. */
+/* Mise en page : catalogue d'un petit label. Une liste numérotée, aperçu au survol. Thème sombre unique, volontairement. */
 :root{
-  --ground:#07060F;
-  --panel:#110F1E;
-  --panel-2:#181530;
-  --line:rgba(190,180,255,.12);
-  --line-2:rgba(190,180,255,.24);
-  --text:#EEEAF8;
-  --muted:#A49FBE;
-  --dim:#6E6990;
-  --pink:#FF3D9A;
-  --cyan:#3FE0E8;
-  --gold:#FFCF3F;
-  --f-head:'Chakra Petch',system-ui,sans-serif;
-  --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --f-tag:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
-  --r:14px;
+  --ground:#0E0E0C;
+  --raise:#161614;
+  --ink:#E9E5DA;
+  --soft:#A39E92;
+  --dim:#6B675E;
+  --line:rgba(233,229,218,.10);
+  --line-2:rgba(233,229,218,.22);
+  --mark:#D9B26A;
+  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
-body{margin:0;background:var(--ground);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden;
-  background-image:radial-gradient(80% 50% at 10% -10%,rgba(255,61,154,.16),transparent 60%),radial-gradient(70% 45% at 100% 0%,rgba(63,224,232,.10),transparent 60%);
-  background-attachment:fixed}
-a{color:inherit}
-:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
-.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-
-/* barre du haut */
-.top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:rgba(7,6,15,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:16px;min-height:56px}
-.brand{font-family:var(--f-head);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
-.brand i{width:10px;height:10px;border-radius:50%;background:var(--pink);box-shadow:0 0 12px var(--pink)}
-.brand b{color:var(--pink);font-weight:700}
-.top nav{margin-left:auto;display:flex;gap:18px}
-.top nav a{font-family:var(--f-tag);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none}
-.top nav a:hover{color:var(--text)}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:1px solid var(--mark);outline-offset:4px}
+::selection{background:var(--mark);color:var(--ground)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
 /* en-tête */
-.hero{padding:56px 0 28px}
-.hero h1{font-family:var(--f-head);font-weight:700;font-size:clamp(40px,7.5vw,84px);line-height:.98;letter-spacing:-.01em;margin:0 0 18px;text-wrap:balance}
-.hero h1 em{font-style:normal;color:var(--pink);text-shadow:0 0 28px rgba(255,61,154,.45)}
-.hero p{color:var(--muted);font-size:18px;max-width:58ch;margin:0}
-.count{display:inline-flex;gap:8px;align-items:center;margin-bottom:18px;font-family:var(--f-tag);font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
-.count::before{content:"";width:22px;height:2px;background:currentColor}
+header{padding-top:calc(28px + env(safe-area-inset-top,0px))}
+.bar{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:14px;border-bottom:1px solid var(--line);color:var(--soft)}
+.name{color:var(--ink);letter-spacing:.02em}
+.name::before{content:"";display:inline-block;width:6px;height:6px;background:var(--mark);margin-right:10px;vertical-align:1px}
+.intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding:56px 0 64px}
+.intro p{margin:0;font-family:var(--serif);font-size:30px;line-height:1.18;color:var(--ink);max-width:22ch;text-wrap:pretty}
+.intro p i{color:var(--soft)}
+.intro dl{margin:0;align-self:end;justify-self:end;display:grid;grid-template-columns:auto auto;gap:4px 24px;color:var(--soft)}
+.intro dt{color:var(--dim)}
+.intro dd{margin:0;text-align:right}
 
-section{padding:30px 0 10px}
-.sec-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 18px}
-.sec-h h2{font-family:var(--f-head);font-weight:600;font-size:24px;letter-spacing:.04em;text-transform:uppercase;margin:0}
+/* catalogue */
+.head,.row{display:grid;grid-template-columns:48px minmax(0,1.4fr) minmax(0,1fr) minmax(0,.9fr) 24px;gap:16px;align-items:baseline}
+.head{color:var(--dim);padding:0 0 10px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+ol{list-style:none;margin:0;padding:0}
+.row{padding:18px 0 17px;border-bottom:1px solid var(--line);position:relative;transition:color .2s}
+.no{color:var(--dim);font-variant-numeric:tabular-nums}
+.t{font-family:var(--serif);font-size:30px;line-height:1.05;letter-spacing:-.005em}
+.t small{display:block;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--soft);letter-spacing:0;margin-top:8px;max-width:46ch}
+.g,.c{color:var(--soft)}
+.c{color:var(--dim)}
+.go{color:var(--dim);text-align:right;transition:transform .25s,color .2s}
+.thumb{display:none}
+.lang{color:var(--mark);margin-left:8px;font-family:var(--mono);font-size:11px;vertical-align:6px;letter-spacing:.06em}
 
-/* cartes */
-.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
-.card{position:relative;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;transition:border-color .18s,transform .18s,background .18s}
-.card:hover{border-color:var(--line-2);background:var(--panel-2);transform:translateY(-3px)}
-.card:hover .shot img{transform:scale(1.04)}
-.shot{aspect-ratio:16/10;overflow:hidden;background:#0c0a18;border-bottom:1px solid var(--line)}
-.shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:7px;flex:1}
-.tag{font-family:var(--f-tag);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc,var(--pink))}
-.card h3{font-family:var(--f-head);font-weight:700;font-size:22px;line-height:1.1;margin:0}
-.card p{margin:0;color:var(--muted);font-size:15px}
-.meta{margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.pill{font-family:var(--f-tag);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
-.play{margin-left:auto;font-family:var(--f-tag);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc,var(--pink))}
-.play::after{content:" →"}
-.card.gold{--acc:var(--gold)}
-.card.cyan{--acc:var(--cyan)}
+@media (hover:hover){
+  ol:hover .row{color:var(--dim)}
+  ol:hover .row .t small,ol:hover .row .g{color:var(--dim)}
+  ol .row:hover{color:var(--ink)}
+  ol .row:hover .t small{color:var(--soft)}
+  ol .row:hover .g{color:var(--soft)}
+  .row:hover .go{color:var(--mark);transform:translateX(4px)}
+  .row:hover .no{color:var(--mark)}
+}
 
-.note{margin:22px 0 0;color:var(--dim);font-size:14px;max-width:70ch}
+/* aperçu qui suit le curseur */
+#peek{position:fixed;left:0;top:0;width:320px;aspect-ratio:16/10;pointer-events:none;z-index:5;opacity:0;transform:translate3d(-999px,-999px,0);transition:opacity .2s;background:var(--raise);outline:1px solid var(--line-2);outline-offset:6px}
+#peek img{width:100%;height:100%;object-fit:cover;display:block}
+#peek.on{opacity:1}
 
-footer{margin-top:60px;border-top:1px solid var(--line);padding:26px 0 calc(40px + env(safe-area-inset-bottom,0px));color:var(--dim);font-size:14px}
-footer .wrap{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center}
-footer nav{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto}
-footer a{color:var(--muted);text-decoration:none}
-footer a:hover{color:var(--text)}
+.note{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--dim);padding:18px 0 0}
 
-@media (max-width:560px){
-  .hero{padding:36px 0 18px}
-  .hero p{font-size:16px}
+footer{margin-top:120px;padding:18px 0 calc(32px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);color:var(--dim)}
+footer .wrap{display:flex;gap:8px 20px;flex-wrap:wrap;justify-content:space-between}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+footer a:hover{color:var(--ink)}
+
+@media (max-width:760px){
+  .intro{grid-template-columns:1fr;padding:40px 0 44px}
+  .intro p{font-size:26px}
+  .intro dl{justify-self:start}
+  .intro dd{text-align:left}
+  .head{display:none}
+  .row{grid-template-columns:96px minmax(0,1fr);gap:4px 14px;padding:16px 0;align-items:start}
+  .thumb{display:block;grid-row:1 / span 3;width:96px;aspect-ratio:16/10;object-fit:cover;outline:1px solid var(--line)}
+  .no{display:none}
+  .t{font-size:24px}
+  .t small{margin-top:6px}
+  .g,.c{font-size:12px}
+  .go{display:none}
+  #peek{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
-<header class="top"><div class="wrap">
-  <a class="brand" href="/"><i aria-hidden="true"></i>Stats<b>Thief</b></a>
-  <nav aria-label="Principal">
-    <a href="#jeux">Jeux</a>
-  </nav>
+<header><div class="wrap">
+  <div class="bar"><a class="name" href="/">statsthief</a><span>catalogue · 2026</span></div>
+  <div class="intro">
+    <p>Petits jeux faits à la main, <i>à jouer dans le navigateur.</i></p>
+    <dl>
+      <dt>titres</dt><dd>08</dd>
+      <dt>prix</dt><dd>gratuit</dd>
+      <dt>installation</dt><dd>aucune</dd>
+    </dl>
+  </div>
 </div></header>
 
-<main>
-  <div class="wrap hero">
-    <div class="count">8 jeux · gratuits · dans le navigateur</div>
-    <h1>Mes jeux, <em>tous au même endroit.</em></h1>
-    <p>Conduite, pêche, western, gestion de club, d'écurie et de ville. Rien à installer : clique et joue.</p>
-  </div>
-
-  <section id="jeux"><div class="wrap">
-    <div class="sec-h"><h2>Les jeux</h2></div>
-    <div class="grid">
-
-      <a class="card gold" href="/stat-thief/">
-        <div class="shot"><img src="img/stat-thief.webp" width="640" height="400" alt="Accueil de Stat Thief avec une carte de joueur"></div>
-        <div class="body">
-          <span class="tag">Football · draft</span>
-          <h3>Stat Thief</h3>
-          <p>Un draft de Premier League : vole une stat par tour pour construire ta légende, puis joue toute sa carrière.</p>
-          <div class="meta"><span class="pill">En anglais</span><span class="pill">Souris / tactile</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card cyan" href="/gif-t-a/">
-        <div class="shot"><img src="img/gif-t-a.webp" width="640" height="400" alt="Menu de Gif T A devant le quartier du Moulon en 3D"></div>
-        <div class="body">
-          <span class="tag">Balade · voiture et métro</span>
-          <h3>Gif T A</h3>
-          <p>Le plateau du Moulon rue par rue, à l'échelle 1:1 : trois voitures, le métro de la ligne 18 à conduire et la météo.</p>
-          <div class="meta"><span class="pill">Clavier</span><span class="pill">Tactile</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card" href="/neon-drift/">
-        <div class="shot"><img src="img/neon-drift.webp" width="640" height="400" alt="Écran titre de Néon Drift au-dessus de la ville de nuit"></div>
-        <div class="body">
-          <span class="tag">Bac à sable urbain</span>
-          <h3>Néon Drift</h3>
-          <p>Drifte, marche et prends n'importe quel véhicule dans la ville autour de l'arena ou sur le plateau du Moulon.</p>
-          <div class="meta"><span class="pill">Clavier</span><span class="pill">Tactile</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card cyan" href="/eaux-sombres/">
-        <div class="shot"><img src="img/eaux-sombres.webp" width="640" height="400" alt="Bateau de pêche amarré au port à l'aube, rendu façon PS1" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Pêche · style PS1</span>
-          <h3>Eaux Sombres</h3>
-          <p>Pêche en bateau : revends tes prises, améliore ton matériel et pars vers le fjord gelé ou la haute mer.</p>
-          <div class="meta"><span class="pill">Clavier + souris</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card" href="/president-de-club/">
-        <div class="shot"><img src="img/president-de-club.webp" width="640" height="400" alt="Bureau du président avec la trésorerie et l'effectif du club" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Gestion · basket</span>
-          <h3>Président de Club</h3>
-          <p>Mène ton club du gymnase de quartier jusqu'à l'élite : effectif, finances, infrastructures et un stade en 3D.</p>
-          <div class="meta"><span class="pill">Souris / tactile</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card gold" href="/paddock-manager/">
-        <div class="shot"><img src="img/paddock-manager.webp" width="640" height="400" alt="Quartier général d'une écurie avec la prochaine manche" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Gestion · sport auto</span>
-          <h3>Paddock Manager</h3>
-          <p>Dirige une écurie de F1, de la F3 jusqu'au Grand Prix : pilotes, sponsors, développement et stratégie en course.</p>
-          <div class="meta"><span class="pill">Souris / tactile</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card" href="/chant-du-pendu/">
-        <div class="shot"><img src="img/chant-du-pendu.webp" width="640" height="400" alt="Écran titre du Chant du Pendu sur une rue de western au coucher du soleil" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">Western · première personne</span>
-          <h3>Le Chant du Pendu</h3>
-          <p>Arizona, 1899 : retrouve ton frère disparu dans la mine du Pendu. Quatre chapitres, des dialogues et un journal.</p>
-          <div class="meta"><span class="pill">Clavier + souris</span><span class="pill">Avec le son</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-      <a class="card cyan" href="/hash-city/">
-        <div class="shot"><img src="img/hash-city.webp" width="640" height="400" alt="Vue aérienne de Hash City avec ses tours, son fleuve et son métro" loading="lazy"></div>
-        <div class="body">
-          <span class="tag">City builder 3D</span>
-          <h3>Hash City</h3>
-          <p>Construis ta ville en 3D, en mode maire avec budget et objectifs, ou en mode libre, sans contraintes.</p>
-          <div class="meta"><span class="pill">Souris / tactile</span><span class="pill">Sauvegarde</span><span class="play">Jouer</span></div>
-        </div>
-      </a>
-
-    </div>
-    <p class="note">Les parties sont sauvegardées dans ton navigateur : elles restent sur cet appareil.</p>
-  </div></section>
+<main class="wrap">
+  <div class="head" aria-hidden="true"><span>N°</span><span>Titre</span><span>Genre</span><span>Commandes</span><span></span></div>
+  <ol id="list">
+    <li><a class="row" href="/stat-thief/" data-img="img/stat-thief.webp">
+      <img class="thumb" src="img/stat-thief.webp" alt="" loading="lazy">
+      <span class="no">001</span>
+      <span class="t">Stat Thief<span class="lang">EN</span><small>Un draft de Premier League : une stat volée par tour, puis toute une carrière.</small></span>
+      <span class="g">football, draft</span>
+      <span class="c">souris, tactile</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/gif-t-a/" data-img="img/gif-t-a.webp">
+      <img class="thumb" src="img/gif-t-a.webp" alt="" loading="lazy">
+      <span class="no">002</span>
+      <span class="t">Gif T A<small>Le plateau du Moulon à l'échelle 1:1, en voiture ou aux commandes du métro de la ligne 18.</small></span>
+      <span class="g">balade, conduite</span>
+      <span class="c">clavier, tactile</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/neon-drift/" data-img="img/neon-drift.webp">
+      <img class="thumb" src="img/neon-drift.webp" alt="" loading="lazy">
+      <span class="no">003</span>
+      <span class="t">Néon Drift<small>Une ville de nuit où l'on drifte, marche et prend n'importe quel véhicule.</small></span>
+      <span class="g">bac à sable</span>
+      <span class="c">clavier, tactile</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/eaux-sombres/" data-img="img/eaux-sombres.webp">
+      <img class="thumb" src="img/eaux-sombres.webp" alt="" loading="lazy">
+      <span class="no">004</span>
+      <span class="t">Eaux Sombres<small>Pêche en bateau rendue comme sur PS1. Du lagon jusqu'au fjord gelé et à la haute mer.</small></span>
+      <span class="g">pêche, rétro</span>
+      <span class="c">clavier, souris</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/president-de-club/" data-img="img/president-de-club.webp">
+      <img class="thumb" src="img/president-de-club.webp" alt="" loading="lazy">
+      <span class="no">005</span>
+      <span class="t">Président de Club<small>Un club de basket, du gymnase de quartier jusqu'à l'élite, avec son stade en 3D.</small></span>
+      <span class="g">gestion, basket</span>
+      <span class="c">souris, tactile</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/paddock-manager/" data-img="img/paddock-manager.webp">
+      <img class="thumb" src="img/paddock-manager.webp" alt="" loading="lazy">
+      <span class="no">006</span>
+      <span class="t">Paddock Manager<small>Une écurie à mener de la F3 au Grand Prix : pilotes, sponsors, stratégie de course.</small></span>
+      <span class="g">gestion, sport auto</span>
+      <span class="c">souris, tactile</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/chant-du-pendu/" data-img="img/chant-du-pendu.webp">
+      <img class="thumb" src="img/chant-du-pendu.webp" alt="" loading="lazy">
+      <span class="no">007</span>
+      <span class="t">Le Chant du Pendu<small>Arizona, 1899. Un frère disparu dans une mine qui chante la nuit. Quatre chapitres.</small></span>
+      <span class="g">western, première personne</span>
+      <span class="c">clavier, souris, son</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+    <li><a class="row" href="/hash-city/" data-img="img/hash-city.webp">
+      <img class="thumb" src="img/hash-city.webp" alt="" loading="lazy">
+      <span class="no">008</span>
+      <span class="t">Hash City<small>Une ville en 3D à faire grandir, avec un budget à tenir ou en mode libre.</small></span>
+      <span class="g">city builder</span>
+      <span class="c">souris, tactile</span>
+      <span class="go" aria-hidden="true">→</span>
+    </a></li>
+  </ol>
+  <div class="note"><span>Les parties sont gardées dans ton navigateur, sur cet appareil.</span><span>EN : en anglais</span></div>
 </main>
 
 <footer><div class="wrap">
-  <span>© <span id="y">2026</span> StatsThief · Jeux faits maison</span>
+  <span>statsthief.win</span>
   <nav aria-label="Pied de page">
-    <a href="/about.html">À propos</a>
-    <a href="/contact.html">Contact</a>
-    <a href="/privacy.html">Confidentialité</a>
-    <a href="/terms.html">Conditions</a>
+    <a href="/about.html">à propos</a>
+    <a href="/contact.html">contact</a>
+    <a href="/privacy.html">confidentialité</a>
+    <a href="/terms.html">conditions</a>
   </nav>
 </div></footer>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+
+<div id="peek" aria-hidden="true"><img alt=""></div>
+<script>
+(function(){
+  var peek=document.getElementById('peek'),img=peek.firstChild,list=document.getElementById('list');
+  if(!window.matchMedia||!matchMedia('(hover:hover) and (min-width:761px)').matches)return;
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var x=0,y=0,tx=0,ty=0,raf=0;
+  function tick(){x+=(tx-x)*(reduce?1:.18);y+=(ty-y)*(reduce?1:.18);
+    peek.style.transform='translate3d('+Math.round(x)+'px,'+Math.round(y)+'px,0)';
+    if(Math.abs(tx-x)>.5||Math.abs(ty-y)>.5)raf=requestAnimationFrame(tick);else raf=0;}
+  function place(e){var w=peek.offsetWidth,h=peek.offsetHeight;
+    tx=Math.min(e.clientX+28,innerWidth-w-16);ty=Math.max(16,Math.min(e.clientY-h/2,innerHeight-h-16));
+    if(!raf)raf=requestAnimationFrame(tick);}
+  list.querySelectorAll('.row').forEach(function(r){
+    r.addEventListener('mouseenter',function(e){img.src=r.dataset.img;if(!peek.classList.contains('on')){place(e);x=tx;y=ty;}peek.classList.add('on');});
+    r.addEventListener('mousemove',place);
+  });
+  list.addEventListener('mouseleave',function(){peek.classList.remove('on');});
+})();
+</script>
 </body>
 </html>
